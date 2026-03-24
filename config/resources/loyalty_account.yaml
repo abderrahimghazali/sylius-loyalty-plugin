@@ -1,0 +1,8 @@
+sylius_resource:
+    resources:
+        loyalty.account:
+            driver: doctrine/orm
+            classes:
+                model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount
+                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface
+                repository: Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepository

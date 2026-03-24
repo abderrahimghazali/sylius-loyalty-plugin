@@ -1,0 +1,5 @@
+<a class="list-group-item list-group-item-action{{ app.request.get('_route') == 'loyalty_shop_account_loyalty' ? ' active' : '' }}"
+   href="{{ path('loyalty_shop_account_loyalty') }}">
+    <i class="bi bi-star-fill"></i>
+    {{ 'loyalty.ui.my_loyalty_points'|trans }}
+</a>

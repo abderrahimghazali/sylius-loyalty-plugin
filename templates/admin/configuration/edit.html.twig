@@ -1,0 +1,77 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% block title %}{{ 'loyalty.ui.loyalty_configuration'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+    <div class="page-header mb-3">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <h2 class="page-title">
+                    <i class="bi bi-gear"></i>
+                    {{ 'loyalty.ui.loyalty_configuration'|trans }}
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="row row-cards">
+        {# --- Points earning --- #}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'loyalty.ui.config_earning'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_row(form.pointsPerCurrencyUnit) }}
+                    {{ form_row(form.redemptionRate) }}
+                    {{ form_row(form.expiryMonths) }}
+                </div>
+            </div>
+        </div>
+
+        {# --- Bonus events --- #}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ 'loyalty.ui.config_bonuses'|trans }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 p-3 border rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            {{ form_row(form.registrationBonusEnabled) }}
+                        </div>
+                        {{ form_row(form.registrationBonusPoints) }}
+                    </div>
+
+                    <div class="mb-3 p-3 border rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            {{ form_row(form.birthdayBonusEnabled) }}
+                        </div>
+                        {{ form_row(form.birthdayBonusPoints) }}
+                    </div>
+
+                    <div class="p-3 border rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            {{ form_row(form.firstOrderBonusEnabled) }}
+                        </div>
+                        {{ form_row(form.firstOrderBonusPoints) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# --- Save button --- #}
+        <div class="col-12">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i>
+                    {{ 'sylius.ui.save'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

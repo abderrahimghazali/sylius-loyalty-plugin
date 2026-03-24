@@ -1,0 +1,7 @@
+{% if data.order is not null %}
+    <a href="{{ path('sylius_admin_order_show', {id: data.order.id}) }}">
+        #{{ data.order.number }}
+    </a>
+{% else %}
+    -
+{% endif %}

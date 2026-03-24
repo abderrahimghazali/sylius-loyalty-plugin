@@ -1,0 +1,47 @@
+sylius_grid:
+    grids:
+        loyalty_admin_loyalty_tier:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: '%loyalty.model.tier.class%'
+                    repository:
+                        method: createQueryBuilder
+                        arguments: ['lt']
+            sorting:
+                position: asc
+            fields:
+                name:
+                    type: string
+                    label: sylius.ui.name
+                    sortable: ~
+                code:
+                    type: string
+                    label: sylius.ui.code
+                minPoints:
+                    type: string
+                    label: loyalty.ui.min_points
+                    sortable: ~
+                multiplier:
+                    type: string
+                    label: loyalty.ui.multiplier
+                    sortable: ~
+                color:
+                    type: twig
+                    label: loyalty.ui.color
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_tier/field/color.html.twig'
+                enabled:
+                    type: twig
+                    label: sylius.ui.enabled
+                    options:
+                        template: '@SyliusAdmin/shared/grid/field/enabled.html.twig'
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
+                    delete:
+                        type: delete

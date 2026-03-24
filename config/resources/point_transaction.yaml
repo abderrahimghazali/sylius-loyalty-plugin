@@ -1,0 +1,8 @@
+sylius_resource:
+    resources:
+        loyalty.point_transaction:
+            driver: doctrine/orm
+            classes:
+                model: Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransaction
+                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransactionInterface
+                repository: Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepository

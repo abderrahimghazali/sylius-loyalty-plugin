@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.customer.show.content.sections':
+            loyalty:
+                template: '@SyliusLoyaltyPlugin/admin/customer/show/content/sections/loyalty.html.twig'
+                priority: 50

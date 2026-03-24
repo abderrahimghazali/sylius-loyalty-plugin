@@ -1,0 +1,79 @@
+{#
+    Checkout loyalty points redemption widget.
+    Hooked into: sylius_shop.checkout.complete.content.form
+    Context: order (the current cart/order)
+#}
+{% set customer = order.customer|default(null) %}
+{% if customer is not null %}
+    {% set loyalty = loyalty_account(customer) %}
+    {% if loyalty is not null and loyalty.balance > 0 %}
+        <div class="card mb-3"
+             data-controller="loyalty-redemption"
+             data-loyalty-redemption-token-value="{{ order.tokenValue }}"
+             data-loyalty-redemption-balance-value="{{ loyalty.balance }}"
+             data-loyalty-redemption-rate-value="{{ redemption_rate|default(100) }}"
+             data-loyalty-redemption-currency-value="{{ sylius.channel.baseCurrency.code|sylius_currency_symbol }}"
+        >
+            <div class="card-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <span>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        {{ 'loyalty.ui.redeem_points'|trans }}
+                    </span>
+                    {% if loyalty.tier is not null %}
+                        <span class="badge"
+                              {% if loyalty.tier_color %}style="background-color: {{ loyalty.tier_color }}; color: white;"{% endif %}>
+                            {{ loyalty.tier }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-2">
+                    {{ 'loyalty.ui.you_have_points'|trans({'%points%': loyalty.balance}) }}
+                    ({{ 'loyalty.ui.worth'|trans({'%value%': loyalty_points_value(loyalty.balance)}) }})
+                </p>
+
+                <div class="row g-2 align-items-end">
+                    <div class="col">
+                        <label for="loyalty-points-input" class="form-label">
+                            {{ 'loyalty.ui.points_to_redeem'|trans }}
+                        </label>
+                        <input type="number"
+                               id="loyalty-points-input"
+                               class="form-control"
+                               min="0"
+                               max="{{ loyalty.balance }}"
+                               placeholder="0"
+                               value="{{ order.pointsToRedeem|default(0) > 0 ? order.pointsToRedeem : '' }}"
+                               data-loyalty-redemption-target="input"
+                               data-action="input->loyalty-redemption#onPointsInput"
+                        />
+                    </div>
+                    <div class="col-auto">
+                        <button type="button"
+                                class="btn btn-outline-primary"
+                                data-action="loyalty-redemption#useAll"
+                                data-loyalty-redemption-target="redeemAll">
+                            {{ 'loyalty.ui.use_all'|trans }}
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-action="loyalty-redemption#clear">
+                            {{ 'loyalty.ui.clear'|trans }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-danger small mt-1 d-none"
+                     data-loyalty-redemption-target="error"></div>
+
+                <div class="d-flex justify-content-between mt-3 pt-2 border-top" data-loyalty-redemption-target="discount">
+                    {# Updated dynamically by Stimulus #}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

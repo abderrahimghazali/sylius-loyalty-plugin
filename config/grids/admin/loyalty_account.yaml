@@ -1,0 +1,52 @@
+sylius_grid:
+    grids:
+        loyalty_admin_loyalty_account:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: '%loyalty.model.account.class%'
+                    repository:
+                        method: createQueryBuilder
+                        arguments: ['la']
+            sorting:
+                pointsBalance: desc
+            fields:
+                customer:
+                    type: twig
+                    label: sylius.ui.customer
+                    sortable: customer.email
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_account/field/customer.html.twig'
+                pointsBalance:
+                    type: string
+                    label: loyalty.ui.points_balance
+                    sortable: ~
+                lifetimePoints:
+                    type: string
+                    label: loyalty.ui.lifetime_points
+                    sortable: ~
+                tier:
+                    type: twig
+                    label: loyalty.ui.tier
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_account/field/tier.html.twig'
+                enabled:
+                    type: twig
+                    label: sylius.ui.enabled
+                    options:
+                        template: '@SyliusAdmin/shared/grid/field/enabled.html.twig'
+            filters:
+                search:
+                    type: string
+                    label: sylius.ui.search
+                    options:
+                        fields: [customer.email, customer.firstName, customer.lastName]
+            actions:
+                item:
+                    show:
+                        type: show
+                        options:
+                            link:
+                                route: loyalty_admin_loyalty_account_show
+                                parameters:
+                                    id: resource.id

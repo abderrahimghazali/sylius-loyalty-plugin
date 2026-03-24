@@ -1,0 +1,3 @@
+loyalty_api_controllers:
+    resource: '@SyliusLoyaltyPlugin/src/Controller/Api/'
+    type: attribute

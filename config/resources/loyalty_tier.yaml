@@ -1,0 +1,8 @@
+sylius_resource:
+    resources:
+        loyalty.tier:
+            driver: doctrine/orm
+            classes:
+                model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyTier
+                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyTierInterface
+                form: Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyTierType

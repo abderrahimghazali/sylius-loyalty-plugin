@@ -1,0 +1,7 @@
+{% if data.tier is not null %}
+    <span class="ui label" {% if data.tier.color %}style="background-color: {{ data.tier.color }}; color: white;"{% endif %}>
+        {{ data.tier.name }}
+    </span>
+{% else %}
+    <span class="ui label">{{ 'loyalty.ui.no_tier'|trans }}</span>
+{% endif %}

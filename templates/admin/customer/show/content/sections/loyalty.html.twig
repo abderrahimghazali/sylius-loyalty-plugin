@@ -1,0 +1,52 @@
+{#
+    Loyalty section hooked into admin customer show page.
+    Hook: sylius_admin.customer.show.content.sections
+    Context: resource = Customer entity
+#}
+{% set customer = hookable_metadata.context.resource %}
+{% set loyalty = loyalty_account(customer) %}
+
+{% if loyalty is not null %}
+<div class="card mb-3">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h3 class="card-title mb-0">
+            <i class="bi bi-star-fill text-warning"></i>
+            {{ 'loyalty.ui.loyalty_points'|trans }}
+        </h3>
+        {% if loyalty.tier is not null %}
+            <span class="badge"
+                  {% if loyalty.tier_color %}style="background-color: {{ loyalty.tier_color }}; color: white;"{% endif %}>
+                {{ loyalty.tier }}
+            </span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col">
+                <div class="h2 mb-0">{{ loyalty.balance|number_format }}</div>
+                <div class="text-muted small">{{ 'loyalty.ui.points_balance'|trans }}</div>
+            </div>
+            <div class="col">
+                <div class="h2 mb-0">{{ loyalty.lifetime|number_format }}</div>
+                <div class="text-muted small">{{ 'loyalty.ui.lifetime_points'|trans }}</div>
+            </div>
+            <div class="col">
+                <div class="h2 mb-0">
+                    {% if loyalty.enabled %}
+                        <span class="badge bg-success">{{ 'sylius.ui.enabled'|trans }}</span>
+                    {% else %}
+                        <span class="badge bg-danger">{{ 'sylius.ui.disabled'|trans }}</span>
+                    {% endif %}
+                </div>
+                <div class="text-muted small">{{ 'sylius.ui.status'|trans }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-end">
+        {# Link to the full loyalty account page — find account id via Twig extension #}
+        <a href="{{ path('loyalty_admin_loyalty_account_index') }}" class="btn btn-sm btn-outline-primary">
+            {{ 'loyalty.ui.view_full_details'|trans }}
+        </a>
+    </div>
+</div>
+{% endif %}

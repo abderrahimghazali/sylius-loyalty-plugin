@@ -1,0 +1,168 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # --- Services ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator:
+        arguments:
+            $pointsPerCurrencyUnit: '%sylius_loyalty.points_per_currency_unit%'
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface:
+        alias: Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluator:
+        arguments:
+            $tierRepository: '@loyalty.tier.repository'
+            $tiersEnabled: '%sylius_loyalty.tiers_enabled%'
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluatorInterface:
+        alias: Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluator
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManager:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $transactionRepository: '@loyalty.point_transaction.repository'
+            $accountFactory: '@loyalty.account.factory'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $pointsCalculator: '@Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface'
+            $tierEvaluator: '@Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluatorInterface'
+            $expiryDays: '%sylius_loyalty.expiry_days%'
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface:
+        alias: Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManager
+
+    # --- Event Listeners ---
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\OrderCompleteListener:
+        arguments:
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+        tags:
+            - { name: kernel.event_listener, event: sylius.order.post_complete, method: __invoke }
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\OrderCancelListener:
+        arguments:
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+        tags:
+            - { name: kernel.event_listener, event: sylius.order.post_cancel, method: __invoke }
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\CustomerRegistrationListener:
+        arguments:
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $registrationBonus: '%sylius_loyalty.bonus.registration%'
+        tags:
+            - { name: kernel.event_listener, event: sylius.customer.post_register, method: __invoke }
+
+    # --- Commands ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Command\ExpirePointsCommand:
+        arguments:
+            $transactionRepository: '@loyalty.point_transaction.repository'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+        tags:
+            - { name: console.command }
+
+    Abderrahim\SyliusLoyaltyPlugin\Command\BirthdayBonusCommand:
+        arguments:
+            $customerRepository: '@sylius.repository.customer'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $birthdayBonus: '%sylius_loyalty.bonus.birthday%'
+        tags:
+            - { name: console.command }
+
+    # --- Order Processing ---
+
+    Abderrahim\SyliusLoyaltyPlugin\OrderProcessing\LoyaltyOrderProcessor:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $adjustmentFactory: '@sylius.factory.adjustment'
+            $redemptionRate: '%sylius_loyalty.redemption_rate%'
+        tags:
+            - { name: sylius.order_processor, priority: 5 }
+
+    # --- API Controllers ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Api\LoyaltyRedemptionController:
+        arguments:
+            $orderRepository: '@sylius.repository.order'
+            $loyaltyAccountRepository: '@loyalty.account.repository'
+            $orderProcessor: '@sylius.order_processing.order_processor'
+            $redemptionRate: '%sylius_loyalty.redemption_rate%'
+        tags:
+            - { name: controller.service_arguments }
+
+    # --- Workflow Listeners ---
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\DeductPointsOnOrderCompleteListener:
+        arguments:
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnOrderCancelListener:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $transactionRepository: '@loyalty.point_transaction.repository'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnPaymentRefundListener:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $transactionRepository: '@loyalty.point_transaction.repository'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+
+    # --- Admin Controllers ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: controller.service_arguments }
+
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+        tags:
+            - { name: controller.service_arguments }
+
+    # --- Shop Controllers ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Shop\LoyaltyAccountController:
+        arguments:
+            $customerContext: '@sylius.context.customer'
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $transactionRepository: '@loyalty.point_transaction.repository'
+            $redemptionRate: '%sylius_loyalty.redemption_rate%'
+        tags:
+            - { name: controller.service_arguments }
+
+    # --- Menu Listener ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Menu\AdminMenuListener:
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addLoyaltyMenu }
+
+    # --- Form Types ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType:
+        tags:
+            - { name: form.type }
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\PointAdjustmentType:
+        tags:
+            - { name: form.type }
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyTierType:
+        tags:
+            - { name: form.type }
+
+    # --- Twig Extension ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
+        arguments:
+            $accountRepository: '@loyalty.account.repository'
+            $redemptionRate: '%sylius_loyalty.redemption_rate%'
+        tags:
+            - { name: twig.extension }

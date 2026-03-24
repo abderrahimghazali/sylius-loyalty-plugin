@@ -1,0 +1,87 @@
+loyalty:
+    ui:
+        # General
+        loyalty_points: Loyalty Points
+        loyalty_account: Loyalty Account
+        loyalty_accounts: Loyalty Accounts
+        loyalty_tiers: Loyalty Tiers
+        loyalty_configuration: Loyalty Configuration
+        manage_loyalty_accounts: Manage customer loyalty accounts
+        manage_loyalty_tiers: Manage loyalty tier levels
+        point_transaction_history: Point transaction history
+
+        # Points
+        points: Points
+        points_balance: Points Balance
+        lifetime_points: Lifetime Points
+        available_points: Available Points
+        redeemable_value: Redeemable Value
+        min_points: Min. Points
+        multiplier: Multiplier
+        balance: Balance
+        current_balance: Current balance
+
+        # Tier
+        tier: Tier
+        no_tier: No Tier
+
+        # Transactions
+        type: Type
+        type_earn: Earned
+        type_redeem: Redeemed
+        type_expire: Expired
+        type_adjust: Adjusted
+        type_bonus: Bonus
+        expires: Expires
+        expires_at: Expires At
+        transaction_history: Transaction History
+        no_transactions: No transactions yet.
+
+        # Shop account
+        my_loyalty_points: My Loyalty Points
+        you_have_points: 'You have <strong>%points%</strong> loyalty points available.'
+        worth: 'worth %value%'
+        points_expiring_soon: Points expiring soon!
+        expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
+
+        # Checkout redemption
+        redeem_points: Redeem Loyalty Points
+        points_to_redeem: Points to redeem
+        use_all: Use all points
+        clear: Clear
+
+        # Admin
+        adjust_points: Adjust Points
+        manual_adjustment: Manual Adjustment
+        adjustment_hint: 'Enter a positive number to add points, negative to deduct.'
+        apply_adjustment: Apply Adjustment
+        view_full_details: View full details
+
+        # Configuration page
+        config_earning: Points Earning & Expiry
+        config_bonuses: Bonus Events
+        config_tiers: Tier Thresholds
+
+    form:
+        points_per_currency_unit: Points per currency unit
+        points_per_currency_unit_help: 'How many loyalty points a customer earns for each currency unit spent (e.g. 1 point per €1).'
+        redemption_rate: Redemption rate
+        redemption_rate_help: 'How many points equal 1 currency unit when redeeming (e.g. 100 points = €1).'
+        expiry_months: Points expiry (months)
+        expiry_months_help: 'Number of months before earned points expire. Set to 0 for no expiry.'
+        registration_bonus_enabled: Enable registration bonus
+        registration_bonus_points: Registration bonus points
+        birthday_bonus_enabled: Enable birthday bonus
+        birthday_bonus_points: Birthday bonus points
+        first_order_bonus_enabled: Enable first order bonus
+        first_order_bonus_points: First order bonus points
+        min_points: Minimum lifetime points
+        multiplier: Points multiplier
+        color: Badge color
+        adjustment_points: Points
+        adjustment_points_help: 'Positive to add, negative to deduct.'
+        adjustment_reason: Reason
+
+    flash:
+        configuration_updated: Loyalty configuration has been updated successfully.
+        points_adjusted: Points have been adjusted successfully.

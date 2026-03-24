@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources xmlns="https://api-platform.com/schema/metadata/resources-3.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://api-platform.com/schema/metadata/resources-3.0
+           https://api-platform.com/schema/metadata/resources-3.0.xsd">
+
+    <resource class="%loyalty.model.account.class%">
+        <operations>
+            <operation name="loyalty_api_shop_loyalty_account_get"
+                       class="ApiPlatform\Metadata\Get"
+                       uriTemplate="/shop/loyalty/account">
+                <normalizationContext>
+                    <values>
+                        <value name="groups">
+                            <values>
+                                <value>loyalty:shop:account:show</value>
+                            </values>
+                        </value>
+                    </values>
+                </normalizationContext>
+            </operation>
+        </operations>
+    </resource>
+
+</resources>

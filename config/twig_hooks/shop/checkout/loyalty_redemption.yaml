@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.checkout.complete.content.form':
+            loyalty_redemption:
+                template: '@SyliusLoyaltyPlugin/shop/checkout/complete/content/form/loyalty_redemption.html.twig'
+                priority: 150

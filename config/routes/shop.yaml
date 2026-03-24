@@ -1,0 +1,8 @@
+loyalty_shop_account_loyalty:
+    path: /account/loyalty
+    methods: [GET]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Shop\LoyaltyAccountController::indexAction
+        _sylius:
+            section: shop
+            template: '@SyliusLoyaltyPlugin/shop/account/loyalty.html.twig'

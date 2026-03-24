@@ -1,0 +1,143 @@
+{% extends '@SyliusShop/account/layout.html.twig' %}
+
+{% block title %}{{ 'loyalty.ui.my_loyalty_points'|trans }} | {{ parent() }}{% endblock %}
+
+{% block content %}
+{# --- Header with tier badge --- #}
+<div class="ui segment">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="ui header mb-0">
+            <i class="star icon"></i>
+            {{ 'loyalty.ui.my_loyalty_points'|trans }}
+        </h2>
+        {% if account.tier %}
+            <span class="ui large label"
+                  {% if account.tier.color %}style="background-color: {{ account.tier.color }}; color: white;"{% endif %}>
+                <i class="trophy icon"></i>
+                {{ account.tier.name }}
+                <span class="detail">{{ account.tier.multiplier }}x {{ 'loyalty.ui.multiplier'|trans }}</span>
+            </span>
+        {% endif %}
+    </div>
+
+    {# --- Stats row --- #}
+    <div class="ui three statistics">
+        <div class="green statistic">
+            <div class="value">{{ account.pointsBalance|number_format }}</div>
+            <div class="label">{{ 'loyalty.ui.available_points'|trans }}</div>
+        </div>
+        <div class="statistic">
+            <div class="value">{{ loyalty_points_value(account.pointsBalance) }}</div>
+            <div class="label">{{ 'loyalty.ui.redeemable_value'|trans }}</div>
+        </div>
+        <div class="statistic">
+            <div class="value">{{ account.lifetimePoints|number_format }}</div>
+            <div class="label">{{ 'loyalty.ui.lifetime_points'|trans }}</div>
+        </div>
+    </div>
+</div>
+
+{# --- Expiry warning --- #}
+{% set expiring_soon = [] %}
+{% set thirty_days_from_now = 'now'|date_modify('+30 days') %}
+{% for transaction in transactions %}
+    {% if transaction.expiresAt is not null
+       and not transaction.expired
+       and not transaction.type.isDebit
+       and transaction.expiresAt <= thirty_days_from_now
+       and transaction.expiresAt >= 'now'|date('U')|date('U') %}
+        {% set expiring_soon = expiring_soon|merge([transaction]) %}
+    {% endif %}
+{% endfor %}
+
+{% if expiring_soon|length > 0 %}
+    {% set expiring_points_total = 0 %}
+    {% for t in expiring_soon %}
+        {% set expiring_points_total = expiring_points_total + t.points %}
+    {% endfor %}
+    <div class="ui warning message">
+        <div class="header">
+            <i class="clock outline icon"></i>
+            {{ 'loyalty.ui.points_expiring_soon'|trans }}
+        </div>
+        <p>
+            {{ 'loyalty.ui.expiry_warning'|trans({
+                '%points%': expiring_points_total,
+                '%date%': expiring_soon|first.expiresAt|date('M d, Y')
+            }) }}
+        </p>
+    </div>
+{% endif %}
+
+{# --- Transaction history with running balance --- #}
+<div class="ui segment">
+    <h3 class="ui dividing header">
+        {{ 'loyalty.ui.transaction_history'|trans }}
+    </h3>
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>{{ 'sylius.ui.date'|trans }}</th>
+                <th>{{ 'loyalty.ui.type'|trans }}</th>
+                <th>{{ 'sylius.ui.description'|trans }}</th>
+                <th class="right aligned">{{ 'loyalty.ui.points'|trans }}</th>
+                <th class="right aligned">{{ 'loyalty.ui.balance'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# Calculate running balance from current balance backwards #}
+            {% set running_balance = account.pointsBalance %}
+            {% set rows = [] %}
+            {% for transaction in transactions %}
+                {% set row = {
+                    'transaction': transaction,
+                    'balance_after': running_balance
+                } %}
+                {% set rows = rows|merge([row]) %}
+                {# Walk backwards: undo the transaction to get previous balance #}
+                {% if transaction.type.isDebit %}
+                    {% set running_balance = running_balance + transaction.points %}
+                {% else %}
+                    {% set running_balance = running_balance - transaction.points %}
+                {% endif %}
+            {% endfor %}
+
+            {% for row in rows %}
+                {% set transaction = row.transaction %}
+                {% set colors = {earn: 'green', bonus: 'blue', redeem: 'orange', expire: 'red', adjust: 'grey'} %}
+                <tr>
+                    <td>{{ transaction.createdAt|date('M d, Y') }}</td>
+                    <td>
+                        <span class="ui tiny label {{ colors[transaction.type.value] ?? 'grey' }}">
+                            {{ ('loyalty.ui.type_' ~ transaction.type.value)|trans }}
+                        </span>
+                    </td>
+                    <td>
+                        {{ transaction.description ?? '-' }}
+                        {% if transaction.expiresAt is not null and not transaction.expired and not transaction.type.isDebit %}
+                            <br>
+                            <small class="text-muted">
+                                {{ 'loyalty.ui.expires'|trans }}: {{ transaction.expiresAt|date('M d, Y') }}
+                            </small>
+                        {% endif %}
+                    </td>
+                    <td class="right aligned">
+                        <strong class="{{ transaction.type.isDebit ? 'text-red' : 'text-green' }}">
+                            {{ transaction.type.isDebit ? '-' : '+' }}{{ transaction.points|number_format }}
+                        </strong>
+                    </td>
+                    <td class="right aligned">
+                        {{ row.balance_after|number_format }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="center aligned">
+                        {{ 'loyalty.ui.no_transactions'|trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

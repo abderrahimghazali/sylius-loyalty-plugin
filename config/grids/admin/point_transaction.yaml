@@ -1,0 +1,46 @@
+sylius_grid:
+    grids:
+        loyalty_admin_point_transaction:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: '%loyalty.model.point_transaction.class%'
+                    repository:
+                        method: createQueryBuilder
+                        arguments: ['pt']
+            sorting:
+                createdAt: desc
+            fields:
+                type:
+                    type: twig
+                    label: loyalty.ui.type
+                    sortable: ~
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/point_transaction/field/type.html.twig'
+                points:
+                    type: string
+                    label: loyalty.ui.points
+                    sortable: ~
+                description:
+                    type: string
+                    label: sylius.ui.description
+                order:
+                    type: twig
+                    label: sylius.ui.order
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/point_transaction/field/order.html.twig'
+                expiresAt:
+                    type: datetime
+                    label: loyalty.ui.expires_at
+                    sortable: ~
+                createdAt:
+                    type: datetime
+                    label: sylius.ui.created_at
+                    sortable: ~
+            filters:
+                type:
+                    type: string
+                    label: loyalty.ui.type
+                createdAt:
+                    type: date
+                    label: sylius.ui.created_at

@@ -1,0 +1,62 @@
+loyalty_admin_loyalty_account:
+    resource: |
+        alias: loyalty.account
+        section: admin
+        grid: loyalty_admin_loyalty_account
+        templates: '@SyliusAdmin/shared/crud'
+        only: ['index']
+        vars:
+            all:
+                subheader: loyalty.ui.manage_loyalty_accounts
+            index:
+                icon: star
+    type: sylius.resource
+
+loyalty_admin_loyalty_account_show:
+    path: /loyalty/accounts/{id}
+    methods: [GET]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyAccountController::showAction
+        _sylius:
+            section: admin
+            template: '@SyliusLoyaltyPlugin/admin/loyalty_account/show.html.twig'
+
+loyalty_admin_loyalty_tier:
+    resource: |
+        alias: loyalty.tier
+        section: admin
+        grid: loyalty_admin_loyalty_tier
+        templates: '@SyliusAdmin/shared/crud'
+        except: ['show']
+        vars:
+            all:
+                subheader: loyalty.ui.manage_loyalty_tiers
+            index:
+                icon: trophy
+    type: sylius.resource
+
+loyalty_admin_point_transaction:
+    resource: |
+        alias: loyalty.point_transaction
+        section: admin
+        grid: loyalty_admin_point_transaction
+        templates: '@SyliusAdmin/shared/crud'
+        only: ['index']
+        vars:
+            all:
+                subheader: loyalty.ui.point_transaction_history
+            index:
+                icon: exchange
+    type: sylius.resource
+
+loyalty_admin_point_adjustment:
+    path: /loyalty/accounts/{accountId}/adjust
+    methods: [GET, POST]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController::adjustAction
+
+loyalty_admin_configuration:
+    path: /loyalty/configuration
+    methods: [GET, POST]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController::editAction

@@ -1,0 +1,4 @@
+{% set colors = {earn: 'green', bonus: 'blue', redeem: 'orange', expire: 'red', adjust: 'grey'} %}
+<span class="ui tiny label {{ colors[data.type.value] ?? 'grey' }}">
+    {{ data.type.value|upper }}
+</span>

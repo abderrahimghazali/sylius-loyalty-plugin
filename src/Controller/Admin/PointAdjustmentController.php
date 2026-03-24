@@ -1,0 +1,66 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Admin;
+
+use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
+use Abderrahim\SyliusLoyaltyPlugin\Form\Type\PointAdjustmentType;
+use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+final class PointAdjustmentController extends AbstractController
+{
+    public function __construct(
+        private readonly LoyaltyAccountRepositoryInterface $accountRepository,
+        private readonly LoyaltyBalanceManagerInterface $balanceManager,
+    ) {
+    }
+
+    public function adjustAction(Request $request, int $accountId): Response
+    {
+        $account = $this->accountRepository->find($accountId);
+        if ($account === null) {
+            throw new NotFoundHttpException('Loyalty account not found.');
+        }
+
+        $form = $this->createForm(PointAdjustmentType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $points = (int) $data['points'];
+            $reason = (string) $data['reason'];
+
+            // Positive = add points, negative = remove points
+            if ($points > 0) {
+                $this->balanceManager->addTransaction(
+                    $account,
+                    TransactionType::Adjust,
+                    $points,
+                    sprintf('Manual adjustment: %s', $reason),
+                );
+            } else {
+                $this->balanceManager->addTransaction(
+                    $account,
+                    TransactionType::Adjust,
+                    abs($points),
+                    sprintf('Manual deduction: %s', $reason),
+                );
+            }
+
+            $this->addFlash('success', 'loyalty.flash.points_adjusted');
+
+            return $this->redirectToRoute('loyalty_admin_loyalty_account_show', ['id' => $accountId]);
+        }
+
+        return $this->render('@SyliusLoyaltyPlugin/admin/loyalty_account/adjust.html.twig', [
+            'account' => $account,
+            'form' => $form->createView(),
+        ]);
+    }
+}
