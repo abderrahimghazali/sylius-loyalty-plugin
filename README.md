@@ -1,11 +1,11 @@
 <p align="center">
     <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" alt="Sylius" width="120"/>
+        <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="https://media.sylius.com/sylius-logo-800-dark.png">
+            <source media="(prefers-color-scheme: light)" srcset="https://media.sylius.com/sylius-logo-800.png">
+            <img alt="Sylius Logo" src="https://media.sylius.com/sylius-logo-800.png" width="300"/>
+        </picture>
     </a>
-    &nbsp;&nbsp;&nbsp;
-    <strong style="font-size: 2em;">+</strong>
-    &nbsp;&nbsp;&nbsp;
-    <span style="font-size: 2em;">&#11088;</span>
 </p>
 
 <h1 align="center">Sylius Loyalty Plugin</h1>
