@@ -18,20 +18,28 @@
                     { name: 'loyalty.ui.loyalty_accounts', url: path('loyalty_admin_account_index'), active: false },
                     { name: account.customer.fullName, active: true },
                 ]) }}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <h2 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h2>
-                        <div class="text-muted">
-                            <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
-                                {{ account.customer.fullName }} ({{ account.customer.email }})
-                            </a>
+                <div class="row mt-3 row-gap-2">
+                    <div class="col-12 col-md">
+                        <div class="d-md-flex gap-2 align-items-center">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="d-flex flex-column gap-2">
+                                    <h1 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h1>
+                                    <div class="text-muted">
+                                        <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
+                                            {{ account.customer.fullName }} ({{ account.customer.email }})
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-auto ms-auto">
-                        <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
-                           class="btn btn-primary">
-                            {{ 'loyalty.ui.adjust_points'|trans }}
-                        </a>
+                    <div class="col-12 col-md-auto ms-auto d-print-none">
+                        <div class="btn-list">
+                            <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
+                               class="btn btn-primary">
+                                {{ 'loyalty.ui.adjust_points'|trans }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

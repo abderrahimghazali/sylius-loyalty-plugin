@@ -19,12 +19,18 @@
                     { name: account.customer.fullName, url: path('loyalty_admin_loyalty_account_show', {id: account.id}), active: false },
                     { name: 'loyalty.ui.adjust_points', active: true },
                 ]) }}
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <h2 class="page-title">{{ 'loyalty.ui.adjust_points'|trans }}</h2>
-                        <div class="text-muted">
-                            {{ account.customer.fullName }} ({{ account.customer.email }})
-                            — {{ 'loyalty.ui.current_balance'|trans }}: <strong>{{ account.pointsBalance|number_format }}</strong>
+                <div class="row mt-3 row-gap-2">
+                    <div class="col-12 col-md">
+                        <div class="d-md-flex gap-2 align-items-center">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="d-flex flex-column gap-2">
+                                    <h1 class="page-title">{{ 'loyalty.ui.adjust_points'|trans }}</h1>
+                                    <div class="text-muted">
+                                        {{ account.customer.fullName }} ({{ account.customer.email }})
+                                        — {{ 'loyalty.ui.current_balance'|trans }}: <strong>{{ account.pointsBalance|number_format }}</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
