@@ -117,8 +117,8 @@
                                         <tr>
                                             <td>{{ transaction.createdAt|date('Y-m-d H:i') }}</td>
                                             <td>
-                                                {% set badge_colors = {earn: 'bg-success', bonus: 'bg-info', redeem: 'bg-warning', expire: 'bg-danger', adjust: 'bg-secondary'} %}
-                                                <span class="badge {{ badge_colors[transaction.type.value] ?? 'bg-secondary' }}">
+                                                {% set badge_colors = {earn: 'bg-green text-white', bonus: 'bg-cyan text-white', redeem: 'bg-yellow text-dark', expire: 'bg-red text-white', adjust: 'bg-purple text-white'} %}
+                                                <span class="badge {{ badge_colors[transaction.type.value] ?? 'bg-secondary text-white' }}">
                                                     {{ transaction.type.value|upper }}
                                                 </span>
                                             </td>
