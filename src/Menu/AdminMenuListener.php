@@ -17,7 +17,7 @@ final class AdminMenuListener
         if ($customersMenu !== null) {
             $customersMenu
                 ->addChild('loyalty_accounts', [
-                    'route' => 'loyalty_admin_loyalty_account_index',
+                    'route' => 'loyalty_admin_account_index',
                 ])
                 ->setLabel('loyalty.ui.loyalty_accounts')
                 ->setLabelAttribute('icon', 'star')
@@ -29,7 +29,7 @@ final class AdminMenuListener
         if ($configMenu !== null) {
             $configMenu
                 ->addChild('loyalty_tiers', [
-                    'route' => 'loyalty_admin_loyalty_tier_index',
+                    'route' => 'loyalty_admin_tier_index',
                 ])
                 ->setLabel('loyalty.ui.loyalty_tiers')
                 ->setLabelAttribute('icon', 'trophy')
