@@ -1,7 +1,7 @@
-{% if data.tier is not null %}
-    <span class="ui label" {% if data.tier.color %}style="background-color: {{ data.tier.color }}; color: white;"{% endif %}>
-        {{ data.tier.name }}
+{% if resource.tier is not null %}
+    <span class="badge" {% if resource.tier.color %}style="background-color: {{ resource.tier.color }}; color: white;"{% endif %}>
+        {{ resource.tier.name }}
     </span>
 {% else %}
-    <span class="ui label">{{ 'loyalty.ui.no_tier'|trans }}</span>
+    <span class="badge bg-secondary">{{ 'loyalty.ui.no_tier'|trans }}</span>
 {% endif %}

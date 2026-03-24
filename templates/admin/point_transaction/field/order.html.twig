@@ -1,6 +1,6 @@
-{% if data.order is not null %}
-    <a href="{{ path('sylius_admin_order_show', {id: data.order.id}) }}">
-        #{{ data.order.number }}
+{% if resource.order is not null %}
+    <a href="{{ path('sylius_admin_order_show', {id: resource.order.id}) }}">
+        #{{ resource.order.number }}
     </a>
 {% else %}
     -

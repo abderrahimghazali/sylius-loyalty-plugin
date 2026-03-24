@@ -1,6 +1,6 @@
-{% if data.customer is not null %}
-    <a href="{{ path('sylius_admin_customer_show', {id: data.customer.id}) }}">
-        {{ data.customer.fullName }} ({{ data.customer.email }})
+{% if resource.customer is not null %}
+    <a href="{{ path('sylius_admin_customer_show', {id: resource.customer.id}) }}">
+        {{ resource.customer.fullName }} ({{ resource.customer.email }})
     </a>
 {% else %}
     -
