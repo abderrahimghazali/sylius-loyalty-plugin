@@ -114,6 +114,13 @@ services:
 
     # --- Admin Controllers ---
 
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyAccountController:
+        arguments:
+            $accountRepository: '@loyalty.repository.account'
+            $transactionRepository: '@loyalty.repository.point_transaction'
+        tags:
+            - { name: controller.service_arguments }
+
     Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
