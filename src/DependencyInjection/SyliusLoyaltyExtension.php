@@ -44,6 +44,9 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
         $loader->load('grids/admin/point_transaction.yaml');
         $loader->load('grids/admin/loyalty_tier.yaml');
 
+        // Load twig hooks configuration
+        $loader->load('config.yaml');
+
         // Register Doctrine mapping for LoyaltyConfiguration (uses ORM attributes, not XML)
         $container->prependExtensionConfig('doctrine', [
             'orm' => [
