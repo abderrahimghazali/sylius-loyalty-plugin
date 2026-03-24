@@ -34,7 +34,7 @@ sylius_grid:
                     type: twig
                     label: sylius.ui.enabled
                     options:
-                        template: '@SyliusAdmin/shared/grid/field/enabled.html.twig'
+                        template: '@SyliusUi/grid/field/enabled.html.twig'
             filters:
                 search:
                     type: string
