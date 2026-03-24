@@ -11,7 +11,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="type" column="type" type="string" length="20" nullable="false"/>
+        <field name="type" column="type" type="string" length="20" nullable="false" enumType="Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType"/>
 
         <field name="points" column="points" type="integer" nullable="false"/>
 
