@@ -1,4 +1,9 @@
-imports:
-    - { resource: 'routes/admin.yaml', prefix: '/%sylius_admin.path_prefix%' }
-    - { resource: 'routes/shop.yaml' }
-    - { resource: 'routes/api.yaml' }
+loyalty_admin:
+    resource: 'routes/admin.yaml'
+    prefix: '/%sylius_admin.path_prefix%'
+
+loyalty_shop:
+    resource: 'routes/shop.yaml'
+
+loyalty_api:
+    resource: 'routes/api.yaml'
