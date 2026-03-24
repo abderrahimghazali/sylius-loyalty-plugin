@@ -8,33 +8,37 @@
     <div class="page-wrapper">
         {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
 
-        <div class="page-body">
+        {% include '@SyliusAdmin/shared/crud/common/content/flashes.html.twig' %}
+
+        {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
+        <div class="page-header" data-sticky-header>
             <div class="container-xl">
-                {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
-                <div class="page-header mb-3">
-                    {{ breadcrumbs([
-                        { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
-                        { name: 'loyalty.ui.loyalty_accounts', url: path('loyalty_admin_account_index'), active: false },
-                        { name: account.customer.fullName, active: true },
-                    ]) }}
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <h2 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h2>
-                            <div class="text-muted">
-                                <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
-                                    {{ account.customer.fullName }} ({{ account.customer.email }})
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-auto ms-auto">
-                            <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
-                               class="btn btn-primary">
-                                {{ 'loyalty.ui.adjust_points'|trans }}
+                {{ breadcrumbs([
+                    { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                    { name: 'loyalty.ui.loyalty_accounts', url: path('loyalty_admin_account_index'), active: false },
+                    { name: account.customer.fullName, active: true },
+                ]) }}
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h2 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h2>
+                        <div class="text-muted">
+                            <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
+                                {{ account.customer.fullName }} ({{ account.customer.email }})
                             </a>
                         </div>
                     </div>
+                    <div class="col-auto ms-auto">
+                        <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
+                           class="btn btn-primary">
+                            {{ 'loyalty.ui.adjust_points'|trans }}
+                        </a>
+                    </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="page-body">
+            <div class="container-xl">
                 <div class="row row-cards">
                     <div class="col-sm-6 col-lg-3">
                         <div class="card">
@@ -151,5 +155,7 @@
                 </div>
             </div>
         </div>
+
+        {% include '@SyliusAdmin/shared/crud/common/content/footer.html.twig' %}
     </div>
 {% endblock %}

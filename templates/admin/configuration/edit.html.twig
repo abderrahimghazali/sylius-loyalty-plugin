@@ -8,32 +8,27 @@
     <div class="page-wrapper">
         {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
 
-        <div class="page-body">
-            <div class="container-xl">
-                {% for flash_message in app.flashes('success') %}
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <div class="d-flex">
-                            <div>{{ flash_message|trans }}</div>
-                        </div>
-                        <a class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
-                    </div>
-                {% endfor %}
+        {% include '@SyliusAdmin/shared/crud/common/content/flashes.html.twig' %}
 
-                {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
-                <div class="page-header mb-3">
-                    {{ breadcrumbs([
-                        { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
-                        { name: 'loyalty.ui.loyalty_configuration', active: true },
-                    ]) }}
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                            <h2 class="page-title">
-                                {{ 'loyalty.ui.loyalty_configuration'|trans }}
-                            </h2>
-                        </div>
+        {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
+        <div class="page-header" data-sticky-header>
+            <div class="container-xl">
+                {{ breadcrumbs([
+                    { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                    { name: 'loyalty.ui.loyalty_configuration', active: true },
+                ]) }}
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <h2 class="page-title">
+                            {{ 'loyalty.ui.loyalty_configuration'|trans }}
+                        </h2>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="page-body">
+            <div class="container-xl">
                 {% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                 <div class="row row-cards">
@@ -83,5 +78,7 @@
                 {{ form_end(form) }}
             </div>
         </div>
+
+        {% include '@SyliusAdmin/shared/crud/common/content/footer.html.twig' %}
     </div>
 {% endblock %}
