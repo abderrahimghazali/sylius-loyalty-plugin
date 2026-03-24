@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "sylius/sylius": "~2.1.0",
+        "sylius/sylius": "^2.1",
         "symfony/framework-bundle": "^7.0"
     },
     "require-dev": {
