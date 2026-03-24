@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'loyalty.shop.account.loyalty.index.content.main':
+            loyalty_content:
+                template: '@SyliusLoyaltyPlugin/shop/account/loyalty/content/main/loyalty_content.html.twig'
+                priority: 0

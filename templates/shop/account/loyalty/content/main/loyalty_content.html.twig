@@ -1,0 +1,133 @@
+{% set account = hookable_metadata.context.account %}
+{% set transactions = hookable_metadata.context.transactions %}
+{% set redemptionRate = hookable_metadata.context.redemptionRate|default(100) %}
+
+{# --- Header with tier badge --- #}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0">{{ 'loyalty.ui.my_loyalty_points'|trans }}</h2>
+    {% if account.tier %}
+        <span class="badge fs-6"
+              {% if account.tier.color %}style="background-color: {{ account.tier.color }}; color: white;"{% endif %}>
+            {{ account.tier.name }}
+            <small>({{ account.tier.multiplier }}x {{ 'loyalty.ui.multiplier'|trans }})</small>
+        </span>
+    {% endif %}
+</div>
+
+{# --- Stats row --- #}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-success mb-0">{{ account.pointsBalance|number_format }}</h3>
+                <small class="text-muted">{{ 'loyalty.ui.available_points'|trans }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="mb-0">{{ loyalty_points_value(account.pointsBalance) }}</h3>
+                <small class="text-muted">{{ 'loyalty.ui.redeemable_value'|trans }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="mb-0">{{ account.lifetimePoints|number_format }}</h3>
+                <small class="text-muted">{{ 'loyalty.ui.lifetime_points'|trans }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# --- Expiry warning --- #}
+{% set expiring_soon = [] %}
+{% set now = "now"|date("U") %}
+{% set thirty_days = "now"|date_modify("+30 days")|date("U") %}
+{% for transaction in transactions %}
+    {% if transaction.expiresAt is not null
+       and not transaction.expired
+       and not transaction.type.isDebit
+       and transaction.expiresAt|date("U") <= thirty_days
+       and transaction.expiresAt|date("U") >= now %}
+        {% set expiring_soon = expiring_soon|merge([transaction]) %}
+    {% endif %}
+{% endfor %}
+
+{% if expiring_soon|length > 0 %}
+    {% set expiring_points_total = 0 %}
+    {% for t in expiring_soon %}
+        {% set expiring_points_total = expiring_points_total + t.points %}
+    {% endfor %}
+    <div class="alert alert-warning mb-4">
+        <strong>{{ 'loyalty.ui.points_expiring_soon'|trans }}</strong><br>
+        {{ 'loyalty.ui.expiry_warning'|trans({
+            '%points%': expiring_points_total,
+            '%date%': expiring_soon|first.expiresAt|date('M d, Y')
+        }) }}
+    </div>
+{% endif %}
+
+{# --- Transaction history with running balance --- #}
+<h4 class="mb-3">{{ 'loyalty.ui.transaction_history'|trans }}</h4>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ 'sylius.ui.date'|trans }}</th>
+                <th>{{ 'loyalty.ui.type'|trans }}</th>
+                <th>{{ 'sylius.ui.description'|trans }}</th>
+                <th class="text-end">{{ 'loyalty.ui.points'|trans }}</th>
+                <th class="text-end">{{ 'loyalty.ui.balance'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set running_balance = account.pointsBalance %}
+            {% set rows = [] %}
+            {% for transaction in transactions %}
+                {% set rows = rows|merge([{
+                    'transaction': transaction,
+                    'balance_after': running_balance
+                }]) %}
+                {% if transaction.type.isDebit %}
+                    {% set running_balance = running_balance + transaction.points %}
+                {% else %}
+                    {% set running_balance = running_balance - transaction.points %}
+                {% endif %}
+            {% endfor %}
+
+            {% for row in rows %}
+                {% set transaction = row.transaction %}
+                {% set badge_colors = {earn: 'bg-success text-white', bonus: 'bg-info text-white', redeem: 'bg-warning text-dark', expire: 'bg-danger text-white', adjust: 'bg-secondary text-white'} %}
+                <tr>
+                    <td>{{ transaction.createdAt|date('M d, Y') }}</td>
+                    <td>
+                        <span class="badge {{ badge_colors[transaction.type.value] ?? 'bg-secondary text-white' }}">
+                            {{ ('loyalty.ui.type_' ~ transaction.type.value)|trans }}
+                        </span>
+                    </td>
+                    <td>
+                        {{ transaction.description ?? '-' }}
+                        {% if transaction.expiresAt is not null and not transaction.expired and not transaction.type.isDebit %}
+                            <br><small class="text-muted">{{ 'loyalty.ui.expires'|trans }}: {{ transaction.expiresAt|date('M d, Y') }}</small>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <strong class="{{ transaction.type.isDebit ? 'text-danger' : 'text-success' }}">
+                            {{ transaction.type.isDebit ? '-' : '+' }}{{ transaction.points|number_format }}
+                        </strong>
+                    </td>
+                    <td class="text-end">{{ row.balance_after|number_format }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        {{ 'loyalty.ui.no_transactions'|trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
