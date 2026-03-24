@@ -9,7 +9,7 @@ sylius_grid:
                         method: createQueryBuilder
                         arguments: ['lt']
             sorting:
-                position: asc
+                minPoints: asc
             fields:
                 name:
                     type: string
@@ -26,6 +26,10 @@ sylius_grid:
                     type: string
                     label: loyalty.ui.multiplier
                     sortable: ~
+                position:
+                    type: string
+                    label: sylius.ui.position
+                    sortable: ~
                 color:
                     type: twig
                     label: loyalty.ui.color
@@ -35,7 +39,7 @@ sylius_grid:
                     type: twig
                     label: sylius.ui.enabled
                     options:
-                        template: '@SyliusAdmin/shared/grid/field/enabled.html.twig'
+                        template: '@SyliusUi/grid/field/enabled.html.twig'
             actions:
                 main:
                     create:
