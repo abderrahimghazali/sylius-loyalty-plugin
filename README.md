@@ -18,6 +18,8 @@
     <a href="https://packagist.org/packages/abderrahimghazali/sylius-loyalty-plugin"><img src="https://img.shields.io/packagist/v/abderrahimghazali/sylius-loyalty-plugin.svg" alt="Latest Version"/></a>
     <a href="https://packagist.org/packages/abderrahimghazali/sylius-loyalty-plugin"><img src="https://img.shields.io/packagist/php-v/abderrahimghazali/sylius-loyalty-plugin.svg" alt="PHP Version"/></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/></a>
+    <a href="https://packagist.org/packages/abderrahimghazali/sylius-loyalty-plugin"><img src="https://img.shields.io/badge/sylius-2.x-green.svg" alt="Sylius 2.x"/></a>
+    <a href="https://packagist.org/packages/abderrahimghazali/sylius-loyalty-plugin"><img src="https://img.shields.io/badge/symfony-7.x-black.svg" alt="Symfony 7.x"/></a>
 </p>
 
 ---
