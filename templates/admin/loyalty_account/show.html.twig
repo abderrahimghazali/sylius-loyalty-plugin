@@ -2,151 +2,148 @@
 
 {% block title %}{{ 'loyalty.ui.loyalty_account'|trans }} — {{ account.customer.fullName }} | {{ parent() }}{% endblock %}
 
-{% block content %}
-<div class="container-xl">
-    {# --- Header --- #}
-    <div class="page-header mb-3">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <h2 class="page-title">
-                    {{ 'loyalty.ui.loyalty_account'|trans }}
-                </h2>
-                <div class="text-muted">
-                    <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
-                        {{ account.customer.fullName }} ({{ account.customer.email }})
-                    </a>
-                </div>
-            </div>
-            <div class="col-auto ms-auto">
-                <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
-                   class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i>
-                    {{ 'loyalty.ui.adjust_points'|trans }}
-                </a>
-            </div>
-        </div>
-    </div>
+{% block body %}
+    {% include '@SyliusAdmin/shared/crud/common/sidebar.html.twig' %}
 
-    <div class="row row-cards">
-        {# --- Stats cards --- #}
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="subheader">{{ 'loyalty.ui.points_balance'|trans }}</div>
-                    </div>
-                    <div class="h1 mb-0">{{ account.pointsBalance|number_format }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="subheader">{{ 'loyalty.ui.lifetime_points'|trans }}</div>
-                    <div class="h1 mb-0">{{ account.lifetimePoints|number_format }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="subheader">{{ 'loyalty.ui.tier'|trans }}</div>
-                    <div class="h1 mb-0">
-                        {% if account.tier %}
-                            <span class="badge"
-                                  {% if account.tier.color %}style="background-color: {{ account.tier.color }}; color: white;"{% endif %}>
-                                {{ account.tier.name }}
-                            </span>
-                        {% else %}
-                            <span class="text-muted">{{ 'loyalty.ui.no_tier'|trans }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="subheader">{{ 'sylius.ui.enabled'|trans }}</div>
-                    <div class="h1 mb-0">
-                        {% if account.enabled %}
-                            <span class="badge bg-success">{{ 'sylius.ui.yes'|trans }}</span>
-                        {% else %}
-                            <span class="badge bg-danger">{{ 'sylius.ui.no'|trans }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="page-wrapper">
+        {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
 
-        {# --- Transaction history --- #}
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        {{ 'loyalty.ui.transaction_history'|trans }}
-                    </h3>
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="page-header mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h2 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h2>
+                            <div class="text-muted">
+                                <a href="{{ path('sylius_admin_customer_show', {id: account.customer.id}) }}">
+                                    {{ account.customer.fullName }} ({{ account.customer.email }})
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-auto ms-auto">
+                            <a href="{{ path('loyalty_admin_point_adjustment', {accountId: account.id}) }}"
+                               class="btn btn-primary">
+                                {{ 'loyalty.ui.adjust_points'|trans }}
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-vcenter card-table">
-                        <thead>
-                            <tr>
-                                <th>{{ 'sylius.ui.date'|trans }}</th>
-                                <th>{{ 'loyalty.ui.type'|trans }}</th>
-                                <th>{{ 'sylius.ui.description'|trans }}</th>
-                                <th>{{ 'sylius.ui.order'|trans }}</th>
-                                <th>{{ 'loyalty.ui.expires_at'|trans }}</th>
-                                <th class="text-end">{{ 'loyalty.ui.points'|trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for transaction in transactions %}
-                            <tr>
-                                <td>{{ transaction.createdAt|date('Y-m-d H:i') }}</td>
-                                <td>
-                                    {% set badge_colors = {earn: 'bg-success', bonus: 'bg-info', redeem: 'bg-warning', expire: 'bg-danger', adjust: 'bg-secondary'} %}
-                                    <span class="badge {{ badge_colors[transaction.type.value] ?? 'bg-secondary' }}">
-                                        {{ transaction.type.value|upper }}
-                                    </span>
-                                </td>
-                                <td>{{ transaction.description ?? '-' }}</td>
-                                <td>
-                                    {% if transaction.order is not null %}
-                                        <a href="{{ path('sylius_admin_order_show', {id: transaction.order.id}) }}">
-                                            #{{ transaction.order.number }}
-                                        </a>
+
+                <div class="row row-cards">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="subheader">{{ 'loyalty.ui.points_balance'|trans }}</div>
+                                <div class="h1 mb-0">{{ account.pointsBalance|number_format }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="subheader">{{ 'loyalty.ui.lifetime_points'|trans }}</div>
+                                <div class="h1 mb-0">{{ account.lifetimePoints|number_format }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="subheader">{{ 'loyalty.ui.tier'|trans }}</div>
+                                <div class="h1 mb-0">
+                                    {% if account.tier %}
+                                        <span class="badge" {% if account.tier.color %}style="background-color: {{ account.tier.color }}; color: white;"{% endif %}>
+                                            {{ account.tier.name }}
+                                        </span>
                                     {% else %}
-                                        -
+                                        <span class="text-muted">{{ 'loyalty.ui.no_tier'|trans }}</span>
                                     {% endif %}
-                                </td>
-                                <td>
-                                    {% if transaction.expiresAt is not null %}
-                                        {{ transaction.expiresAt|date('Y-m-d') }}
-                                        {% if transaction.expired %}
-                                            <span class="badge bg-danger">{{ 'loyalty.ui.type_expire'|trans }}</span>
-                                        {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="subheader">{{ 'sylius.ui.enabled'|trans }}</div>
+                                <div class="h1 mb-0">
+                                    {% if account.enabled %}
+                                        <span class="badge bg-success">{{ 'sylius.ui.yes'|trans }}</span>
                                     {% else %}
-                                        -
+                                        <span class="badge bg-danger">{{ 'sylius.ui.no'|trans }}</span>
                                     {% endif %}
-                                </td>
-                                <td class="text-end">
-                                    <strong class="{{ transaction.type.isDebit ? 'text-danger' : 'text-success' }}">
-                                        {{ transaction.type.isDebit ? '-' : '+' }}{{ transaction.points|number_format }}
-                                    </strong>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">
-                                    {{ 'loyalty.ui.no_transactions'|trans }}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ 'loyalty.ui.transaction_history'|trans }}</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-vcenter card-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ 'sylius.ui.date'|trans }}</th>
+                                            <th>{{ 'loyalty.ui.type'|trans }}</th>
+                                            <th>{{ 'sylius.ui.description'|trans }}</th>
+                                            <th>{{ 'sylius.ui.order'|trans }}</th>
+                                            <th>{{ 'loyalty.ui.expires_at'|trans }}</th>
+                                            <th class="text-end">{{ 'loyalty.ui.points'|trans }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for transaction in transactions %}
+                                        <tr>
+                                            <td>{{ transaction.createdAt|date('Y-m-d H:i') }}</td>
+                                            <td>
+                                                {% set badge_colors = {earn: 'bg-success', bonus: 'bg-info', redeem: 'bg-warning', expire: 'bg-danger', adjust: 'bg-secondary'} %}
+                                                <span class="badge {{ badge_colors[transaction.type.value] ?? 'bg-secondary' }}">
+                                                    {{ transaction.type.value|upper }}
+                                                </span>
+                                            </td>
+                                            <td>{{ transaction.description ?? '-' }}</td>
+                                            <td>
+                                                {% if transaction.order is not null %}
+                                                    <a href="{{ path('sylius_admin_order_show', {id: transaction.order.id}) }}">
+                                                        #{{ transaction.order.number }}
+                                                    </a>
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if transaction.expiresAt is not null %}
+                                                    {{ transaction.expiresAt|date('Y-m-d') }}
+                                                    {% if transaction.expired %}
+                                                        <span class="badge bg-danger">{{ 'loyalty.ui.type_expire'|trans }}</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-end">
+                                                <strong class="{{ transaction.type.isDebit ? 'text-danger' : 'text-success' }}">
+                                                    {{ transaction.type.isDebit ? '-' : '+' }}{{ transaction.points|number_format }}
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">
+                                                {{ 'loyalty.ui.no_transactions'|trans }}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

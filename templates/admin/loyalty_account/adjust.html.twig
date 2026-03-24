@@ -2,47 +2,65 @@
 
 {% block title %}{{ 'loyalty.ui.adjust_points'|trans }} | {{ parent() }}{% endblock %}
 
-{% block content %}
-<div class="container-xl">
-    <div class="page-header mb-3">
-        <div class="row align-items-center">
-            <div class="col-auto">
-                <h2 class="page-title">{{ 'loyalty.ui.adjust_points'|trans }}</h2>
-                <div class="text-muted">
-                    {{ account.customer.fullName }} ({{ account.customer.email }})
-                    — {{ 'loyalty.ui.current_balance'|trans }}: <strong>{{ account.pointsBalance|number_format }}</strong>
+{% block body %}
+    {% include '@SyliusAdmin/shared/crud/common/sidebar.html.twig' %}
+
+    <div class="page-wrapper">
+        {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
+
+        <div class="page-body">
+            <div class="container-xl">
+                {% for flash_message in app.flashes('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <div class="d-flex">
+                            <div>{{ flash_message|trans }}</div>
+                        </div>
+                        <a class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
+                    </div>
+                {% endfor %}
+
+                <div class="page-header mb-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h2 class="page-title">{{ 'loyalty.ui.adjust_points'|trans }}</h2>
+                            <div class="text-muted">
+                                {{ account.customer.fullName }} ({{ account.customer.email }})
+                                — {{ 'loyalty.ui.current_balance'|trans }}: <strong>{{ account.pointsBalance|number_format }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ 'loyalty.ui.manual_adjustment'|trans }}</h3>
+                            </div>
+                            <div class="card-body">
+                                {% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
+                                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                                    {{ form_row(form.points) }}
+                                    <div class="text-muted small mb-3">
+                                        {{ 'loyalty.ui.adjustment_hint'|trans }}
+                                    </div>
+                                    {{ form_row(form.reason) }}
+
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            {{ 'loyalty.ui.apply_adjustment'|trans }}
+                                        </button>
+                                        <a href="{{ path('loyalty_admin_loyalty_account_show', {id: account.id}) }}"
+                                           class="btn btn-outline-secondary">
+                                            {{ 'sylius.ui.cancel'|trans }}
+                                        </a>
+                                    </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">{{ 'loyalty.ui.manual_adjustment'|trans }}</h3>
-                </div>
-                <div class="card-body">
-                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                        {{ form_row(form.points) }}
-                        <div class="text-muted small mb-3">
-                            {{ 'loyalty.ui.adjustment_hint'|trans }}
-                        </div>
-                        {{ form_row(form.reason) }}
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                {{ 'loyalty.ui.apply_adjustment'|trans }}
-                            </button>
-                            <a href="{{ path('loyalty_admin_loyalty_account_show', {id: account.id}) }}"
-                               class="btn btn-outline-secondary">
-                                {{ 'sylius.ui.cancel'|trans }}
-                            </a>
-                        </div>
-                    {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
