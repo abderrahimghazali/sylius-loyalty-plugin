@@ -15,7 +15,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluator:
         arguments:
-            $tierRepository: '@loyalty.tier.repository'
+            $tierRepository: '@loyalty.repository.tier'
             $tiersEnabled: '%sylius_loyalty.tiers_enabled%'
 
     Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluatorInterface:
@@ -23,9 +23,9 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManager:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
-            $transactionRepository: '@loyalty.point_transaction.repository'
-            $accountFactory: '@loyalty.account.factory'
+            $accountRepository: '@loyalty.repository.account'
+            $transactionRepository: '@loyalty.repository.point_transaction'
+            $accountFactory: '@loyalty.factory.account'
             $entityManager: '@doctrine.orm.entity_manager'
             $pointsCalculator: '@Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface'
             $tierEvaluator: '@Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluatorInterface'
@@ -59,7 +59,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Command\ExpirePointsCommand:
         arguments:
-            $transactionRepository: '@loyalty.point_transaction.repository'
+            $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
         tags:
             - { name: console.command }
@@ -77,7 +77,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\OrderProcessing\LoyaltyOrderProcessor:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
+            $accountRepository: '@loyalty.repository.account'
             $adjustmentFactory: '@sylius.factory.adjustment'
             $redemptionRate: '%sylius_loyalty.redemption_rate%'
         tags:
@@ -88,7 +88,7 @@ services:
     Abderrahim\SyliusLoyaltyPlugin\Controller\Api\LoyaltyRedemptionController:
         arguments:
             $orderRepository: '@sylius.repository.order'
-            $loyaltyAccountRepository: '@loyalty.account.repository'
+            $loyaltyAccountRepository: '@loyalty.repository.account'
             $orderProcessor: '@sylius.order_processing.order_processor'
             $redemptionRate: '%sylius_loyalty.redemption_rate%'
         tags:
@@ -102,14 +102,14 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnOrderCancelListener:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
-            $transactionRepository: '@loyalty.point_transaction.repository'
+            $accountRepository: '@loyalty.repository.account'
+            $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnPaymentRefundListener:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
-            $transactionRepository: '@loyalty.point_transaction.repository'
+            $accountRepository: '@loyalty.repository.account'
+            $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
 
     # --- Admin Controllers ---
@@ -122,7 +122,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
+            $accountRepository: '@loyalty.repository.account'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
         tags:
             - { name: controller.service_arguments }
@@ -133,7 +133,7 @@ services:
         arguments:
             $customerContext: '@sylius.context.customer'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
-            $transactionRepository: '@loyalty.point_transaction.repository'
+            $transactionRepository: '@loyalty.repository.point_transaction'
             $redemptionRate: '%sylius_loyalty.redemption_rate%'
         tags:
             - { name: controller.service_arguments }
@@ -162,7 +162,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
         arguments:
-            $accountRepository: '@loyalty.account.repository'
+            $accountRepository: '@loyalty.repository.account'
             $redemptionRate: '%sylius_loyalty.redemption_rate%'
         tags:
             - { name: twig.extension }
