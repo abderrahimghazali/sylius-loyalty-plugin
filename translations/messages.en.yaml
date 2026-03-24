@@ -10,6 +10,13 @@ loyalty:
         manage_loyalty_tiers: Manage loyalty tier levels
         point_transaction_history: Point transaction history
 
+        # Sylius auto-generated keys (from resource alias)
+        accounts: Loyalty Accounts
+        account: Loyalty Account
+        tiers: Loyalty Tiers
+        point_transactions: Point Transactions
+        point_transaction: Point Transaction
+
         # Points
         points: Points
         points_balance: Points Balance
