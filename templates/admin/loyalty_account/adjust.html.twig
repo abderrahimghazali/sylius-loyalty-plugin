@@ -19,7 +19,14 @@
                     </div>
                 {% endfor %}
 
+                {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
                 <div class="page-header mb-3">
+                    {{ breadcrumbs([
+                        { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                        { name: 'loyalty.ui.loyalty_accounts', url: path('loyalty_admin_account_index'), active: false },
+                        { name: account.customer.fullName, url: path('loyalty_admin_loyalty_account_show', {id: account.id}), active: false },
+                        { name: 'loyalty.ui.adjust_points', active: true },
+                    ]) }}
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <h2 class="page-title">{{ 'loyalty.ui.adjust_points'|trans }}</h2>

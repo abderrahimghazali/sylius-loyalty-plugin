@@ -10,7 +10,13 @@
 
         <div class="page-body">
             <div class="container-xl">
+                {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
                 <div class="page-header mb-3">
+                    {{ breadcrumbs([
+                        { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                        { name: 'loyalty.ui.loyalty_accounts', url: path('loyalty_admin_account_index'), active: false },
+                        { name: account.customer.fullName, active: true },
+                    ]) }}
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <h2 class="page-title">{{ 'loyalty.ui.loyalty_account'|trans }}</h2>
