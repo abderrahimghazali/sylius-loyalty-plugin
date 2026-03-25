@@ -108,14 +108,48 @@ class Order extends BaseOrder implements LoyaltyOrderInterface
 }
 ```
 
-### 4. Run migrations
+### 4. Register the Stimulus controller (for checkout widget)
+
+Add the plugin JS dependency to your `package.json`:
+
+```json
+{
+    "dependencies": {
+        "@abderrahimghazali/sylius-loyalty-plugin": "file:vendor/abderrahimghazali/sylius-loyalty-plugin/assets"
+    }
+}
+```
+
+Register the controller in `assets/shop/controllers.json`:
+
+```json
+{
+    "controllers": {
+        "@abderrahimghazali/sylius-loyalty-plugin": {
+            "loyalty-redemption": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        }
+    }
+}
+```
+
+Then rebuild assets:
+
+```bash
+yarn install --force
+yarn encore dev
+```
+
+### 5. Run migrations
 
 ```bash
 php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ```
 
-### 5. Set up cron jobs
+### 6. Set up cron jobs
 
 ```bash
 # Expire old points (run daily)
@@ -189,7 +223,7 @@ Grid view of all customer loyalty accounts with balance, lifetime points, tier, 
 
 ### Manual Point Adjustment
 
-From any loyalty account detail page, admins can add or deduct points with a required reason field. Creates an `Adjust` type transaction in the ledger.
+From any loyalty account detail page, admins can add or deduct points with a required reason field. Positive values create an `Adjust` (credit) transaction, negative values create a `Deduct` (debit) transaction.
 
 ### Tier Management
 
@@ -209,8 +243,11 @@ Under **Configuration > Loyalty Configuration**:
 
 - Points per currency unit
 - Redemption rate (points per 1 currency unit)
-- Expiry period in months
+- Expiry period in days
+- Enable/disable tier system
 - Toggle and configure bonus events (registration, birthday, first order)
+
+Settings are stored in the database and take effect immediately without redeployment. The YAML config values serve as defaults for the initial database row.
 
 ## API Endpoints
 
