@@ -10,6 +10,7 @@ enum TransactionType: string
     case Redeem = 'redeem';
     case Expire = 'expire';
     case Adjust = 'adjust';
+    case Deduct = 'deduct';
     case Bonus = 'bonus';
 
     public function label(): string
@@ -19,6 +20,7 @@ enum TransactionType: string
             self::Redeem => 'Points redeemed',
             self::Expire => 'Points expired',
             self::Adjust => 'Manual adjustment',
+            self::Deduct => 'Manual deduction',
             self::Bonus => 'Bonus points',
         };
     }
@@ -26,7 +28,7 @@ enum TransactionType: string
     public function isDebit(): bool
     {
         return match ($this) {
-            self::Redeem, self::Expire => true,
+            self::Redeem, self::Expire, self::Deduct => true,
             default => false,
         };
     }

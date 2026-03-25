@@ -6,6 +6,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Api;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Order\LoyaltyOrderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
@@ -22,7 +23,7 @@ final class LoyaltyRedemptionController
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly LoyaltyAccountRepositoryInterface $loyaltyAccountRepository,
         private readonly OrderProcessorInterface $orderProcessor,
-        private readonly int $redemptionRate,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
     }
 
@@ -77,7 +78,8 @@ final class LoyaltyRedemptionController
 
         // The processor may have clamped the value
         $effectivePoints = $order->getPointsToRedeem();
-        $discountCents = (int) floor(($effectivePoints / $this->redemptionRate) * 100);
+        $redemptionRate = $this->configProvider->getConfiguration()->getRedemptionRate();
+        $discountCents = (int) floor(($effectivePoints / $redemptionRate) * 100);
 
         return new JsonResponse([
             'pointsRedeemed' => $effectivePoints,

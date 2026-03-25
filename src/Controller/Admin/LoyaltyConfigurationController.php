@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Admin;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration;
 use Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +14,14 @@ use Symfony\Component\HttpFoundation\Response;
 final class LoyaltyConfigurationController extends AbstractController
 {
     public function __construct(
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function editAction(Request $request): Response
     {
-        $config = $this->getOrCreateConfiguration();
+        $config = $this->configProvider->getConfiguration();
 
         $form = $this->createForm(LoyaltyConfigurationType::class, $config);
         $form->handleRequest($request);
@@ -36,19 +37,5 @@ final class LoyaltyConfigurationController extends AbstractController
         return $this->render('@SyliusLoyaltyPlugin/admin/configuration/edit.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    private function getOrCreateConfiguration(): LoyaltyConfiguration
-    {
-        $repository = $this->entityManager->getRepository(LoyaltyConfiguration::class);
-        $config = $repository->findOneBy([]);
-
-        if ($config === null) {
-            $config = new LoyaltyConfiguration();
-            $this->entityManager->persist($config);
-            $this->entityManager->flush();
-        }
-
-        return $config;
     }
 }

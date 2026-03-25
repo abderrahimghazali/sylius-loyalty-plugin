@@ -38,6 +38,7 @@ loyalty:
         type_redeem: Redeemed
         type_expire: Expired
         type_adjust: Adjusted
+        type_deduct: Deducted
         type_bonus: Bonus
         expires: Expires
         expires_at: Expires At
@@ -74,8 +75,9 @@ loyalty:
         points_per_currency_unit_help: 'How many loyalty points a customer earns for each currency unit spent (e.g. 1 point per €1).'
         redemption_rate: Redemption rate
         redemption_rate_help: 'How many points equal 1 currency unit when redeeming (e.g. 100 points = €1).'
-        expiry_months: Points expiry (months)
-        expiry_months_help: 'Number of months before earned points expire. Set to 0 for no expiry.'
+        expiry_days: Points expiry (days)
+        expiry_days_help: 'Number of days before earned points expire. Set to 0 for no expiry.'
+        tiers_enabled: Enable tier system
         registration_bonus_enabled: Enable registration bonus
         registration_bonus_points: Registration bonus points
         birthday_bonus_enabled: Enable birthday bonus

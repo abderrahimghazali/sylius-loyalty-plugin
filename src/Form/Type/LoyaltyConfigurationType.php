@@ -29,11 +29,15 @@ final class LoyaltyConfigurationType extends AbstractType
                 'constraints' => [new Assert\Positive()],
                 'attr' => ['min' => 1],
             ])
-            ->add('expiryMonths', IntegerType::class, [
-                'label' => 'loyalty.form.expiry_months',
-                'help' => 'loyalty.form.expiry_months_help',
+            ->add('expiryDays', IntegerType::class, [
+                'label' => 'loyalty.form.expiry_days',
+                'help' => 'loyalty.form.expiry_days_help',
                 'constraints' => [new Assert\PositiveOrZero()],
                 'attr' => ['min' => 0],
+            ])
+            ->add('tiersEnabled', CheckboxType::class, [
+                'label' => 'loyalty.form.tiers_enabled',
+                'required' => false,
             ])
             ->add('registrationBonusEnabled', CheckboxType::class, [
                 'label' => 'loyalty.form.registration_bonus_enabled',

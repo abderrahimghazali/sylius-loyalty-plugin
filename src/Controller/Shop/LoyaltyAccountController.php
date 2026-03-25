@@ -6,6 +6,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Shop;
 
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Sylius\Component\Customer\Context\CustomerContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ final class LoyaltyAccountController extends AbstractController
         private readonly CustomerContextInterface $customerContext,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
         private readonly PointTransactionRepositoryInterface $transactionRepository,
-        private readonly int $redemptionRate,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
     }
 
@@ -34,7 +35,7 @@ final class LoyaltyAccountController extends AbstractController
         return $this->render('@SyliusLoyaltyPlugin/shop/account/loyalty.html.twig', [
             'account' => $account,
             'transactions' => $transactions,
-            'redemptionRate' => $this->redemptionRate,
+            'redemptionRate' => $this->configProvider->getConfiguration()->getRedemptionRate(),
         ]);
     }
 }

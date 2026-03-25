@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Abderrahim\SyliusLoyaltyPlugin\Unit\OrderProcessing;
 
+use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Order\LoyaltyOrderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Model\AdjustmentTypes;
 use Abderrahim\SyliusLoyaltyPlugin\OrderProcessing\LoyaltyOrderProcessor;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +24,7 @@ final class LoyaltyOrderProcessorTest extends TestCase
 {
     private LoyaltyAccountRepositoryInterface&MockObject $accountRepository;
     private FactoryInterface&MockObject $adjustmentFactory;
+    private LoyaltyConfigurationProviderInterface&MockObject $configProvider;
     private LoyaltyOrderProcessor $processor;
 
     private const REDEMPTION_RATE = 100; // 100 points = 1 currency unit
@@ -30,11 +33,16 @@ final class LoyaltyOrderProcessorTest extends TestCase
     {
         $this->accountRepository = $this->createMock(LoyaltyAccountRepositoryInterface::class);
         $this->adjustmentFactory = $this->createMock(FactoryInterface::class);
+        $this->configProvider = $this->createMock(LoyaltyConfigurationProviderInterface::class);
+
+        $config = $this->createMock(LoyaltyConfigurationInterface::class);
+        $config->method('getRedemptionRate')->willReturn(self::REDEMPTION_RATE);
+        $this->configProvider->method('getConfiguration')->willReturn($config);
 
         $this->processor = new LoyaltyOrderProcessor(
             $this->accountRepository,
             $this->adjustmentFactory,
-            self::REDEMPTION_RATE,
+            $this->configProvider,
         );
     }
 

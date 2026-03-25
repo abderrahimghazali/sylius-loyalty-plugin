@@ -24,7 +24,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         private readonly EntityManagerInterface $entityManager,
         private readonly PointsCalculatorInterface $pointsCalculator,
         private readonly TierEvaluatorInterface $tierEvaluator,
-        private readonly int $expiryDays,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
     }
 
@@ -60,8 +60,9 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         $transaction->setOrder($order);
 
         // Set expiry for earn/bonus transactions
-        if (in_array($type, [TransactionType::Earn, TransactionType::Bonus], true) && $this->expiryDays > 0) {
-            $expiresAt = new \DateTime(sprintf('+%d days', $this->expiryDays));
+        $expiryDays = $this->configProvider->getConfiguration()->getExpiryDays();
+        if (in_array($type, [TransactionType::Earn, TransactionType::Bonus], true) && $expiryDays > 0) {
+            $expiresAt = new \DateTime(sprintf('+%d days', $expiryDays));
             $transaction->setExpiresAt($expiresAt);
         }
 
@@ -136,7 +137,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
 
         return $this->addTransaction(
             $account,
-            TransactionType::Adjust,
+            TransactionType::Deduct,
             $earnTransaction->getPoints(),
             sprintf('Points revoked for cancelled order #%s', $order->getNumber()),
             $order,

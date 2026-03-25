@@ -100,7 +100,7 @@
 
             {% for row in rows %}
                 {% set transaction = row.transaction %}
-                {% set badge_colors = {earn: 'bg-success text-white', bonus: 'bg-info text-white', redeem: 'bg-warning text-dark', expire: 'bg-danger text-white', adjust: 'bg-secondary text-white'} %}
+                {% set badge_colors = {earn: 'bg-success text-white', bonus: 'bg-info text-white', redeem: 'bg-warning text-dark', expire: 'bg-danger text-white', adjust: 'bg-secondary text-white', deduct: 'bg-danger text-white'} %}
                 <tr>
                     <td>{{ transaction.createdAt|date('M d, Y') }}</td>
                     <td>

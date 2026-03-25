@@ -21,8 +21,11 @@ class LoyaltyConfiguration implements LoyaltyConfigurationInterface
     #[ORM\Column(type: 'integer', options: ['default' => 100])]
     protected int $redemptionRate = 100;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 12])]
-    protected int $expiryMonths = 12;
+    #[ORM\Column(type: 'integer', options: ['default' => 365])]
+    protected int $expiryDays = 365;
+
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
+    protected bool $tiersEnabled = true;
 
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     protected bool $registrationBonusEnabled = true;
@@ -67,14 +70,24 @@ class LoyaltyConfiguration implements LoyaltyConfigurationInterface
         $this->redemptionRate = $redemptionRate;
     }
 
-    public function getExpiryMonths(): int
+    public function getExpiryDays(): int
     {
-        return $this->expiryMonths;
+        return $this->expiryDays;
     }
 
-    public function setExpiryMonths(int $expiryMonths): void
+    public function setExpiryDays(int $expiryDays): void
     {
-        $this->expiryMonths = $expiryMonths;
+        $this->expiryDays = $expiryDays;
+    }
+
+    public function isTiersEnabled(): bool
+    {
+        return $this->tiersEnabled;
+    }
+
+    public function setTiersEnabled(bool $tiersEnabled): void
+    {
+        $this->tiersEnabled = $tiersEnabled;
     }
 
     public function isRegistrationBonusEnabled(): bool

@@ -16,9 +16,13 @@ interface LoyaltyConfigurationInterface extends ResourceInterface
 
     public function setRedemptionRate(int $redemptionRate): void;
 
-    public function getExpiryMonths(): int;
+    public function getExpiryDays(): int;
 
-    public function setExpiryMonths(int $expiryMonths): void;
+    public function setExpiryDays(int $expiryDays): void;
+
+    public function isTiersEnabled(): bool;
+
+    public function setTiersEnabled(bool $tiersEnabled): void;
 
     public function isRegistrationBonusEnabled(): bool;
 

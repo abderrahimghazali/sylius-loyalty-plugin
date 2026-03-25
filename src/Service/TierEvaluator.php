@@ -13,13 +13,13 @@ final class TierEvaluator implements TierEvaluatorInterface
     /** @param RepositoryInterface<LoyaltyTierInterface> $tierRepository */
     public function __construct(
         private readonly RepositoryInterface $tierRepository,
-        private readonly bool $tiersEnabled,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
     }
 
     public function evaluate(LoyaltyAccountInterface $account): void
     {
-        if (!$this->tiersEnabled) {
+        if (!$this->configProvider->getConfiguration()->isTiersEnabled()) {
             return;
         }
 

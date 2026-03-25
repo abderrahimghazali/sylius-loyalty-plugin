@@ -6,6 +6,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -26,7 +27,7 @@ final class BirthdayBonusCommand extends Command
         private readonly RepositoryInterface $customerRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
         private readonly EntityManagerInterface $entityManager,
-        private readonly int $birthdayBonus,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
         parent::__construct();
     }
@@ -34,13 +35,15 @@ final class BirthdayBonusCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $config = $this->configProvider->getConfiguration();
 
-        if ($this->birthdayBonus <= 0) {
-            $io->note('Birthday bonus is disabled (set to 0).');
+        if (!$config->isBirthdayBonusEnabled() || $config->getBirthdayBonusPoints() <= 0) {
+            $io->note('Birthday bonus is disabled.');
 
             return Command::SUCCESS;
         }
 
+        $birthdayBonus = $config->getBirthdayBonusPoints();
         $today = new \DateTime('today');
 
         // Find customers whose birthday month and day match today
@@ -75,7 +78,7 @@ final class BirthdayBonusCommand extends Command
             $this->balanceManager->addTransaction(
                 $account,
                 TransactionType::Bonus,
-                $this->birthdayBonus,
+                $birthdayBonus,
                 sprintf('Birthday bonus %s', $today->format('Y')),
             );
 

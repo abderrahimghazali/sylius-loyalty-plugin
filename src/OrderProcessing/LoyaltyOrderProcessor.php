@@ -7,6 +7,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\OrderProcessing;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Order\LoyaltyOrderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Model\AdjustmentTypes;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Sylius\Bundle\OrderBundle\Attribute\AsOrderProcessor;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -30,7 +31,7 @@ final class LoyaltyOrderProcessor implements OrderProcessorInterface
     public function __construct(
         private readonly LoyaltyAccountRepositoryInterface $accountRepository,
         private readonly FactoryInterface $adjustmentFactory,
-        private readonly int $redemptionRate,
+        private readonly LoyaltyConfigurationProviderInterface $configProvider,
     ) {
     }
 
@@ -75,14 +76,14 @@ final class LoyaltyOrderProcessor implements OrderProcessorInterface
         }
 
         // Convert points to discount amount (in smallest currency unit = cents)
-        $discountAmount = (int) floor(($effectivePoints / $this->redemptionRate) * 100);
+        $discountAmount = (int) floor(($effectivePoints / $this->configProvider->getConfiguration()->getRedemptionRate()) * 100);
 
         // Guard: discount cannot exceed the order total (items + shipping + tax, before this adjustment)
         $orderTotalBeforeDiscount = $order->getTotal();
         if ($discountAmount > $orderTotalBeforeDiscount) {
             $discountAmount = $orderTotalBeforeDiscount;
             // Recalculate how many points this actually requires
-            $effectivePoints = (int) ceil(($discountAmount / 100) * $this->redemptionRate);
+            $effectivePoints = (int) ceil(($discountAmount / 100) * $this->configProvider->getConfiguration()->getRedemptionRate());
         }
 
         if ($discountAmount <= 0) {

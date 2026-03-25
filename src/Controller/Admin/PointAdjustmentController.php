@@ -36,7 +36,7 @@ final class PointAdjustmentController extends AbstractController
             $points = (int) $data['points'];
             $reason = (string) $data['reason'];
 
-            // Positive = add points, negative = remove points
+            // Positive = credit points (Adjust), negative = debit points (Deduct)
             if ($points > 0) {
                 $this->balanceManager->addTransaction(
                     $account,
@@ -47,7 +47,7 @@ final class PointAdjustmentController extends AbstractController
             } else {
                 $this->balanceManager->addTransaction(
                     $account,
-                    TransactionType::Adjust,
+                    TransactionType::Deduct,
                     abs($points),
                     sprintf('Manual deduction: %s', $reason),
                 );

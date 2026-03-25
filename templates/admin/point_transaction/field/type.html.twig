@@ -1,4 +1,4 @@
-{% set colors = {earn: 'bg-green text-white', bonus: 'bg-cyan text-white', redeem: 'bg-yellow text-dark', expire: 'bg-red text-white', adjust: 'bg-purple text-white'} %}
+{% set colors = {earn: 'bg-green text-white', bonus: 'bg-cyan text-white', redeem: 'bg-yellow text-dark', expire: 'bg-red text-white', adjust: 'bg-purple text-white', deduct: 'bg-orange text-white'} %}
 <span class="badge {{ colors[data] ?? 'bg-secondary text-white' }}">
     {{ data|upper }}
 </span>
