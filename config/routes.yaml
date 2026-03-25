@@ -4,6 +4,9 @@ loyalty_admin:
 
 loyalty_shop:
     resource: 'routes/shop.yaml'
+    prefix: /{_locale}
+    requirements:
+        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
 
 loyalty_api:
     resource: 'routes/api.yaml'

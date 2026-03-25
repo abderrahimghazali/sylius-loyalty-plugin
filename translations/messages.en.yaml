@@ -45,7 +45,7 @@ loyalty:
         no_transactions: No transactions yet.
 
         # Shop account
-        my_loyalty_points: My Loyalty Points
+        my_loyalty_points: Loyalty points
         you_have_points: 'You have <strong>%points%</strong> loyalty points available.'
         worth: 'worth %value%'
         points_expiring_soon: Points expiring soon!
