@@ -3,6 +3,7 @@
     Hooked into: sylius_shop.checkout.complete.content.form
     Context: order (the current cart/order)
 #}
+{% set order = hookable_metadata.context.order %}
 {% set customer = order.customer|default(null) %}
 {% if customer is not null %}
     {% set loyalty = loyalty_account(customer) %}
