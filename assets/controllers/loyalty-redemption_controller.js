@@ -122,9 +122,15 @@ export default class extends Controller {
         const totalFormatted = (totalCents / 100).toFixed(2);
 
         if (this.hasDiscountTarget) {
-            this.discountTarget.textContent = discountCents > 0
-                ? `-${this.currencyValue}${discountFormatted}`
-                : '';
+            if (discountCents > 0) {
+                this.discountTarget.innerHTML =
+                    `<span style="color: #6b7280; font-size: 0.875rem;">Loyalty discount</span>` +
+                    `<span style="color: #059669; font-weight: 600; font-size: 0.95rem;">-${this.currencyValue}${discountFormatted}</span>`;
+                this.discountTarget.classList.remove('d-none');
+            } else {
+                this.discountTarget.innerHTML = '';
+                this.discountTarget.classList.add('d-none');
+            }
         }
 
         if (this.hasOrderTotalTarget) {

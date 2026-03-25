@@ -8,72 +8,82 @@
 {% if customer is not null %}
     {% set loyalty = loyalty_account(customer) %}
     {% if loyalty is not null and loyalty.balance > 0 %}
-        <div class="card mb-3"
+        {% set currency_symbol = sylius.channel.baseCurrency.code|sylius_currency_symbol %}
+        {% set points_value = loyalty_points_value(loyalty.balance) %}
+        <div class="mb-4"
              data-controller="loyalty-redemption"
              data-loyalty-redemption-token-value="{{ order.tokenValue }}"
              data-loyalty-redemption-balance-value="{{ loyalty.balance }}"
              data-loyalty-redemption-rate-value="{{ redemption_rate|default(100) }}"
-             data-loyalty-redemption-currency-value="{{ sylius.channel.baseCurrency.code|sylius_currency_symbol }}"
+             data-loyalty-redemption-currency-value="{{ currency_symbol }}"
         >
-            <div class="card-header">
-                <div class="d-flex align-items-center justify-content-between">
-                    <span>
-                        <i class="bi bi-star-fill text-warning"></i>
-                        {{ 'loyalty.ui.redeem_points'|trans }}
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #f59e0b;">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span style="font-weight: 600; font-size: 1.05rem;">{{ 'loyalty.ui.redeem_points'|trans }}</span>
+                </div>
+                {% if loyalty.tier is not null %}
+                    <span style="display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.025em;
+                        {% if loyalty.tier_color %}background-color: {{ loyalty.tier_color }}; color: white;{% else %}background-color: #e5e7eb; color: #374151;{% endif %}">
+                        {{ loyalty.tier }}
                     </span>
-                    {% if loyalty.tier is not null %}
-                        <span class="badge"
-                              {% if loyalty.tier_color %}style="background-color: {{ loyalty.tier_color }}; color: white;"{% endif %}>
-                            {{ loyalty.tier }}
-                        </span>
-                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div style="background-color: #f8f9fa; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem;">
+                <div class="d-flex align-items-baseline justify-content-between flex-wrap gap-2">
+                    <div>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: #111827;">{{ loyalty.balance|number_format }}</span>
+                        <span style="font-size: 0.875rem; color: #6b7280; margin-left: 0.25rem;">{{ 'loyalty.ui.points'|trans|lower }}</span>
+                    </div>
+                    <span style="font-size: 0.875rem; color: #6b7280;">
+                        {{ 'loyalty.ui.worth'|trans({'%value%': currency_symbol ~ points_value}) }}
+                    </span>
                 </div>
             </div>
-            <div class="card-body">
-                <p class="text-muted mb-2">
-                    {{ 'loyalty.ui.you_have_points'|trans({'%points%': loyalty.balance}) }}
-                    ({{ 'loyalty.ui.worth'|trans({'%value%': loyalty_points_value(loyalty.balance)}) }})
-                </p>
 
-                <div class="row g-2 align-items-end">
-                    <div class="col">
-                        <label for="loyalty-points-input" class="form-label">
-                            {{ 'loyalty.ui.points_to_redeem'|trans }}
-                        </label>
-                        <input type="number"
-                               id="loyalty-points-input"
-                               class="form-control"
-                               min="0"
-                               max="{{ loyalty.balance }}"
-                               placeholder="0"
-                               value="{{ order.pointsToRedeem|default(0) > 0 ? order.pointsToRedeem : '' }}"
-                               data-loyalty-redemption-target="input"
-                               data-action="input->loyalty-redemption#onPointsInput"
-                        />
-                    </div>
-                    <div class="col-auto">
-                        <button type="button"
-                                class="btn btn-outline-primary"
-                                data-action="loyalty-redemption#useAll"
-                                data-loyalty-redemption-target="redeemAll">
-                            {{ 'loyalty.ui.use_all'|trans }}
-                        </button>
-                    </div>
-                    <div class="col-auto">
-                        <button type="button"
-                                class="btn btn-outline-secondary"
-                                data-action="loyalty-redemption#clear">
-                            {{ 'loyalty.ui.clear'|trans }}
-                        </button>
-                    </div>
+            <div class="d-flex gap-2 align-items-end">
+                <div class="flex-grow-1">
+                    <label for="loyalty-points-input" style="display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.3rem;">
+                        {{ 'loyalty.ui.points_to_redeem'|trans }}
+                    </label>
+                    <input type="number"
+                           id="loyalty-points-input"
+                           class="form-control"
+                           min="0"
+                           max="{{ loyalty.balance }}"
+                           placeholder="0"
+                           value="{{ order.pointsToRedeem|default(0) > 0 ? order.pointsToRedeem : '' }}"
+                           data-loyalty-redemption-target="input"
+                           data-action="input->loyalty-redemption#onPointsInput"
+                           style="border-radius: 6px;"
+                    />
                 </div>
+                <button type="button"
+                        class="btn"
+                        data-action="loyalty-redemption#useAll"
+                        data-loyalty-redemption-target="redeemAll"
+                        style="white-space: nowrap; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.47rem 1rem; font-size: 0.875rem; color: #374151; background: white;">
+                    {{ 'loyalty.ui.use_all'|trans }}
+                </button>
+                <button type="button"
+                        class="btn"
+                        data-action="loyalty-redemption#clear"
+                        style="white-space: nowrap; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.47rem 1rem; font-size: 0.875rem; color: #6b7280; background: white;">
+                    {{ 'loyalty.ui.clear'|trans }}
+                </button>
+            </div>
 
-                <div class="text-danger small mt-1 d-none"
-                     data-loyalty-redemption-target="error"></div>
+            <div class="text-danger mt-1 d-none"
+                 style="font-size: 0.8rem;"
+                 data-loyalty-redemption-target="error"></div>
 
-                <div class="d-flex justify-content-between mt-3 pt-2 border-top" data-loyalty-redemption-target="discount">
-                    {# Updated dynamically by Stimulus #}
-                </div>
+            <div class="d-none mt-3 pt-2"
+                 style="border-top: 1px dashed #e5e7eb;"
+                 data-loyalty-redemption-target="discount">
+                {# Updated dynamically by Stimulus #}
             </div>
         </div>
     {% endif %}
