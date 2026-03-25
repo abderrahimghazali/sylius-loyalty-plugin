@@ -7,6 +7,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Api;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Order\LoyaltyOrderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
@@ -24,6 +25,7 @@ final class LoyaltyRedemptionController
         private readonly LoyaltyAccountRepositoryInterface $loyaltyAccountRepository,
         private readonly OrderProcessorInterface $orderProcessor,
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -75,6 +77,7 @@ final class LoyaltyRedemptionController
         // Set redemption and trigger order reprocessing
         $order->setPointsToRedeem($pointsToRedeem);
         $this->orderProcessor->process($order);
+        $this->entityManager->flush();
 
         // The processor may have clamped the value
         $effectivePoints = $order->getPointsToRedeem();
@@ -110,6 +113,7 @@ final class LoyaltyRedemptionController
 
         $order->setPointsToRedeem(0);
         $this->orderProcessor->process($order);
+        $this->entityManager->flush();
 
         return new JsonResponse([
             'pointsRedeemed' => 0,

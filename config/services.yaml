@@ -100,6 +100,7 @@ services:
             $loyaltyAccountRepository: '@loyalty.repository.account'
             $orderProcessor: '@sylius.order_processing.order_processor'
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: controller.service_arguments }
 
