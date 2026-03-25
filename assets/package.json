@@ -1,0 +1,17 @@
+{
+    "name": "@abderrahimghazali/sylius-loyalty-plugin",
+    "license": "MIT",
+    "version": "2.0.0",
+    "symfony": {
+        "controllers": {
+            "loyalty-redemption": {
+                "main": "controllers/loyalty-redemption_controller.js",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
