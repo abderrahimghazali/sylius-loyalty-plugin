@@ -151,6 +151,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addLoyaltyMenu }
 
+    Abderrahim\SyliusLoyaltyPlugin\Menu\ShopAccountMenuListener:
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.shop.account, method: addLoyaltyMenu }
+
     # --- Form Types ---
 
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType:
