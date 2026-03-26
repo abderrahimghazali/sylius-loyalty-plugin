@@ -11,7 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class LoyaltyTierType extends AbstractResourceType
@@ -19,11 +21,6 @@ final class LoyaltyTierType extends AbstractResourceType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code', TextType::class, [
-                'label' => 'sylius.ui.code',
-                'disabled' => $options['is_edit'],
-                'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 50)],
-            ])
             ->add('name', TextType::class, [
                 'label' => 'sylius.ui.name',
                 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 100)],
@@ -38,10 +35,6 @@ final class LoyaltyTierType extends AbstractResourceType
                 'scale' => 2,
                 'constraints' => [new Assert\Positive()],
                 'attr' => ['min' => 0.01, 'step' => 0.01],
-            ])
-            ->add('position', IntegerType::class, [
-                'label' => 'sylius.ui.position',
-                'constraints' => [new Assert\PositiveOrZero()],
             ])
             ->add('color', ColorType::class, [
                 'label' => 'loyalty.form.color',
@@ -59,14 +52,25 @@ final class LoyaltyTierType extends AbstractResourceType
                 'required' => false,
             ])
         ;
-    }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        parent::configureOptions($resolver);
+        // Auto-generate code from name and position from minPoints
+        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event): void {
+            $tier = $event->getData();
 
-        $resolver->setDefault('is_edit', false);
-        $resolver->setAllowedTypes('is_edit', 'bool');
+            if ($tier === null) {
+                return;
+            }
+
+            // Auto-generate code from name if empty (only on create)
+            if (empty($tier->getCode()) && !empty($tier->getName())) {
+                $slugger = new AsciiSlugger();
+                $code = strtoupper((string) $slugger->slug($tier->getName(), '_'));
+                $tier->setCode($code);
+            }
+
+            // Auto-set position from minPoints
+            $tier->setPosition($tier->getMinPoints());
+        });
     }
 
     public function getBlockPrefix(): string

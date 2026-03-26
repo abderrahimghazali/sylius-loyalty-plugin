@@ -15,9 +15,6 @@ sylius_grid:
                     type: string
                     label: sylius.ui.name
                     sortable: ~
-                code:
-                    type: string
-                    label: sylius.ui.code
                 minPoints:
                     type: string
                     label: loyalty.ui.min_points
@@ -25,10 +22,6 @@ sylius_grid:
                 multiplier:
                     type: string
                     label: loyalty.ui.multiplier
-                    sortable: ~
-                position:
-                    type: string
-                    label: sylius.ui.position
                     sortable: ~
                 color:
                     type: twig
