@@ -1,45 +1,13 @@
 {% block loyalty_earning_rule_widget %}
     {{ form_row(form.name) }}
     {{ form_row(form.scopeType) }}
-
-    {% set hide = 'height:0;overflow:hidden;margin:0;padding:0;opacity:0;pointer-events:none;position:absolute;' %}
-
-    <div data-loyalty-scope-target="taxon" {% if form.scopeType.vars.data != 'taxon' %}style="{{ hide }}"{% endif %}>
-        {{ form_row(form.targetTaxons) }}
-    </div>
-    <div data-loyalty-scope-target="product" {% if form.scopeType.vars.data != 'product' %}style="{{ hide }}"{% endif %}>
-        {{ form_row(form.targetProducts) }}
-    </div>
-    <div data-loyalty-scope-target="variant" {% if form.scopeType.vars.data != 'variant' %}style="{{ hide }}"{% endif %}>
-        {{ form_row(form.targetVariants) }}
-    </div>
-
+    {{ form_row(form.targetTaxons) }}
+    {{ form_row(form.targetProducts) }}
+    {{ form_row(form.targetVariants) }}
     {{ form_row(form.pointsPerCurrencyUnit) }}
     {{ form_row(form.priority) }}
     {{ form_row(form.startsAt) }}
     {{ form_row(form.endsAt) }}
     {{ form_row(form.channel) }}
     {{ form_row(form.enabled) }}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var scopeSelect = document.querySelector('[name$="[scopeType]"]');
-            if (!scopeSelect) return;
-
-            var hideStyle = '{{ hide }}';
-
-            function toggleTargets() {
-                var value = scopeSelect.value;
-                document.querySelectorAll('[data-loyalty-scope-target]').forEach(function(el) {
-                    if (el.dataset.loyaltyScopeTarget === value) {
-                        el.removeAttribute('style');
-                    } else {
-                        el.setAttribute('style', hideStyle);
-                    }
-                });
-            }
-
-            scopeSelect.addEventListener('change', toggleTargets);
-        });
-    </script>
 {% endblock %}
