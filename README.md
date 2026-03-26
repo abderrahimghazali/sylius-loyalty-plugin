@@ -30,24 +30,10 @@
 
 SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Customers earn points on purchases, redeem them as discounts at checkout, unlock tier-based multipliers, and receive bonus points for registration, birthdays, and first orders — all manageable from the admin panel.
 
-### Screenshots
-
-**Cart — Redeem points (same UX as coupons)**
-
-<img src="docs/images/cart-redemption.png" alt="Cart redemption widget" width="700"/>
-
-**Customer Account — Loyalty points & transaction history**
-
-<img src="docs/images/customer-loyalty-account.png" alt="Customer loyalty account" width="700"/>
-
-**Admin — Loyalty tiers management**
-
-<img src="docs/images/admin-loyalty-tiers.png" alt="Admin loyalty tiers" width="700"/>
-
 ### Key Features
 
 - **Points earning** — Configurable points per currency unit on every order
-- **Cart redemption** — Spend points as a monetary discount on the cart page (same UX pattern as coupons)
+- **Cart redemption** — Spend points as a monetary discount on the cart page
 - **Points expiry** — Automatic expiration with cron command + 30-day warnings
 - **Bonus events** — Registration, birthday, and first-order bonuses (toggle on/off)
 - **Tier system** — Bronze / Silver / Gold with earning multipliers (tiers only go up)
@@ -203,10 +189,10 @@ Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
 
 ### Cart Redemption Widget
 
-On the cart page, logged-in customers can redeem points as a discount — styled identically to the coupon section. The widget uses Symfony UX Live Components (the same `data-model` binding pattern as the built-in coupon field).
+On the cart page, logged-in customers can redeem points as a discount. The widget uses Symfony UX Live Components for seamless interaction without page reloads.
 
 - Input field with placeholder showing available balance
-- "Apply points" button (triggers Live Component re-render, same as "Apply coupon")
+- "Apply points" button (triggers Live Component re-render)
 - Applied state shows a badge with points count, discount value, and a remove button
 - Loyalty discount line appears in the cart summary and throughout the checkout sidebar
 - Automatic clamping: can't exceed balance or order total
@@ -302,6 +288,20 @@ PATCH  /api/v2/admin/loyalty/accounts/{id}
 composer install
 vendor/bin/phpunit
 ```
+
+## Screenshots
+
+**Cart — Redeem points**
+
+<img src="docs/images/cart-redemption.png" alt="Cart redemption widget" width="700"/>
+
+**Customer Account — Loyalty points & transaction history**
+
+<img src="docs/images/customer-loyalty-account.png" alt="Customer loyalty account" width="700"/>
+
+**Admin — Loyalty tiers management**
+
+<img src="docs/images/admin-loyalty-tiers.png" alt="Admin loyalty tiers" width="700"/>
 
 ## License
 
