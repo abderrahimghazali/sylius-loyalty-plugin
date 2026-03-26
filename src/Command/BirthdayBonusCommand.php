@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
+use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,7 @@ final class BirthdayBonusCommand extends Command
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
+        private readonly PointTransactionRepositoryInterface $transactionRepository,
     ) {
         parent::__construct();
     }
@@ -44,6 +46,7 @@ final class BirthdayBonusCommand extends Command
 
         $birthdayBonus = $config->getBirthdayBonusPoints();
         $today = new \DateTime('today');
+        $year = (int) $today->format('Y');
 
         // Find customers whose birthday month and day match today
         $qb = $this->entityManager->createQueryBuilder();
@@ -58,19 +61,15 @@ final class BirthdayBonusCommand extends Command
             ->getResult();
 
         $count = 0;
+        $description = sprintf('Birthday bonus %d', $year);
 
         /** @var CustomerInterface $customer */
         foreach ($customers as $customer) {
             $account = $this->balanceManager->getOrCreateAccount($customer);
 
-            // Check if birthday bonus was already awarded this year
-            $transactions = $account->getTransactions()->filter(
-                fn ($t) => $t->getType() === TransactionType::Bonus
-                    && str_contains((string) $t->getDescription(), 'Birthday')
-                    && $t->getCreatedAt()?->format('Y') === $today->format('Y'),
-            );
-
-            if (!$transactions->isEmpty()) {
+            // Check via DB query instead of loading all transactions in memory
+            $existing = $this->transactionRepository->findBonusByDescriptionAndYear($account, $description, $year);
+            if ($existing !== null) {
                 continue;
             }
 
@@ -78,11 +77,14 @@ final class BirthdayBonusCommand extends Command
                 $account,
                 TransactionType::Bonus,
                 $birthdayBonus,
-                sprintf('Birthday bonus %s', $today->format('Y')),
+                $description,
             );
 
             ++$count;
         }
+
+        // Single flush for the entire batch
+        $this->entityManager->flush();
 
         $io->success(sprintf('Awarded birthday bonus to %d customer(s).', $count));
 

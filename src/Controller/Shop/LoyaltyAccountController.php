@@ -23,6 +23,8 @@ final class LoyaltyAccountController extends AbstractController
 
     public function indexAction(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $customer = $this->customerContext->getCustomer();
 
         if ($customer === null) {

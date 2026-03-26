@@ -24,6 +24,8 @@ final class PointAdjustmentController extends AbstractController
 
     public function adjustAction(Request $request, int $accountId): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATION_ACCESS');
+
         $account = $this->accountRepository->find($accountId);
         if (!$account instanceof LoyaltyAccountInterface) {
             throw new NotFoundHttpException('Loyalty account not found.');

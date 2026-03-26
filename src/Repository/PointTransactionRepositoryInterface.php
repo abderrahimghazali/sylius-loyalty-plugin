@@ -20,4 +20,10 @@ interface PointTransactionRepositoryInterface extends RepositoryInterface
     public function findEarnByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface;
 
     public function findBonusByDescription(LoyaltyAccountInterface $account, string $description): ?PointTransactionInterface;
+
+    public function findRedeemByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface;
+
+    public function findRestoreByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface;
+
+    public function findBonusByDescriptionAndYear(LoyaltyAccountInterface $account, string $description, int $year): ?PointTransactionInterface;
 }

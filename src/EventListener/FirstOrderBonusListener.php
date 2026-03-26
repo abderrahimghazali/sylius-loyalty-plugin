@@ -8,6 +8,7 @@ use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -23,6 +24,7 @@ final class FirstOrderBonusListener
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly PointTransactionRepositoryInterface $transactionRepository,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -70,5 +72,7 @@ final class FirstOrderBonusListener
             'First order bonus',
             $order,
         );
+
+        $this->entityManager->flush();
     }
 }

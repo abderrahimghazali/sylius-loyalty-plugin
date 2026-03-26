@@ -7,6 +7,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\EventListener;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -19,6 +20,7 @@ final class CustomerRegistrationListener
     public function __construct(
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -44,5 +46,7 @@ final class CustomerRegistrationListener
             $config->getRegistrationBonusPoints(),
             'Welcome bonus for account registration',
         );
+
+        $this->entityManager->flush();
     }
 }

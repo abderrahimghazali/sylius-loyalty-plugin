@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\EventListener;
 
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -16,6 +17,7 @@ final class OrderCompleteListener
 {
     public function __construct(
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -28,5 +30,6 @@ final class OrderCompleteListener
         }
 
         $this->balanceManager->awardPointsForOrder($order);
+        $this->entityManager->flush();
     }
 }

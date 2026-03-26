@@ -18,8 +18,8 @@ final class PointsCalculator implements PointsCalculatorInterface
     {
         $config = $this->configProvider->getConfiguration();
 
-        // Order total is in smallest currency unit (cents), convert to whole units
-        $orderTotalInUnits = $order->getTotal() / 100;
+        // Use items subtotal (pre-discount) so loyalty/coupon discounts don't reduce earned points
+        $orderTotalInUnits = $order->getItemsTotal() / 100;
 
         $basePoints = (int) floor($orderTotalInUnits * $config->getPointsPerCurrencyUnit());
 

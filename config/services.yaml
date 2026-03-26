@@ -48,12 +48,14 @@ services:
     Abderrahim\SyliusLoyaltyPlugin\EventListener\OrderCompleteListener:
         arguments:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_complete, method: __invoke }
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\OrderCancelListener:
         arguments:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_cancel, method: __invoke }
 
@@ -63,6 +65,7 @@ services:
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
             $orderRepository: '@sylius.repository.order'
             $transactionRepository: '@loyalty.repository.point_transaction'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_complete, method: __invoke }
 
@@ -70,6 +73,7 @@ services:
         arguments:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: sylius.customer.post_register, method: __invoke }
 
@@ -79,6 +83,7 @@ services:
         arguments:
             $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: console.command }
 
@@ -88,6 +93,7 @@ services:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
             $entityManager: '@doctrine.orm.entity_manager'
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $transactionRepository: '@loyalty.repository.point_transaction'
         tags:
             - { name: console.command }
 
@@ -126,12 +132,14 @@ services:
             $accountRepository: '@loyalty.repository.account'
             $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnPaymentRefundListener:
         arguments:
             $accountRepository: '@loyalty.repository.account'
             $transactionRepository: '@loyalty.repository.point_transaction'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
 
     # --- Admin Controllers ---
 

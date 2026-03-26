@@ -64,4 +64,55 @@ class PointTransactionRepository extends EntityRepository implements PointTransa
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findRedeemByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.order = :order')
+            ->andWhere('pt.type = :type')
+            ->setParameter('account', $account)
+            ->setParameter('order', $order)
+            ->setParameter('type', TransactionType::Redeem->value)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findRestoreByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.order = :order')
+            ->andWhere('pt.type = :type')
+            ->andWhere('pt.description LIKE :desc')
+            ->setParameter('account', $account)
+            ->setParameter('order', $order)
+            ->setParameter('type', TransactionType::Adjust->value)
+            ->setParameter('desc', 'Points restored%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findBonusByDescriptionAndYear(LoyaltyAccountInterface $account, string $description, int $year): ?PointTransactionInterface
+    {
+        $start = new \DateTime(sprintf('%d-01-01', $year));
+        $end = new \DateTime(sprintf('%d-01-01', $year + 1));
+
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.type = :type')
+            ->andWhere('pt.description = :description')
+            ->andWhere('pt.createdAt >= :start')
+            ->andWhere('pt.createdAt < :end')
+            ->setParameter('account', $account)
+            ->setParameter('type', TransactionType::Bonus->value)
+            ->setParameter('description', $description)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

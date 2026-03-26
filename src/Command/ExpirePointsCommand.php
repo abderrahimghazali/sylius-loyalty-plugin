@@ -7,6 +7,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +23,7 @@ final class ExpirePointsCommand extends Command
     public function __construct(
         private readonly PointTransactionRepositoryInterface $transactionRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -58,6 +60,9 @@ final class ExpirePointsCommand extends Command
 
             ++$count;
         }
+
+        // Single flush for the entire batch
+        $this->entityManager->flush();
 
         $io->success(sprintf('Expired %d point transaction(s).', $count));
 

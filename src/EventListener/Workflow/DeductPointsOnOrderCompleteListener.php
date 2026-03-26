@@ -69,5 +69,7 @@ final class DeductPointsOnOrderCompleteListener
             sprintf('Points redeemed for order #%s', $order->getNumber()),
             $order,
         );
+
+        $this->entityManager->flush();
     }
 }

@@ -21,6 +21,8 @@ final class LoyaltyConfigurationController extends AbstractController
 
     public function editAction(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATION_ACCESS');
+
         $config = $this->configProvider->getConfiguration();
 
         $form = $this->createForm(LoyaltyConfigurationType::class, $config);

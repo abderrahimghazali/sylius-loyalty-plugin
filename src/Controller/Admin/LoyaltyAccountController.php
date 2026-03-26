@@ -21,6 +21,8 @@ final class LoyaltyAccountController extends AbstractController
 
     public function showAction(int $id): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMINISTRATION_ACCESS');
+
         $account = $this->accountRepository->find($id);
 
         if (!$account instanceof LoyaltyAccountInterface) {

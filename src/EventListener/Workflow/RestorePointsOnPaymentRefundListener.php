@@ -9,6 +9,7 @@ use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -26,6 +27,7 @@ final class RestorePointsOnPaymentRefundListener
         private readonly LoyaltyAccountRepositoryInterface $accountRepository,
         private readonly PointTransactionRepositoryInterface $transactionRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -52,40 +54,26 @@ final class RestorePointsOnPaymentRefundListener
             return;
         }
 
-        // Find the redeem transaction for this order
-        $transactions = $this->transactionRepository->findByLoyaltyAccount($account, 500);
-
-        foreach ($transactions as $transaction) {
-            if (
-                $transaction->getType() === TransactionType::Redeem
-                && $transaction->getOrder()?->getId() === $order->getId()
-            ) {
-                // Check we haven't already restored (look for matching adjust)
-                $alreadyRestored = false;
-                foreach ($transactions as $other) {
-                    if (
-                        $other->getType() === TransactionType::Adjust
-                        && $other->getOrder()?->getId() === $order->getId()
-                        && str_contains((string) $other->getDescription(), 'restored')
-                    ) {
-                        $alreadyRestored = true;
-
-                        break;
-                    }
-                }
-
-                if (!$alreadyRestored) {
-                    $this->balanceManager->addTransaction(
-                        $account,
-                        TransactionType::Adjust,
-                        $transaction->getPoints(),
-                        sprintf('Points restored for refunded order #%s', $order->getNumber()),
-                        $order,
-                    );
-                }
-
-                return;
-            }
+        // Find the redeem transaction for this order via DB query
+        $redeemTransaction = $this->transactionRepository->findRedeemByOrder($account, $order);
+        if ($redeemTransaction === null) {
+            return;
         }
+
+        // Check we haven't already restored via DB query
+        $existing = $this->transactionRepository->findRestoreByOrder($account, $order);
+        if ($existing !== null) {
+            return;
+        }
+
+        $this->balanceManager->addTransaction(
+            $account,
+            TransactionType::Adjust,
+            $redeemTransaction->getPoints(),
+            sprintf('Points restored for refunded order #%s', $order->getNumber()),
+            $order,
+        );
+
+        $this->entityManager->flush();
     }
 }

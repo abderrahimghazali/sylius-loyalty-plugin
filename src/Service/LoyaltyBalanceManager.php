@@ -41,7 +41,6 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         $account->setCustomer($customer);
 
         $this->entityManager->persist($account);
-        $this->entityManager->flush();
 
         return $account;
     }
@@ -84,7 +83,6 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         $this->tierEvaluator->evaluate($account);
 
         $this->entityManager->persist($transaction);
-        $this->entityManager->flush();
 
         return $transaction;
     }
