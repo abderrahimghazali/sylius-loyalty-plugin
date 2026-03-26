@@ -66,12 +66,17 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             $transaction->setExpiresAt($expiresAt);
         }
 
-        $account->addTransaction($transaction);
-
-        // Update account balance
+        // Update account balance — clamp debits to available balance
         if ($type->isDebit()) {
-            $account->debitPoints($points);
+            $safePoints = min($points, $account->getPointsBalance());
+            if ($safePoints <= 0) {
+                return $transaction;
+            }
+            $transaction->setPoints($safePoints);
+            $account->addTransaction($transaction);
+            $account->debitPoints($safePoints);
         } else {
+            $account->addTransaction($transaction);
             $account->creditPoints($points);
         }
 

@@ -9,6 +9,7 @@ use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\ShopUserInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[AsController]
 final class LoyaltyRedemptionController
@@ -26,6 +28,7 @@ final class LoyaltyRedemptionController
         private readonly OrderProcessorInterface $orderProcessor,
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
         private readonly EntityManagerInterface $entityManager,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 
@@ -51,6 +54,11 @@ final class LoyaltyRedemptionController
         $customer = $order->getCustomer();
         if ($customer === null) {
             return $this->errorResponse('Guest orders cannot use loyalty points.', Response::HTTP_FORBIDDEN);
+        }
+
+        // Verify the logged-in user owns this order
+        if (!$this->isOwner($order)) {
+            return $this->errorResponse('Access denied.', Response::HTTP_FORBIDDEN);
         }
 
         $payload = json_decode($request->getContent(), true);
@@ -111,6 +119,11 @@ final class LoyaltyRedemptionController
             );
         }
 
+        // Verify the logged-in user owns this order
+        if (!$this->isOwner($order)) {
+            return $this->errorResponse('Access denied.', Response::HTTP_FORBIDDEN);
+        }
+
         $order->setPointsToRedeem(0);
         $this->orderProcessor->process($order);
         $this->entityManager->flush();
@@ -121,6 +134,26 @@ final class LoyaltyRedemptionController
             'orderTotal' => $order->getTotal(),
             'message' => 'Loyalty redemption removed.',
         ]);
+    }
+
+    private function isOwner(OrderInterface $order): bool
+    {
+        $token = $this->tokenStorage->getToken();
+        if ($token === null) {
+            return false;
+        }
+
+        $user = $token->getUser();
+        if (!$user instanceof ShopUserInterface) {
+            return false;
+        }
+
+        $loggedInCustomer = $user->getCustomer();
+        if ($loggedInCustomer === null) {
+            return false;
+        }
+
+        return $order->getCustomer()?->getId() === $loggedInCustomer->getId();
     }
 
     private function findOrder(string $tokenValue): ?OrderInterface

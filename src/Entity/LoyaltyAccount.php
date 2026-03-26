@@ -111,6 +111,14 @@ class LoyaltyAccount implements LoyaltyAccountInterface
 
     public function debitPoints(int $points): void
     {
+        if ($points > $this->pointsBalance) {
+            throw new \DomainException(sprintf(
+                'Cannot debit %d points — only %d available.',
+                $points,
+                $this->pointsBalance,
+            ));
+        }
+
         $this->pointsBalance -= $points;
     }
 }

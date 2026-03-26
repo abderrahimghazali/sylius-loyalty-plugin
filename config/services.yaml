@@ -57,6 +57,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_cancel, method: __invoke }
 
+    Abderrahim\SyliusLoyaltyPlugin\EventListener\FirstOrderBonusListener:
+        arguments:
+            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $orderRepository: '@sylius.repository.order'
+            $transactionRepository: '@loyalty.repository.point_transaction'
+        tags:
+            - { name: kernel.event_listener, event: sylius.order.post_complete, method: __invoke }
+
     Abderrahim\SyliusLoyaltyPlugin\EventListener\CustomerRegistrationListener:
         arguments:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
@@ -101,6 +110,7 @@ services:
             $orderProcessor: '@sylius.order_processing.order_processor'
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
             $entityManager: '@doctrine.orm.entity_manager'
+            $tokenStorage: '@security.token_storage'
         tags:
             - { name: controller.service_arguments }
 
@@ -109,6 +119,7 @@ services:
     Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\DeductPointsOnOrderCompleteListener:
         arguments:
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow\RestorePointsOnOrderCancelListener:
         arguments:

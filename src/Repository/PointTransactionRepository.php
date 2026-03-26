@@ -50,4 +50,18 @@ class PointTransactionRepository extends EntityRepository implements PointTransa
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findBonusByDescription(LoyaltyAccountInterface $account, string $description): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.type = :type')
+            ->andWhere('pt.description = :description')
+            ->setParameter('account', $account)
+            ->setParameter('type', TransactionType::Bonus->value)
+            ->setParameter('description', $description)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
