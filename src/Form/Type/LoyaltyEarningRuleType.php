@@ -24,6 +24,12 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $scopeChoices = [
+            'loyalty.ui.scope_taxon' => 'taxon',
+            'loyalty.ui.scope_product' => 'product',
+            'loyalty.ui.scope_variant' => 'variant',
+        ];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'sylius.ui.name',
@@ -31,14 +37,9 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
             ])
             ->add('scopeType', ChoiceType::class, [
                 'label' => 'loyalty.ui.scope_type',
-                'choices' => [
-                    'loyalty.ui.scope_taxon' => EarningRuleScopeType::Taxon->value,
-                    'loyalty.ui.scope_product' => EarningRuleScopeType::Product->value,
-                    'loyalty.ui.scope_variant' => EarningRuleScopeType::Variant->value,
-                ],
-                'getter' => fn ($rule) => $rule->getScopeType()->value,
-                'setter' => fn ($rule, $value) => $rule->setScopeType(EarningRuleScopeType::from($value)),
-            })
+                'choices' => $scopeChoices,
+                'mapped' => false,
+            ])
             ->add('targetTaxon', TaxonAutocompleteType::class, [
                 'label' => 'loyalty.ui.scope_taxon',
                 'required' => false,
@@ -85,7 +86,16 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
             ])
         ;
 
-        // On submit: read the autocomplete field matching scopeType and set targetId
+        // Pre-populate scopeType choice from entity
+        $builder->addEventListener(FormEvents::POST_SET_DATA, static function (FormEvent $event): void {
+            $rule = $event->getData();
+            if ($rule === null) {
+                return;
+            }
+            $event->getForm()->get('scopeType')->setData($rule->getScopeType()->value);
+        });
+
+        // On submit: set scopeType + targetId from the form fields
         $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event): void {
             $rule = $event->getData();
             if ($rule === null) {
@@ -93,6 +103,12 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
             }
 
             $form = $event->getForm();
+            $scopeValue = $form->get('scopeType')->getData();
+
+            if ($scopeValue !== null) {
+                $rule->setScopeType(EarningRuleScopeType::from($scopeValue));
+            }
+
             $scope = $rule->getScopeType();
 
             $target = match ($scope) {
