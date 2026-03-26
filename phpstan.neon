@@ -3,4 +3,6 @@ parameters:
     paths:
         - src
     ignoreErrors:
-        - identifier: trait.unused
+        -
+            identifier: trait.unused
+            reportUnmatched: false
