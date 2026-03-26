@@ -1,6 +1,2 @@
-sylius_twig_hooks:
-    hooks:
-        'sylius_shop.checkout.complete.content.form':
-            loyalty_redemption:
-                template: '@SyliusLoyaltyPlugin/shop/checkout/complete/content/form/loyalty_redemption.html.twig'
-                priority: 150
+## Loyalty redemption has been moved to the cart page.
+## See: config/twig_hooks/shop/cart/loyalty_points.yaml

@@ -1,0 +1,66 @@
+{#
+    Cart loyalty points redemption widget.
+    Hooked into: sylius_shop.cart.index.content.form.sections.general#left
+    Styled to match the coupon section.
+#}
+{% set form = hookable_metadata.context.form %}
+{% set cart = form.vars.data %}
+{% set customer = cart.customer|default(null) %}
+
+{% if customer is not null %}
+    {% set loyalty = loyalty_account(customer) %}
+    {% if loyalty is not null and loyalty.enabled and loyalty.balance > 0 %}
+        {% set currency_symbol = sylius.channel.baseCurrency.code|sylius_currency_symbol %}
+        {% set ctrl = '@abderrahimghazali/sylius-loyalty-plugin/loyalty-redemption' %}
+        {% set current_points = cart.pointsToRedeem|default(0) %}
+
+        <div class="mb-4"
+             {{ stimulus_controller(ctrl, {
+                 token: cart.tokenValue|default(''),
+                 balance: loyalty.balance,
+                 rate: redemption_rate|default(100),
+                 currency: currency_symbol,
+             }) }}
+        >
+            <div class="p-4 bg-light">
+                <div class="input-group field">
+                    {% if current_points > 0 %}
+                        <div class="card d-flex flex-row justify-content-between align-items-center w-100 py-2 px-3">
+                            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem 0;">
+                                <span class="me-2">{{ 'loyalty.ui.points_applied'|trans }}:</span>
+                                <span class="badge d-flex align-items-center text-bg-warning">
+                                    {{ current_points }} {{ 'loyalty.ui.points'|trans|lower }}
+                                </span>
+                                <span class="ms-2 text-success fw-semibold">
+                                    (-{{ currency_symbol }}{{ loyalty_points_value(current_points) }})
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-transparent d-flex align-items-center p-0"
+                                {{ stimulus_action(ctrl, 'clear') }}
+                            >
+                                {{ ux_icon('tabler:trash', {class: 'icon icon-sm'}) }}
+                            </button>
+                        </div>
+                    {% else %}
+                        <input type="number"
+                               class="form-control"
+                               min="1"
+                               max="{{ loyalty.balance }}"
+                               placeholder="{{ 'loyalty.ui.enter_points'|trans({'%balance%': loyalty.balance}) }}"
+                               {{ stimulus_target(ctrl, 'input') }}
+                        />
+                        <button class="btn btn-outline-gray" type="button"
+                                {{ stimulus_action(ctrl, 'applyPoints') }}
+                        >
+                            {{ 'loyalty.ui.apply_points'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="text-danger mt-1 d-none" style="font-size: 0.8rem;"
+                     {{ stimulus_target(ctrl, 'error') }}></div>
+                <button type="button" class="d-none" data-action="live#$render"
+                        {{ stimulus_target(ctrl, 'refresh') }}></button>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

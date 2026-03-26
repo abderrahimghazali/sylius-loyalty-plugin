@@ -52,9 +52,12 @@ loyalty:
         points_expiring_soon: Points expiring soon!
         expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
 
-        # Checkout redemption
+        # Cart redemption
         redeem_points: Redeem Loyalty Points
         points_to_redeem: Points to redeem
+        points_applied: Loyalty points applied
+        apply_points: Apply points
+        enter_points: 'Enter points to redeem (%balance% available)'
         use_all: Use all points
         clear: Clear
 

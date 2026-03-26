@@ -1,15 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 
 /**
- * Stimulus controller for the checkout loyalty points redemption widget.
+ * Stimulus controller for the cart loyalty points redemption widget.
  *
  * Targets:
  *   - input: the points input field
- *   - discount: element showing the discount amount
- *   - orderTotal: element showing the updated order total
- *   - balance: element showing available points balance
  *   - error: element for displaying validation errors
- *   - redeemAll: the "Use all points" button
+ *   - refresh: hidden button that triggers a live component re-render
  *
  * Values:
  *   - token: the order tokenValue (for API calls)
@@ -18,7 +15,7 @@ import { Controller } from '@hotwired/stimulus';
  *   - currency: currency symbol
  */
 export default class extends Controller {
-    static targets = ['input', 'discount', 'orderTotal', 'balance', 'error', 'redeemAll'];
+    static targets = ['input', 'error', 'refresh'];
     static values = {
         token: String,
         balance: Number,
@@ -26,65 +23,16 @@ export default class extends Controller {
         currency: { type: String, default: '€' },
     };
 
-    connect() {
-        this._debounceTimer = null;
-    }
-
-    disconnect() {
-        if (this._debounceTimer) {
-            clearTimeout(this._debounceTimer);
-        }
-    }
-
     /**
-     * Called on input change — debounced to avoid excessive API calls.
+     * "Apply points" button handler.
      */
-    onPointsInput() {
+    async applyPoints() {
         this.clearError();
 
-        if (this._debounceTimer) {
-            clearTimeout(this._debounceTimer);
-        }
-
-        this._debounceTimer = setTimeout(() => this.applyRedemption(), 400);
-    }
-
-    /**
-     * "Use all points" button handler.
-     */
-    useAll() {
-        this.inputTarget.value = this.balanceValue;
-        this.applyRedemption();
-    }
-
-    /**
-     * Clear redemption entirely.
-     */
-    async clear() {
-        this.inputTarget.value = '';
-        this.clearError();
-
-        try {
-            const response = await fetch(`/api/v2/shop/orders/${this.tokenValue}/loyalty-redemption`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            const data = await response.json();
-            this.updateDisplay(0, data.orderTotal);
-        } catch {
-            this.showError('Failed to clear redemption.');
-        }
-    }
-
-    /**
-     * Send the redemption request to the API.
-     */
-    async applyRedemption() {
         const points = parseInt(this.inputTarget.value, 10);
 
         if (isNaN(points) || points <= 0) {
-            this.clear();
+            this.showError('Please enter a valid number of points.');
             return;
         }
 
@@ -107,34 +55,37 @@ export default class extends Controller {
                 return;
             }
 
-            this.inputTarget.value = data.pointsRedeemed;
-            this.updateDisplay(data.discountAmount, data.orderTotal);
+            this._triggerRefresh();
         } catch {
             this.showError('Network error. Please try again.');
         }
     }
 
     /**
-     * Update the discount and total display.
+     * Remove redemption (trash icon handler).
      */
-    updateDisplay(discountCents, totalCents) {
-        const discountFormatted = (discountCents / 100).toFixed(2);
-        const totalFormatted = (totalCents / 100).toFixed(2);
+    async clear() {
+        this.clearError();
 
-        if (this.hasDiscountTarget) {
-            if (discountCents > 0) {
-                this.discountTarget.innerHTML =
-                    `<span style="color: #6b7280; font-size: 0.875rem;">Loyalty discount</span>` +
-                    `<span style="color: #059669; font-weight: 600; font-size: 0.95rem;">-${this.currencyValue}${discountFormatted}</span>`;
-                this.discountTarget.classList.remove('d-none');
-            } else {
-                this.discountTarget.innerHTML = '';
-                this.discountTarget.classList.add('d-none');
-            }
+        try {
+            await fetch(`/api/v2/shop/orders/${this.tokenValue}/loyalty-redemption`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            this._triggerRefresh();
+        } catch {
+            this.showError('Failed to clear redemption.');
         }
+    }
 
-        if (this.hasOrderTotalTarget) {
-            this.orderTotalTarget.textContent = `${this.currencyValue}${totalFormatted}`;
+    /**
+     * Trigger the parent live component to re-render,
+     * so the cart summary updates with the new totals.
+     */
+    _triggerRefresh() {
+        if (this.hasRefreshTarget) {
+            this.refreshTarget.click();
         }
     }
 

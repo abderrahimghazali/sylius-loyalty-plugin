@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.cart.index.content.form.sections.general#left':
+            loyalty_points:
+                template: '@SyliusLoyaltyPlugin/shop/cart/index/content/form/sections/general/loyalty_points.html.twig'
+                priority: 90
