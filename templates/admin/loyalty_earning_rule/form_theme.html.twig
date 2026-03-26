@@ -1,0 +1,37 @@
+{% block loyalty_earning_rule_widget %}
+    {{ form_row(form.name) }}
+    {{ form_row(form.scopeType) }}
+
+    <div data-loyalty-scope-target="taxon" {% if form.scopeType.vars.data != 'taxon' %}style="display:none"{% endif %}>
+        {{ form_row(form.targetTaxons) }}
+    </div>
+    <div data-loyalty-scope-target="product" {% if form.scopeType.vars.data != 'product' %}style="display:none"{% endif %}>
+        {{ form_row(form.targetProducts) }}
+    </div>
+    <div data-loyalty-scope-target="variant" {% if form.scopeType.vars.data != 'variant' %}style="display:none"{% endif %}>
+        {{ form_row(form.targetVariants) }}
+    </div>
+
+    {{ form_row(form.pointsPerCurrencyUnit) }}
+    {{ form_row(form.priority) }}
+    {{ form_row(form.startsAt) }}
+    {{ form_row(form.endsAt) }}
+    {{ form_row(form.channel) }}
+    {{ form_row(form.enabled) }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scopeSelect = document.querySelector('[name$="[scopeType]"]');
+            if (!scopeSelect) return;
+
+            function toggleTargets() {
+                const value = scopeSelect.value;
+                document.querySelectorAll('[data-loyalty-scope-target]').forEach(function(el) {
+                    el.style.display = el.dataset.loyaltyScopeTarget === value ? '' : 'none';
+                });
+            }
+
+            scopeSelect.addEventListener('change', toggleTargets);
+        });
+    </script>
+{% endblock %}

@@ -37,5 +37,12 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
 
         // Load twig hooks configuration
         $loader->load('config.yaml');
+
+        // Register custom form theme for earning rule form
+        $container->prependExtensionConfig('twig', [
+            'form_themes' => [
+                '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/form_theme.html.twig',
+            ],
+        ]);
     }
 }
