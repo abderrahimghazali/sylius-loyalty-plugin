@@ -2,13 +2,15 @@
     {{ form_row(form.name) }}
     {{ form_row(form.scopeType) }}
 
-    <div data-loyalty-scope-target="taxon" {% if form.scopeType.vars.data != 'taxon' %}style="display:none"{% endif %}>
+    {% set hide = 'height:0;overflow:hidden;margin:0;padding:0;opacity:0;pointer-events:none;position:absolute;' %}
+
+    <div data-loyalty-scope-target="taxon" {% if form.scopeType.vars.data != 'taxon' %}style="{{ hide }}"{% endif %}>
         {{ form_row(form.targetTaxons) }}
     </div>
-    <div data-loyalty-scope-target="product" {% if form.scopeType.vars.data != 'product' %}style="display:none"{% endif %}>
+    <div data-loyalty-scope-target="product" {% if form.scopeType.vars.data != 'product' %}style="{{ hide }}"{% endif %}>
         {{ form_row(form.targetProducts) }}
     </div>
-    <div data-loyalty-scope-target="variant" {% if form.scopeType.vars.data != 'variant' %}style="display:none"{% endif %}>
+    <div data-loyalty-scope-target="variant" {% if form.scopeType.vars.data != 'variant' %}style="{{ hide }}"{% endif %}>
         {{ form_row(form.targetVariants) }}
     </div>
 
@@ -21,13 +23,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const scopeSelect = document.querySelector('[name$="[scopeType]"]');
+            var scopeSelect = document.querySelector('[name$="[scopeType]"]');
             if (!scopeSelect) return;
 
+            var hideStyle = '{{ hide }}';
+
             function toggleTargets() {
-                const value = scopeSelect.value;
+                var value = scopeSelect.value;
                 document.querySelectorAll('[data-loyalty-scope-target]').forEach(function(el) {
-                    el.style.display = el.dataset.loyaltyScopeTarget === value ? '' : 'none';
+                    if (el.dataset.loyaltyScopeTarget === value) {
+                        el.removeAttribute('style');
+                    } else {
+                        el.setAttribute('style', hideStyle);
+                    }
                 });
             }
 
