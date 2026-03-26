@@ -70,9 +70,9 @@ loyalty:
         target_taxons: Categories
         target_products: Products
         target_variants: Variants
-        add_category_rule: + Category rule
-        add_product_rule: + Product rule
-        add_variant_rule: + Variant rule
+        add_category_rule: Category rule
+        add_product_rule: Product rule
+        add_variant_rule: Variant rule
         conflicts: Conflicts
         points_per_unit: Pts/unit
         starts_at: Starts at
