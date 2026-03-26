@@ -1,0 +1,87 @@
+loyalty:
+    ui:
+        loyalty_points: Treuepunkte
+        loyalty_account: Treuekonto
+        loyalty_accounts: Treuekonten
+        loyalty_tiers: Treuestufen
+        loyalty_configuration: Treuekonfiguration
+        manage_loyalty_accounts: Treuekonten verwalten
+        manage_loyalty_tiers: Treuestufen verwalten
+        point_transaction_history: Transaktionsverlauf
+        accounts: Treuekonten
+        account: Treuekonto
+        tiers: Stufen
+        point_transactions: Punktetransaktionen
+        point_transaction: Punktetransaktion
+        points: Punkte
+        points_balance: Punktestand
+        lifetime_points: Gesammelte Punkte
+        available_points: Verfügbare Punkte
+        redeemable_value: Einlösbarer Wert
+        min_points: Min. Punkte
+        multiplier: Multiplikator
+        balance: Guthaben
+        current_balance: Aktueller Stand
+        tier: Stufe
+        no_tier: Keine Stufe
+        type: Typ
+        type_earn: Verdient
+        type_redeem: Eingelöst
+        type_expire: Verfallen
+        type_adjust: Angepasst
+        type_deduct: Abgezogen
+        type_bonus: Bonus
+        expires: Verfällt
+        expires_at: Verfällt am
+        transaction_history: Transaktionsverlauf
+        no_transactions: Noch keine Transaktionen.
+        my_loyalty_points: Treuepunkte
+        you_have_points: 'Sie haben <strong>%points%</strong> Treuepunkte verfügbar.'
+        worth: 'Wert %value%'
+        points_expiring_soon: Punkte verfallen bald!
+        expiry_warning: '%points% Punkte verfallen am %date%. Lösen Sie sie rechtzeitig ein!'
+        channel_configurations: Kanalkonfigurationen
+        configured: Konfiguriert
+        not_configured: Nicht konfiguriert
+        color: Badge-Farbe
+        loyalty_discount: Treuerabatt
+        redeem_points: Treuepunkte einlösen
+        points_to_redeem: Einzulösende Punkte
+        points_applied: Treuepunkte angewendet
+        apply_points: Punkte einlösen
+        enter_points: 'Punkte eingeben (%balance% verfügbar)'
+        use_all: Alle Punkte verwenden
+        clear: Löschen
+        adjust_points: Punkte anpassen
+        manual_adjustment: Manuelle Anpassung
+        adjustment_hint: 'Positiv zum Hinzufügen, negativ zum Abziehen.'
+        apply_adjustment: Anwenden
+        view_full_details: Details anzeigen
+        config_earning: Punkte sammeln & Verfall
+        config_bonuses: Bonusaktionen
+        config_tiers: Stufenschwellen
+
+    form:
+        points_per_currency_unit: Punkte pro Währungseinheit
+        points_per_currency_unit_help: 'Wie viele Treuepunkte ein Kunde pro ausgegebener Währungseinheit erhält (z.B. 1 Punkt pro €1).'
+        redemption_rate: Einlöserate
+        redemption_rate_help: 'Wie viele Punkte einer Währungseinheit beim Einlösen entsprechen (z.B. 100 Punkte = €1).'
+        expiry_days: Punkteverfall (Tage)
+        expiry_days_help: 'Anzahl der Tage bis zum Verfall der verdienten Punkte. 0 = nie.'
+        tiers_enabled: Stufensystem aktivieren
+        registration_bonus_enabled: Registrierungsbonus aktivieren
+        registration_bonus_points: Registrierungsbonuspunkte
+        birthday_bonus_enabled: Geburtstagsbonus aktivieren
+        birthday_bonus_points: Geburtstagsbonuspunkte
+        first_order_bonus_enabled: Erstbestellungsbonus aktivieren
+        first_order_bonus_points: Erstbestellungsbonuspunkte
+        min_points: Mindestpunkte (kumuliert)
+        multiplier: Punktemultiplikator
+        color: Badge-Farbe
+        adjustment_points: Punkte
+        adjustment_points_help: 'Positiv zum Hinzufügen, negativ zum Abziehen.'
+        adjustment_reason: Grund
+
+    flash:
+        configuration_updated: Die Treuekonfiguration wurde erfolgreich aktualisiert.
+        points_adjusted: Die Punkte wurden erfolgreich angepasst.

@@ -1,0 +1,87 @@
+loyalty:
+    ui:
+        loyalty_points: Points de fidélité
+        loyalty_account: Compte de fidélité
+        loyalty_accounts: Comptes de fidélité
+        loyalty_tiers: Niveaux de fidélité
+        loyalty_configuration: Configuration fidélité
+        manage_loyalty_accounts: Gérer les comptes de fidélité
+        manage_loyalty_tiers: Gérer les niveaux de fidélité
+        point_transaction_history: Historique des transactions
+        accounts: Comptes de fidélité
+        account: Compte de fidélité
+        tiers: Niveaux
+        point_transactions: Transactions de points
+        point_transaction: Transaction de points
+        points: Points
+        points_balance: Solde de points
+        lifetime_points: Points cumulés
+        available_points: Points disponibles
+        redeemable_value: Valeur échangeable
+        min_points: Points min.
+        multiplier: Multiplicateur
+        balance: Solde
+        current_balance: Solde actuel
+        tier: Niveau
+        no_tier: Aucun niveau
+        type: Type
+        type_earn: Gagné
+        type_redeem: Utilisé
+        type_expire: Expiré
+        type_adjust: Ajusté
+        type_deduct: Déduit
+        type_bonus: Bonus
+        expires: Expire
+        expires_at: Expire le
+        transaction_history: Historique des transactions
+        no_transactions: Aucune transaction pour le moment.
+        my_loyalty_points: Points de fidélité
+        you_have_points: 'Vous avez <strong>%points%</strong> points de fidélité disponibles.'
+        worth: 'valeur %value%'
+        points_expiring_soon: Points bientôt expirés !
+        expiry_warning: '%points% points expireront le %date%. Utilisez-les avant leur expiration !'
+        channel_configurations: Configurations par canal
+        configured: Configuré
+        not_configured: Non configuré
+        color: Couleur du badge
+        loyalty_discount: Réduction fidélité
+        redeem_points: Utiliser les points de fidélité
+        points_to_redeem: Points à utiliser
+        points_applied: Points de fidélité appliqués
+        apply_points: Appliquer les points
+        enter_points: 'Saisissez les points à utiliser (%balance% disponibles)'
+        use_all: Utiliser tous les points
+        clear: Effacer
+        adjust_points: Ajuster les points
+        manual_adjustment: Ajustement manuel
+        adjustment_hint: 'Entrez un nombre positif pour ajouter, négatif pour déduire.'
+        apply_adjustment: Appliquer
+        view_full_details: Voir les détails
+        config_earning: Gains de points & expiration
+        config_bonuses: Bonus
+        config_tiers: Seuils des niveaux
+
+    form:
+        points_per_currency_unit: Points par unité monétaire
+        points_per_currency_unit_help: "Combien de points de fidélité un client gagne par unité monétaire dépensée (ex: 1 point par €1)."
+        redemption_rate: Taux d'échange
+        redemption_rate_help: "Combien de points équivalent à 1 unité monétaire lors de l'échange (ex: 100 points = €1)."
+        expiry_days: Expiration des points (jours)
+        expiry_days_help: "Nombre de jours avant l'expiration des points gagnés. 0 = jamais."
+        tiers_enabled: Activer le système de niveaux
+        registration_bonus_enabled: Activer le bonus d'inscription
+        registration_bonus_points: Points bonus d'inscription
+        birthday_bonus_enabled: Activer le bonus anniversaire
+        birthday_bonus_points: Points bonus anniversaire
+        first_order_bonus_enabled: Activer le bonus première commande
+        first_order_bonus_points: Points bonus première commande
+        min_points: Points minimum cumulés
+        multiplier: Multiplicateur de points
+        color: Couleur du badge
+        adjustment_points: Points
+        adjustment_points_help: 'Positif pour ajouter, négatif pour déduire.'
+        adjustment_reason: Raison
+
+    flash:
+        configuration_updated: La configuration de fidélité a été mise à jour avec succès.
+        points_adjusted: Les points ont été ajustés avec succès.

@@ -1,0 +1,87 @@
+loyalty:
+    ui:
+        loyalty_points: Puntos de fidelidad
+        loyalty_account: Cuenta de fidelidad
+        loyalty_accounts: Cuentas de fidelidad
+        loyalty_tiers: Niveles de fidelidad
+        loyalty_configuration: Configuración de fidelidad
+        manage_loyalty_accounts: Gestionar cuentas de fidelidad
+        manage_loyalty_tiers: Gestionar niveles de fidelidad
+        point_transaction_history: Historial de transacciones
+        accounts: Cuentas de fidelidad
+        account: Cuenta de fidelidad
+        tiers: Niveles
+        point_transactions: Transacciones de puntos
+        point_transaction: Transacción de puntos
+        points: Puntos
+        points_balance: Saldo de puntos
+        lifetime_points: Puntos acumulados
+        available_points: Puntos disponibles
+        redeemable_value: Valor canjeable
+        min_points: Puntos mín.
+        multiplier: Multiplicador
+        balance: Saldo
+        current_balance: Saldo actual
+        tier: Nivel
+        no_tier: Sin nivel
+        type: Tipo
+        type_earn: Ganado
+        type_redeem: Canjeado
+        type_expire: Expirado
+        type_adjust: Ajustado
+        type_deduct: Deducido
+        type_bonus: Bonus
+        expires: Expira
+        expires_at: Expira el
+        transaction_history: Historial de transacciones
+        no_transactions: No hay transacciones todavía.
+        my_loyalty_points: Puntos de fidelidad
+        you_have_points: 'Tienes <strong>%points%</strong> puntos de fidelidad disponibles.'
+        worth: 'valor %value%'
+        points_expiring_soon: ¡Puntos por expirar!
+        expiry_warning: '%points% puntos expirarán el %date%. ¡Úsalos antes de que expiren!'
+        channel_configurations: Configuraciones por canal
+        configured: Configurado
+        not_configured: No configurado
+        color: Color del badge
+        loyalty_discount: Descuento de fidelidad
+        redeem_points: Canjear puntos de fidelidad
+        points_to_redeem: Puntos a canjear
+        points_applied: Puntos de fidelidad aplicados
+        apply_points: Aplicar puntos
+        enter_points: 'Ingresa los puntos a canjear (%balance% disponibles)'
+        use_all: Usar todos los puntos
+        clear: Limpiar
+        adjust_points: Ajustar puntos
+        manual_adjustment: Ajuste manual
+        adjustment_hint: 'Positivo para agregar, negativo para deducir.'
+        apply_adjustment: Aplicar
+        view_full_details: Ver detalles
+        config_earning: Acumulación y expiración
+        config_bonuses: Eventos bonus
+        config_tiers: Umbrales de niveles
+
+    form:
+        points_per_currency_unit: Puntos por unidad monetaria
+        points_per_currency_unit_help: 'Cuántos puntos gana un cliente por cada unidad monetaria gastada (ej: 1 punto por €1).'
+        redemption_rate: Tasa de canje
+        redemption_rate_help: 'Cuántos puntos equivalen a 1 unidad monetaria al canjear (ej: 100 puntos = €1).'
+        expiry_days: Expiración de puntos (días)
+        expiry_days_help: 'Número de días antes de que expiren los puntos ganados. 0 = nunca.'
+        tiers_enabled: Activar sistema de niveles
+        registration_bonus_enabled: Activar bonus de registro
+        registration_bonus_points: Puntos bonus de registro
+        birthday_bonus_enabled: Activar bonus de cumpleaños
+        birthday_bonus_points: Puntos bonus de cumpleaños
+        first_order_bonus_enabled: Activar bonus de primera compra
+        first_order_bonus_points: Puntos bonus de primera compra
+        min_points: Puntos mínimos acumulados
+        multiplier: Multiplicador de puntos
+        color: Color del badge
+        adjustment_points: Puntos
+        adjustment_points_help: 'Positivo para agregar, negativo para deducir.'
+        adjustment_reason: Motivo
+
+    flash:
+        configuration_updated: La configuración de fidelidad se ha actualizado correctamente.
+        points_adjusted: Los puntos se han ajustado correctamente.

@@ -1,0 +1,87 @@
+loyalty:
+    ui:
+        loyalty_points: Punkty lojalnościowe
+        loyalty_account: Konto lojalnościowe
+        loyalty_accounts: Konta lojalnościowe
+        loyalty_tiers: Poziomy lojalnościowe
+        loyalty_configuration: Konfiguracja lojalnościowa
+        manage_loyalty_accounts: Zarządzaj kontami lojalnościowymi
+        manage_loyalty_tiers: Zarządzaj poziomami lojalnościowymi
+        point_transaction_history: Historia transakcji punktów
+        accounts: Konta lojalnościowe
+        account: Konto lojalnościowe
+        tiers: Poziomy
+        point_transactions: Transakcje punktów
+        point_transaction: Transakcja punktów
+        points: Punkty
+        points_balance: Saldo punktów
+        lifetime_points: Punkty łącznie
+        available_points: Dostępne punkty
+        redeemable_value: Wartość do wymiany
+        min_points: Min. punktów
+        multiplier: Mnożnik
+        balance: Saldo
+        current_balance: Bieżące saldo
+        tier: Poziom
+        no_tier: Brak poziomu
+        type: Typ
+        type_earn: Zdobyte
+        type_redeem: Wymienione
+        type_expire: Wygasłe
+        type_adjust: Skorygowane
+        type_deduct: Odjęte
+        type_bonus: Bonus
+        expires: Wygasa
+        expires_at: Wygasa dnia
+        transaction_history: Historia transakcji
+        no_transactions: Brak transakcji.
+        my_loyalty_points: Punkty lojalnościowe
+        you_have_points: 'Masz <strong>%points%</strong> dostępnych punktów lojalnościowych.'
+        worth: 'wartość %value%'
+        points_expiring_soon: Punkty wkrótce wygasną!
+        expiry_warning: '%points% punktów wygaśnie %date%. Wykorzystaj je!'
+        channel_configurations: Konfiguracje kanałów
+        configured: Skonfigurowany
+        not_configured: Nieskonfigurowany
+        color: Kolor odznaki
+        loyalty_discount: Rabat lojalnościowy
+        redeem_points: Wymień punkty lojalnościowe
+        points_to_redeem: Punkty do wymiany
+        points_applied: Punkty lojalnościowe zastosowane
+        apply_points: Zastosuj punkty
+        enter_points: 'Wpisz punkty do wymiany (%balance% dostępnych)'
+        use_all: Użyj wszystkich punktów
+        clear: Wyczyść
+        adjust_points: Dostosuj punkty
+        manual_adjustment: Ręczna korekta
+        adjustment_hint: 'Dodatnia wartość dodaje, ujemna odejmuje.'
+        apply_adjustment: Zastosuj
+        view_full_details: Zobacz szczegóły
+        config_earning: Zbieranie punktów i wygasanie
+        config_bonuses: Bonusy
+        config_tiers: Progi poziomów
+
+    form:
+        points_per_currency_unit: Punkty za jednostkę walutową
+        points_per_currency_unit_help: 'Ile punktów lojalnościowych klient zdobywa za każdą wydaną jednostkę walutową (np. 1 punkt za 1 zł).'
+        redemption_rate: Kurs wymiany
+        redemption_rate_help: 'Ile punktów odpowiada 1 jednostce walutowej przy wymianie (np. 100 punktów = 1 zł).'
+        expiry_days: Wygasanie punktów (dni)
+        expiry_days_help: 'Liczba dni do wygaśnięcia zdobytych punktów. 0 = nigdy.'
+        tiers_enabled: Włącz system poziomów
+        registration_bonus_enabled: Włącz bonus rejestracyjny
+        registration_bonus_points: Punkty bonusu rejestracyjnego
+        birthday_bonus_enabled: Włącz bonus urodzinowy
+        birthday_bonus_points: Punkty bonusu urodzinowego
+        first_order_bonus_enabled: Włącz bonus za pierwsze zamówienie
+        first_order_bonus_points: Punkty bonusu za pierwsze zamówienie
+        min_points: Minimalna liczba punktów
+        multiplier: Mnożnik punktów
+        color: Kolor odznaki
+        adjustment_points: Punkty
+        adjustment_points_help: 'Dodatnia wartość dodaje, ujemna odejmuje.'
+        adjustment_reason: Powód
+
+    flash:
+        configuration_updated: Konfiguracja lojalnościowa została zaktualizowana.
+        points_adjusted: Punkty zostały skorygowane.
