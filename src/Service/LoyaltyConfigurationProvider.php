@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Service;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration;
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfiguration;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class LoyaltyConfigurationProvider implements LoyaltyConfigurationProviderInterface

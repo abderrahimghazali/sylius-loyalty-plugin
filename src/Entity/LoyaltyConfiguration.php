@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration;
+namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
 class LoyaltyConfiguration implements LoyaltyConfigurationInterface
 {

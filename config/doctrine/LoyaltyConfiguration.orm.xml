@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <mapped-superclass name="Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration"
+    <mapped-superclass name="Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfiguration"
                        table="loyalty_configuration">
 
         <id name="id" column="id" type="integer">

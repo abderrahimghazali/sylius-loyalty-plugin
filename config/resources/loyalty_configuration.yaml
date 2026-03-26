@@ -3,6 +3,6 @@ sylius_resource:
         loyalty.configuration:
             driver: doctrine/orm
             classes:
-                model: Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration
-                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface
+                model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfiguration
+                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface
                 form: Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType
