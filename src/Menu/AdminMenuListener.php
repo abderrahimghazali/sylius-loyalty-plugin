@@ -12,12 +12,16 @@ final class AdminMenuListener
     {
         $menu = $event->getMenu();
 
-        // Add "Loyalty" section under Customers menu
+        // Add "Loyalty Accounts" under Customers menu
         $customersMenu = $menu->getChild('customers');
         if ($customersMenu !== null) {
             $customersMenu
                 ->addChild('loyalty_accounts', [
                     'route' => 'loyalty_admin_account_index',
+                    'extras' => ['routes' => [
+                        ['route' => 'loyalty_admin_loyalty_account_show'],
+                        ['route' => 'loyalty_admin_point_adjustment'],
+                    ]],
                 ])
                 ->setLabel('loyalty.ui.loyalty_accounts')
                 ->setLabelAttribute('icon', 'star')
@@ -30,6 +34,10 @@ final class AdminMenuListener
             $configMenu
                 ->addChild('loyalty_tiers', [
                     'route' => 'loyalty_admin_tier_index',
+                    'extras' => ['routes' => [
+                        ['route' => 'loyalty_admin_tier_create'],
+                        ['route' => 'loyalty_admin_tier_update'],
+                    ]],
                 ])
                 ->setLabel('loyalty.ui.loyalty_tiers')
                 ->setLabelAttribute('icon', 'trophy')
