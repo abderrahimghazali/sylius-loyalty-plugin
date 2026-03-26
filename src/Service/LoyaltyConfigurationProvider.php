@@ -23,9 +23,10 @@ final class LoyaltyConfigurationProvider implements LoyaltyConfigurationProvider
             return $this->cached;
         }
 
+        /** @var LoyaltyConfigurationInterface|null $config */
         $config = $this->configurationRepository->findOneBy([]);
 
-        if ($config === null) {
+        if (!$config instanceof LoyaltyConfigurationInterface) {
             // Return an in-memory default with sensible values.
             // Run `loyalty:install` to persist the config row.
             $config = new LoyaltyConfiguration();

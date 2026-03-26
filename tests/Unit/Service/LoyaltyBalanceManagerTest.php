@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Abderrahim\SyliusLoyaltyPlugin\Unit\Service;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransaction;
