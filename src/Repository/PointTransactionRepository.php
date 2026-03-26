@@ -38,6 +38,29 @@ class PointTransactionRepository extends EntityRepository implements PointTransa
             ->getResult();
     }
 
+    public function countByLoyaltyAccount(LoyaltyAccountInterface $account): int
+    {
+        return (int) $this->createQueryBuilder('pt')
+            ->select('COUNT(pt.id)')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->setParameter('account', $account)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /** @return PointTransactionInterface[] */
+    public function findPaginatedByLoyaltyAccount(LoyaltyAccountInterface $account, int $page = 1, int $perPage = 20): array
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->setParameter('account', $account)
+            ->orderBy('pt.createdAt', 'DESC')
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findEarnByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
     {
         return $this->createQueryBuilder('pt')

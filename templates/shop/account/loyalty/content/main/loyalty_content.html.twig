@@ -1,6 +1,8 @@
 {% set account = hookable_metadata.context.account %}
 {% set transactions = hookable_metadata.context.transactions %}
 {% set redemptionRate = hookable_metadata.context.redemptionRate|default(100) %}
+{% set currentPage = hookable_metadata.context.currentPage|default(1) %}
+{% set totalPages = hookable_metadata.context.totalPages|default(1) %}
 
 {# --- Header with tier badge --- #}
 <div class="d-flex align-items-center justify-content-between mb-4">
@@ -131,3 +133,25 @@
         </tbody>
     </table>
 </div>
+
+{% if totalPages > 1 %}
+    <nav class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            <li class="page-item {{ currentPage <= 1 ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ path('loyalty_shop_account_loyalty', {page: currentPage - 1}) }}">
+                    &laquo;
+                </a>
+            </li>
+            {% for p in range(max(1, currentPage - 2), min(totalPages, currentPage + 2)) %}
+                <li class="page-item {{ p == currentPage ? 'active' : '' }}">
+                    <a class="page-link" href="{{ path('loyalty_shop_account_loyalty', {page: p}) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{ currentPage >= totalPages ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ path('loyalty_shop_account_loyalty', {page: currentPage + 1}) }}">
+                    &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}

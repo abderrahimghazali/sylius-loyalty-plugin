@@ -1,6 +1,6 @@
 {% extends '@SyliusShop/account/common/index.html.twig' %}
 
 {% set prefixes = ['loyalty.shop.account.loyalty', 'sylius_shop.account.common'] %}
-{% set attrs = { account: account, transactions: transactions, redemptionRate: redemptionRate } %}
+{% set attrs = { account: account, transactions: transactions, redemptionRate: redemptionRate, currentPage: currentPage, totalPages: totalPages } %}
 
 {% block title %}{{ 'loyalty.ui.my_loyalty_points'|trans }} | {{ parent() }}{% endblock %}
