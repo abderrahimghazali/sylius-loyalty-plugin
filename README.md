@@ -28,19 +28,21 @@
 
 ## Overview
 
-SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Customers earn points on purchases, redeem them as discounts at checkout, unlock tier-based multipliers, and receive bonus points for registration, birthdays, and first orders — all manageable from the admin panel.
+SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Customers earn points on purchases, redeem them as discounts on the cart page, unlock tier-based multipliers, and receive bonus points for registration, birthdays, and first orders — all configurable per channel from the admin panel.
 
 ### Key Features
 
+- **Multi-channel** — Each channel has independent earning rates, redemption rates, expiry, and bonus settings
 - **Points earning** — Configurable points per currency unit on every order
 - **Cart redemption** — Spend points as a monetary discount on the cart page
 - **Points expiry** — Automatic expiration with cron command + 30-day warnings
-- **Bonus events** — Registration, birthday, and first-order bonuses (toggle on/off)
+- **Bonus events** — Registration, birthday, and first-order bonuses (toggle on/off per channel)
 - **Tier system** — Bronze / Silver / Gold with earning multipliers (tiers only go up)
-- **Admin panel** — Full management: accounts, transactions, manual adjustments, global config
-- **Customer account** — Points balance, tier badge, transaction history with running balance
-- **REST API** — Headless-ready endpoints for balance and checkout redemption
+- **Admin panel** — Full management: accounts, transactions, manual adjustments, per-channel config
+- **Customer account** — Points balance, tier badge, paginated transaction history with running balance
+- **REST API** — Headless-ready endpoints for balance and redemption
 - **Workflow integration** — Points deducted on order complete, restored on cancel/refund
+- **Translations** — English, French, German, Spanish, Polish, Portuguese
 
 ## Requirements
 
@@ -66,9 +68,7 @@ return [
 ];
 ```
 
-### 2. Import configuration and routes
-
-All loyalty settings (earning rate, redemption rate, expiry, bonuses, tiers) are managed from the **admin panel** under Configuration > Loyalty Configuration. Settings are stored in the database and take effect immediately.
+### 2. Import routes
 
 ```yaml
 # config/routes/sylius_loyalty.yaml
@@ -78,7 +78,7 @@ sylius_loyalty:
 
 ### 3. Extend your Order entity
 
-Add the loyalty trait to your Order entity so customers can redeem points at checkout:
+Add the loyalty trait to your Order entity so customers can redeem points on the cart page:
 
 ```php
 // src/Entity/Order/Order.php
@@ -146,7 +146,7 @@ php bin/console doctrine:migrations:migrate
 php bin/console loyalty:install
 ```
 
-This creates the default loyalty configuration row in the database. You can then customize all settings from the admin panel under **Configuration > Loyalty Configuration**.
+This creates a default loyalty configuration for each channel. You can then customize settings per channel from the admin panel under **Configuration > Loyalty Configuration**.
 
 ### 7. Set up cron jobs
 
@@ -163,12 +163,17 @@ php bin/console loyalty:birthday-bonus
 ### Domain Model
 
 ```
+Channel ──1:1──▶ LoyaltyConfiguration
+                    (earning rate, redemption rate, expiry, bonuses)
+
 Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
                         │                    (earn/redeem/expire/adjust/bonus)
                         │
                         └───N:1──▶ LoyaltyTier
                                    (Bronze/Silver/Gold)
 ```
+
+Points are **shared across channels** (one account per customer), while earning/redemption rates are **configured per channel**.
 
 ### Entities
 
@@ -177,7 +182,7 @@ Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
 | `LoyaltyAccount` | Per-customer account with balance, lifetime points, tier |
 | `PointTransaction` | Ledger entry — signed points, type, optional order link, expiry |
 | `LoyaltyTier` | Tier with min-points threshold, earning multiplier, color |
-| `LoyaltyConfiguration` | Single-row config table for admin-editable settings |
+| `LoyaltyConfiguration` | Per-channel config: earning rate, redemption rate, expiry, bonuses |
 
 ### Sylius Integration Points
 
@@ -192,6 +197,22 @@ Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
 | `workflow.sylius_payment.completed.refund` | Restores redeemed points on refund |
 | `sylius.menu.admin.main` event | Adds menu items under Customers & Configuration |
 | Twig hooks | Cart widget, cart/checkout summary, customer show section, account menu |
+
+## Multi-Channel Support
+
+Each Sylius channel can have its own loyalty configuration:
+
+| Setting | US Store | EU Store | B2B Store |
+|---|---|---|---|
+| Earning rate | 1 pt / $1 | 2 pts / €1 | Disabled |
+| Redemption rate | 100 pts = $1 | 50 pts = €1 | N/A |
+| Registration bonus | 100 pts | 200 pts | 0 |
+| Birthday bonus | 200 pts | 500 pts | 0 |
+| Tiers enabled | Yes | Yes | No |
+
+Points are shared across channels — a customer earns on one store and redeems on another. Rates are applied based on the order's channel.
+
+Manage per-channel settings at **Configuration > Loyalty Configuration** in the admin panel.
 
 ## Shop Features
 
@@ -212,13 +233,13 @@ Accessible from the account sidebar menu:
 - Current balance + redeemable monetary value
 - Tier badge with multiplier info
 - Expiry warning for points expiring within 30 days
-- Transaction history table with running balance column
+- Paginated transaction history table with running balance column
 
 ## Admin Features
 
 ### Loyalty Accounts
 
-Grid view of all customer loyalty accounts with balance, lifetime points, tier, and status. Click through to a detail page showing full transaction history.
+Grid view of all customer loyalty accounts with balance, lifetime points, tier, and status. Click through to a detail page showing paginated transaction history.
 
 ### Manual Point Adjustment
 
@@ -226,19 +247,18 @@ From any loyalty account detail page, admins can add or deduct points with a req
 
 ### Tier Management
 
-Full CRUD for loyalty tiers under **Configuration > Loyalty Tiers**:
+Full CRUD for loyalty tiers under **Configuration > Loyalty Tiers**. Code and position are auto-generated from the tier name.
 
 | Field | Description |
 |---|---|
-| Code | Unique identifier (e.g., `BRONZE`) |
-| Name | Display name (e.g., "Bronze") |
+| Name | Display name (e.g., "Bronze") — code is auto-generated |
 | Min Points | Lifetime points threshold to reach this tier |
 | Multiplier | Earning multiplier (e.g., 1.5x for Silver) |
 | Color | Badge color (hex, rendered in admin and shop) |
 
-### Global Configuration
+### Per-Channel Configuration
 
-Under **Configuration > Loyalty Configuration**:
+Under **Configuration > Loyalty Configuration**, admins see a table of all channels and can configure each independently:
 
 - Points per currency unit
 - Redemption rate (points per 1 currency unit)
@@ -287,8 +307,21 @@ PATCH  /api/v2/admin/loyalty/accounts/{id}
 - First-order bonus awarded only once (idempotent)
 - Points are reserved at cart, deducted only on order completion
 - Cancelled/refunded orders restore redeemed points (idempotent)
-- Birthday bonus awarded at most once per calendar year
+- Birthday bonus awarded at most once per calendar year per channel
 - Tiers only upgrade, never demote (based on lifetime points)
+
+## Translations
+
+The plugin ships with translations for:
+
+| Language | File |
+|---|---|
+| English | `messages.en.yaml` |
+| French | `messages.fr.yaml` |
+| German | `messages.de.yaml` |
+| Spanish | `messages.es.yaml` |
+| Polish | `messages.pl.yaml` |
+| Portuguese | `messages.pt.yaml` |
 
 ## Running Tests
 
@@ -296,6 +329,8 @@ PATCH  /api/v2/admin/loyalty/accounts/{id}
 composer install
 vendor/bin/phpunit
 ```
+
+71 unit tests covering entities, services, order processing, and all event listeners.
 
 ## Screenshots
 
