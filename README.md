@@ -33,7 +33,8 @@ SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Cus
 ### Key Features
 
 - **Multi-channel** — Each channel has independent earning rates, redemption rates, expiry, and bonus settings
-- **Points earning** — Configurable points per currency unit on every order
+- **Per-product/category earning rules** — Override earning rates for specific taxons, products, or variants with time-limited promotions
+- **Points earning** — Configurable default points per currency unit on every order
 - **Cart redemption** — Spend points as a monetary discount on the cart page
 - **Points expiry** — Automatic expiration with cron command + 30-day warnings
 - **Bonus events** — Registration, birthday, and first-order bonuses (toggle on/off per channel)
@@ -166,6 +167,9 @@ php bin/console loyalty:birthday-bonus
 Channel ──1:1──▶ LoyaltyConfiguration
                     (earning rate, redemption rate, expiry, bonuses)
 
+Channel ──1:N──▶ LoyaltyEarningRule
+                    (scope: taxon/product/variant, target codes, rate override)
+
 Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
                         │                    (earn/redeem/expire/adjust/bonus)
                         │
@@ -183,6 +187,7 @@ Points are **shared across channels** (one account per customer), while earning/
 | `PointTransaction` | Ledger entry — signed points, type, optional order link, expiry |
 | `LoyaltyTier` | Tier with min-points threshold, earning multiplier, color |
 | `LoyaltyConfiguration` | Per-channel config: earning rate, redemption rate, expiry, bonuses |
+| `LoyaltyEarningRule` | Per-channel rate override for specific taxons, products, or variants |
 
 ### Sylius Integration Points
 
@@ -267,6 +272,27 @@ Under **Configuration > Loyalty Configuration**, admins see a table of all chann
 - Toggle and configure bonus events (registration, birthday, first order)
 
 Settings are stored in the database and take effect immediately without redeployment.
+
+### Earning Rules
+
+Under **Configuration > Earning Rules**, admins can override the default earning rate for specific categories, products, or variants. The index page offers three create buttons:
+
+- **Category rule** — select one or more taxons (multi-select autocomplete)
+- **Product rule** — select one or more products
+- **Variant rule** — select one or more specific variants
+
+Each rule specifies a points-per-currency-unit rate, an optional date range (for time-limited promotions like "double points this week"), a priority, and a channel.
+
+**Specificity resolution**: When a product matches multiple rules, the most specific wins: Variant > Product > Category > Channel default. Within the same scope level, higher priority wins. The grid shows a **Conflicts** column warning when rules overlap at the same scope level.
+
+**Example rules:**
+
+| Rule | Scope | Targets | Rate |
+|---|---|---|---|
+| Double on Dresses | Category | Dresses | 2 pts/€1 |
+| No points on gift cards | Product | Gift Card | 0 pts/€1 |
+| 5x on new collection | Category | New Arrivals | 5 pts/€1 |
+| Premium variant bonus | Variant | XL Gold Edition | 10 pts/€1 |
 
 ## API Endpoints (Headless)
 

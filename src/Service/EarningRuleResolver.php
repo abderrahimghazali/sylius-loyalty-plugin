@@ -81,7 +81,8 @@ final class EarningRuleResolver implements EarningRuleResolverInterface
                 if (in_array($current->getCode(), $taxonCodes, true)) {
                     return true;
                 }
-                $current = $current instanceof TaxonInterface ? $current->getParent() : null;
+                $parent = $current->getParent();
+                $current = $parent instanceof TaxonInterface ? $parent : null;
             }
         }
 
