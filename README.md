@@ -30,6 +30,20 @@
 
 SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Customers earn points on purchases, redeem them as discounts at checkout, unlock tier-based multipliers, and receive bonus points for registration, birthdays, and first orders — all manageable from the admin panel.
 
+### Screenshots
+
+**Cart — Redeem points (same UX as coupons)**
+
+<img src="docs/images/cart-redemption.png" alt="Cart redemption widget" width="700"/>
+
+**Customer Account — Loyalty points & transaction history**
+
+<img src="docs/images/customer-loyalty-account.png" alt="Customer loyalty account" width="700"/>
+
+**Admin — Loyalty tiers management**
+
+<img src="docs/images/admin-loyalty-tiers.png" alt="Admin loyalty tiers" width="700"/>
+
 ### Key Features
 
 - **Points earning** — Configurable points per currency unit on every order
