@@ -55,8 +55,14 @@ loyalty_admin_point_adjustment:
     defaults:
         _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController::adjustAction
 
-loyalty_admin_configuration:
+loyalty_admin_configuration_index:
     path: /loyalty/configuration
+    methods: [GET]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController::indexAction
+
+loyalty_admin_configuration:
+    path: /loyalty/configuration/{channelCode}
     methods: [GET, POST]
     defaults:
         _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController::editAction

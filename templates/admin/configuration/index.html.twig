@@ -1,0 +1,76 @@
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
+
+{% block title %}{{ 'loyalty.ui.loyalty_configuration'|trans }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% include '@SyliusAdmin/shared/crud/common/sidebar.html.twig' %}
+
+    <div class="page-wrapper">
+        {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
+
+        {% include '@SyliusAdmin/shared/crud/common/content/flashes.html.twig' %}
+
+        {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
+        <div class="page-header" data-sticky-header>
+            <div class="container-xl">
+                {{ breadcrumbs([
+                    { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                    { name: 'loyalty.ui.loyalty_configuration', active: true },
+                ]) }}
+                <div class="row mt-3 row-gap-2">
+                    <div class="col-12">
+                        <h1 class="page-title">{{ 'loyalty.ui.channel_configurations'|trans }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-vcenter card-table">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'sylius.ui.channel'|trans }}</th>
+                                    <th>{{ 'loyalty.form.points_per_currency_unit'|trans }}</th>
+                                    <th>{{ 'loyalty.form.redemption_rate'|trans }}</th>
+                                    <th>{{ 'loyalty.form.expiry_days'|trans }}</th>
+                                    <th>{{ 'sylius.ui.status'|trans }}</th>
+                                    <th class="text-end">{{ 'sylius.ui.actions'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in configurations %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ item.channel.name }}</strong>
+                                            <div class="text-muted small">{{ item.channel.code }}</div>
+                                        </td>
+                                        {% if item.config %}
+                                            <td>{{ item.config.pointsPerCurrencyUnit }}</td>
+                                            <td>{{ item.config.redemptionRate }}</td>
+                                            <td>{{ item.config.expiryDays }} {{ 'sylius.ui.days'|trans|lower }}</td>
+                                            <td><span class="badge bg-success text-white">{{ 'loyalty.ui.configured'|trans }}</span></td>
+                                        {% else %}
+                                            <td colspan="3" class="text-muted">{{ 'loyalty.ui.not_configured'|trans }}</td>
+                                            <td><span class="badge bg-secondary text-white">{{ 'loyalty.ui.not_configured'|trans }}</span></td>
+                                        {% endif %}
+                                        <td class="text-end">
+                                            <a href="{{ path('loyalty_admin_configuration', {channelCode: item.channel.code}) }}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                {{ 'sylius.ui.edit'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include '@SyliusAdmin/shared/crud/common/content/footer.html.twig' %}
+    </div>
+{% endblock %}

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,13 +18,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'loyalty:install',
-    description: 'Seed the default loyalty configuration row',
+    description: 'Seed the default loyalty configuration for each channel',
 )]
 final class InstallCommand extends Command
 {
     public function __construct(
-        private readonly RepositoryInterface $configurationRepository,
+        private readonly LoyaltyConfigurationRepositoryInterface $configurationRepository,
         private readonly FactoryInterface $configurationFactory,
+        private readonly RepositoryInterface $channelRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
@@ -31,19 +35,37 @@ final class InstallCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $existing = $this->configurationRepository->findOneBy([]);
+        /** @var ChannelInterface[] $channels */
+        $channels = $this->channelRepository->findAll();
 
-        if ($existing !== null) {
-            $io->success('Loyalty configuration already exists. Nothing to do.');
+        if (count($channels) === 0) {
+            $io->warning('No channels found. Create at least one channel first.');
 
             return Command::SUCCESS;
         }
 
-        $config = $this->configurationFactory->createNew();
-        $this->entityManager->persist($config);
+        $created = 0;
+
+        foreach ($channels as $channel) {
+            $existing = $this->configurationRepository->findOneByChannel($channel);
+
+            if ($existing !== null) {
+                $io->note(sprintf('Channel "%s" already has a configuration. Skipping.', $channel->getCode()));
+
+                continue;
+            }
+
+            /** @var LoyaltyConfigurationInterface $config */
+            $config = $this->configurationFactory->createNew();
+            $config->setChannel($channel);
+            $this->entityManager->persist($config);
+
+            ++$created;
+        }
+
         $this->entityManager->flush();
 
-        $io->success('Default loyalty configuration created successfully.');
+        $io->success(sprintf('Created loyalty configuration for %d channel(s).', $created));
 
         return Command::SUCCESS;
     }

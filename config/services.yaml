@@ -8,7 +8,11 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProvider:
         arguments:
-            $configurationRepository: '@loyalty.repository.configuration'
+            $configurationRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface'
+            $channelContext: '@sylius.context.channel'
+
+    Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface:
+        alias: loyalty.repository.configuration
 
     Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface:
         alias: Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProvider
@@ -82,8 +86,9 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Command\InstallCommand:
         arguments:
-            $configurationRepository: '@loyalty.repository.configuration'
+            $configurationRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface'
             $configurationFactory: '@loyalty.factory.configuration'
+            $channelRepository: '@sylius.repository.channel'
             $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: console.command }
@@ -101,7 +106,8 @@ services:
             $customerRepository: '@sylius.repository.customer'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
             $entityManager: '@doctrine.orm.entity_manager'
-            $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $channelRepository: '@sylius.repository.channel'
+            $configurationRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface'
             $transactionRepository: '@loyalty.repository.point_transaction'
         tags:
             - { name: console.command }
@@ -161,7 +167,9 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyConfigurationController:
         arguments:
-            $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $configurationRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface'
+            $configurationFactory: '@loyalty.factory.configuration'
+            $channelRepository: '@sylius.repository.channel'
             $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: controller.service_arguments }

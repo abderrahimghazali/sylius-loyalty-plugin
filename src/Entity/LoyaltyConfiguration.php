@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
+use Sylius\Component\Channel\Model\ChannelInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+#[UniqueEntity(fields: ['channel'], message: 'A configuration for this channel already exists.')]
 class LoyaltyConfiguration implements LoyaltyConfigurationInterface
 {
     protected ?int $id = null;
+
+    protected ?ChannelInterface $channel = null;
 
     protected int $pointsPerCurrencyUnit = 1;
 
@@ -31,6 +37,16 @@ class LoyaltyConfiguration implements LoyaltyConfigurationInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getChannel(): ?ChannelInterface
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(?ChannelInterface $channel): void
+    {
+        $this->channel = $channel;
     }
 
     public function getPointsPerCurrencyUnit(): int

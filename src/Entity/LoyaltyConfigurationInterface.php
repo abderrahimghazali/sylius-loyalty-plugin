@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 interface LoyaltyConfigurationInterface extends ResourceInterface
 {
+    public function getChannel(): ?ChannelInterface;
+
+    public function setChannel(?ChannelInterface $channel): void;
+
     public function getPointsPerCurrencyUnit(): int;
 
     public function setPointsPerCurrencyUnit(int $pointsPerCurrencyUnit): void;

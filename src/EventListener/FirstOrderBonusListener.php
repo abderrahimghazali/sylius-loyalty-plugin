@@ -37,7 +37,10 @@ final class FirstOrderBonusListener
             return;
         }
 
-        $config = $this->configProvider->getConfiguration();
+        $channel = $order->getChannel();
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
 
         if (!$config->isFirstOrderBonusEnabled() || $config->getFirstOrderBonusPoints() <= 0) {
             return;
@@ -72,6 +75,7 @@ final class FirstOrderBonusListener
             $config->getFirstOrderBonusPoints(),
             'First order bonus',
             $order,
+            $channel,
         );
 
         $this->entityManager->flush();

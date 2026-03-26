@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Service;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 
 final class PointsCalculator implements PointsCalculatorInterface
@@ -14,9 +15,14 @@ final class PointsCalculator implements PointsCalculatorInterface
     ) {
     }
 
-    public function calculateForOrder(OrderInterface $order, ?LoyaltyAccountInterface $account = null): int
-    {
-        $config = $this->configProvider->getConfiguration();
+    public function calculateForOrder(
+        OrderInterface $order,
+        ?LoyaltyAccountInterface $account = null,
+        ?ChannelInterface $channel = null,
+    ): int {
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
 
         // Use items subtotal (pre-discount) so loyalty/coupon discounts don't reduce earned points
         $orderTotalInUnits = $order->getItemsTotal() / 100;

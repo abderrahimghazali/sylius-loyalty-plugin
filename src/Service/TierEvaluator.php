@@ -6,6 +6,7 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Service;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyTierInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class TierEvaluator implements TierEvaluatorInterface
@@ -16,9 +17,13 @@ final class TierEvaluator implements TierEvaluatorInterface
     ) {
     }
 
-    public function evaluate(LoyaltyAccountInterface $account): void
+    public function evaluate(LoyaltyAccountInterface $account, ?ChannelInterface $channel = null): void
     {
-        if (!$this->configProvider->getConfiguration()->isTiersEnabled()) {
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
+
+        if (!$config->isTiersEnabled()) {
             return;
         }
 

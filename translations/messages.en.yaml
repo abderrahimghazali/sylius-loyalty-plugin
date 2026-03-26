@@ -52,6 +52,11 @@ loyalty:
         points_expiring_soon: Points expiring soon!
         expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
 
+        # Channel configuration
+        channel_configurations: Channel Configurations
+        configured: Configured
+        not_configured: Not configured
+
         # Tier fields
         color: Badge Color
 

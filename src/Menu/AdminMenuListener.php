@@ -45,7 +45,7 @@ final class AdminMenuListener
 
             $configMenu
                 ->addChild('loyalty_configuration', [
-                    'route' => 'loyalty_admin_configuration',
+                    'route' => 'loyalty_admin_configuration_index',
                 ])
                 ->setLabel('loyalty.ui.loyalty_configuration')
                 ->setLabelAttribute('icon', 'cog')

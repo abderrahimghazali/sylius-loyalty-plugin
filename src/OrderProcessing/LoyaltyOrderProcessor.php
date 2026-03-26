@@ -72,15 +72,22 @@ final class LoyaltyOrderProcessor implements OrderProcessorInterface
             return;
         }
 
+        // Use channel-specific config for redemption rate
+        $channel = $order->getChannel();
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
+        $redemptionRate = $config->getRedemptionRate();
+
         // Convert points to discount amount (in smallest currency unit = cents)
-        $discountAmount = (int) floor(($effectivePoints / $this->configProvider->getConfiguration()->getRedemptionRate()) * 100);
+        $discountAmount = (int) floor(($effectivePoints / $redemptionRate) * 100);
 
         // Guard: discount cannot exceed the order total (items + shipping + tax, before this adjustment)
         $orderTotalBeforeDiscount = $order->getTotal();
         if ($discountAmount > $orderTotalBeforeDiscount) {
             $discountAmount = $orderTotalBeforeDiscount;
             // Recalculate how many points this actually requires
-            $effectivePoints = (int) ceil(($discountAmount / 100) * $this->configProvider->getConfiguration()->getRedemptionRate());
+            $effectivePoints = (int) ceil(($discountAmount / 100) * $redemptionRate);
         }
 
         if ($discountAmount <= 0) {

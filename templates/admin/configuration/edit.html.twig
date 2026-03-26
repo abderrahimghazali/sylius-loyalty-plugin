@@ -15,7 +15,8 @@
             <div class="container-xl">
                 {{ breadcrumbs([
                     { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
-                    { name: 'loyalty.ui.loyalty_configuration', active: true },
+                    { name: 'loyalty.ui.loyalty_configuration', url: path('loyalty_admin_configuration_index'), active: false },
+                    { name: channel.name, active: true },
                 ]) }}
                 <div class="row mt-3 row-gap-2">
                     <div class="col-12 col-md">
@@ -23,8 +24,9 @@
                             <div class="d-flex gap-3 align-items-center">
                                 <div class="d-flex flex-column gap-2">
                                     <h1 class="page-title">
-                                        {{ 'loyalty.ui.loyalty_configuration'|trans }}
+                                        {{ 'loyalty.ui.loyalty_configuration'|trans }} — {{ channel.name }}
                                     </h1>
+                                    <div class="text-muted">{{ channel.code }}</div>
                                 </div>
                             </div>
                         </div>

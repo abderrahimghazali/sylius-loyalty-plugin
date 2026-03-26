@@ -15,7 +15,7 @@
              {{ stimulus_controller(ctrl, {
                  token: order.tokenValue|default(''),
                  balance: loyalty.balance,
-                 rate: redemption_rate|default(100),
+                 rate: loyalty_redemption_rate(),
                  currency: currency_symbol,
              }) }}
         >

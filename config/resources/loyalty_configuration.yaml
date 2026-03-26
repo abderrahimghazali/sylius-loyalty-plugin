@@ -6,3 +6,4 @@ sylius_resource:
                 model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfiguration
                 interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface
                 form: Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType
+                repository: Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepository

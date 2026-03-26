@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
+use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyConfigurationRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
-use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,7 +28,8 @@ final class BirthdayBonusCommand extends Command
         private readonly RepositoryInterface $customerRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LoyaltyConfigurationProviderInterface $configProvider,
+        private readonly RepositoryInterface $channelRepository,
+        private readonly LoyaltyConfigurationRepositoryInterface $configurationRepository,
         private readonly PointTransactionRepositoryInterface $transactionRepository,
     ) {
         parent::__construct();
@@ -36,15 +38,6 @@ final class BirthdayBonusCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $config = $this->configProvider->getConfiguration();
-
-        if (!$config->isBirthdayBonusEnabled() || $config->getBirthdayBonusPoints() <= 0) {
-            $io->note('Birthday bonus is disabled.');
-
-            return Command::SUCCESS;
-        }
-
-        $birthdayBonus = $config->getBirthdayBonusPoints();
         $today = new \DateTime('today');
         $year = (int) $today->format('Y');
 
@@ -60,33 +53,53 @@ final class BirthdayBonusCommand extends Command
             ->getQuery()
             ->getResult();
 
+        if (count($customers) === 0) {
+            $io->success('No customers with a birthday today.');
+
+            return Command::SUCCESS;
+        }
+
+        /** @var ChannelInterface[] $channels */
+        $channels = $this->channelRepository->findAll();
         $count = 0;
-        $description = sprintf('Birthday bonus %d', $year);
 
-        /** @var CustomerInterface $customer */
-        foreach ($customers as $customer) {
-            $account = $this->balanceManager->getOrCreateAccount($customer);
+        foreach ($channels as $channel) {
+            $config = $this->configurationRepository->findOneByChannel($channel);
 
-            // Check via DB query instead of loading all transactions in memory
-            $existing = $this->transactionRepository->findBonusByDescriptionAndYear($account, $description, $year);
-            if ($existing !== null) {
+            if ($config === null || !$config->isBirthdayBonusEnabled() || $config->getBirthdayBonusPoints() <= 0) {
                 continue;
             }
 
-            $this->balanceManager->addTransaction(
-                $account,
-                TransactionType::Bonus,
-                $birthdayBonus,
-                $description,
-            );
+            $bonus = $config->getBirthdayBonusPoints();
+            $channelCode = $channel->getCode() ?? 'default';
+            $description = sprintf('Birthday bonus %d [%s]', $year, $channelCode);
 
-            ++$count;
+            /** @var CustomerInterface $customer */
+            foreach ($customers as $customer) {
+                $account = $this->balanceManager->getOrCreateAccount($customer);
+
+                // Check via DB query — scoped to channel + year
+                $existing = $this->transactionRepository->findBonusByDescriptionAndYear($account, $description, $year);
+                if ($existing !== null) {
+                    continue;
+                }
+
+                $this->balanceManager->addTransaction(
+                    $account,
+                    TransactionType::Bonus,
+                    $bonus,
+                    $description,
+                    null,
+                    $channel,
+                );
+
+                ++$count;
+            }
         }
 
-        // Single flush for the entire batch
         $this->entityManager->flush();
 
-        $io->success(sprintf('Awarded birthday bonus to %d customer(s).', $count));
+        $io->success(sprintf('Awarded birthday bonus to %d customer/channel pair(s).', $count));
 
         return Command::SUCCESS;
     }

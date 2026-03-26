@@ -89,7 +89,11 @@ final class LoyaltyRedemptionController
 
         // The processor may have clamped the value
         $effectivePoints = $order->getPointsToRedeem();
-        $redemptionRate = $this->configProvider->getConfiguration()->getRedemptionRate();
+        $channel = $order->getChannel();
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
+        $redemptionRate = $config->getRedemptionRate();
         $discountCents = (int) floor(($effectivePoints / $redemptionRate) * 100);
 
         return new JsonResponse([

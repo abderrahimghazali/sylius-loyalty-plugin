@@ -10,6 +10,7 @@ use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -51,6 +52,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         int $points,
         ?string $description = null,
         ?OrderInterface $order = null,
+        ?ChannelInterface $channel = null,
     ): PointTransactionInterface {
         /** @var PointTransactionInterface $transaction */
         $transaction = $this->transactionFactory->createNew();
@@ -59,8 +61,12 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         $transaction->setDescription($description);
         $transaction->setOrder($order);
 
-        // Set expiry for earn/bonus transactions
-        $expiryDays = $this->configProvider->getConfiguration()->getExpiryDays();
+        // Set expiry for earn/bonus transactions using channel-specific config
+        $config = $channel !== null
+            ? $this->configProvider->getConfigurationForChannel($channel)
+            : $this->configProvider->getConfiguration();
+
+        $expiryDays = $config->getExpiryDays();
         if (in_array($type, [TransactionType::Earn, TransactionType::Bonus], true) && $expiryDays > 0) {
             $expiresAt = new \DateTime(sprintf('+%d days', $expiryDays));
             $transaction->setExpiresAt($expiresAt);
@@ -81,7 +87,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         }
 
         // Re-evaluate tier
-        $this->tierEvaluator->evaluate($account);
+        $this->tierEvaluator->evaluate($account, $channel);
 
         $this->entityManager->persist($transaction);
 
@@ -107,7 +113,8 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             return null;
         }
 
-        $points = $this->pointsCalculator->calculateForOrder($order, $account);
+        $channel = $order->getChannel();
+        $points = $this->pointsCalculator->calculateForOrder($order, $account, $channel);
 
         if ($points <= 0) {
             return null;
@@ -119,6 +126,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             $points,
             sprintf('Points earned for order #%s', $order->getNumber()),
             $order,
+            $channel,
         );
     }
 
@@ -145,6 +153,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             $earnTransaction->getPoints(),
             sprintf('Points revoked for cancelled order #%s', $order->getNumber()),
             $order,
+            $order->getChannel(),
         );
     }
 }
