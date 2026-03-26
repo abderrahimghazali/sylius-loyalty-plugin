@@ -140,7 +140,15 @@ php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ```
 
-### 6. Set up cron jobs
+### 6. Seed the default configuration
+
+```bash
+php bin/console loyalty:install
+```
+
+This creates the default loyalty configuration row in the database. You can then customize all settings from the admin panel under **Configuration > Loyalty Configuration**.
+
+### 7. Set up cron jobs
 
 ```bash
 # Expire old points (run daily)

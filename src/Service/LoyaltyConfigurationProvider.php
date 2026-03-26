@@ -27,10 +27,9 @@ final class LoyaltyConfigurationProvider implements LoyaltyConfigurationProvider
         $config = $repository->findOneBy([]);
 
         if ($config === null) {
-            // Return a transient default — callers that need persistence
-            // (e.g. admin config form) will persist and flush themselves.
+            // Return an in-memory default with sensible values.
+            // Run `loyalty:install` to persist the config row.
             $config = new LoyaltyConfiguration();
-            $this->entityManager->persist($config);
         }
 
         $this->cached = $config;

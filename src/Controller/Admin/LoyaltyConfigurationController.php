@@ -29,6 +29,7 @@ final class LoyaltyConfigurationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($config);
             $this->entityManager->flush();
 
             $this->addFlash('success', 'loyalty.flash.configuration_updated');

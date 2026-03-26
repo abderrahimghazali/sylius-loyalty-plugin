@@ -79,6 +79,12 @@ services:
 
     # --- Commands ---
 
+    Abderrahim\SyliusLoyaltyPlugin\Command\InstallCommand:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: console.command }
+
     Abderrahim\SyliusLoyaltyPlugin\Command\ExpirePointsCommand:
         arguments:
             $transactionRepository: '@loyalty.repository.point_transaction'
