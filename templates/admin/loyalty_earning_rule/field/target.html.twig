@@ -1,8 +1,9 @@
-{% set scope = data.scopeType.value|default(data.scopeType) %}
-{% set target_id = data.targetId %}
+{% set codes = data.targetCodes|default([]) %}
 
-{% if target_id > 0 %}
-    <code>#{{ target_id }}</code>
+{% if codes|length > 0 %}
+    {% for code in codes %}
+        <span class="badge bg-light text-dark me-1">{{ code }}</span>
+    {% endfor %}
 {% else %}
-    -
+    <span class="text-muted">-</span>
 {% endif %}

@@ -18,9 +18,11 @@ interface LoyaltyEarningRuleInterface extends ResourceInterface
 
     public function setScopeType(EarningRuleScopeType $scopeType): void;
 
-    public function getTargetId(): int;
+    /** @return string[] */
+    public function getTargetCodes(): array;
 
-    public function setTargetId(int $targetId): void;
+    /** @param string[] $targetCodes */
+    public function setTargetCodes(array $targetCodes): void;
 
     public function getPointsPerCurrencyUnit(): int;
 

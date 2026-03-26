@@ -65,6 +65,9 @@ loyalty:
         scope_product: Product
         scope_variant: Variant
         target: Target
+        target_taxons: Categories
+        target_products: Products
+        target_variants: Variants
         points_per_unit: Pts/unit
         starts_at: Starts at
         ends_at: Ends at

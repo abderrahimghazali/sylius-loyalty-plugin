@@ -38,12 +38,16 @@ final class EarningRuleResolver implements EarningRuleResolverInterface
 
         foreach ($rules as $rule) {
             $scope = $rule->getScopeType();
-            $targetId = $rule->getTargetId();
+            $codes = $rule->getTargetCodes();
+
+            if (count($codes) === 0) {
+                continue;
+            }
 
             $matches = match ($scope) {
-                EarningRuleScopeType::Variant => $variant !== null && $variant->getId() === $targetId,
-                EarningRuleScopeType::Product => $product !== null && $product->getId() === $targetId,
-                EarningRuleScopeType::Taxon => $product instanceof ProductInterface && $this->productMatchesTaxon($product, $targetId),
+                EarningRuleScopeType::Variant => $variant !== null && in_array($variant->getCode(), $codes, true),
+                EarningRuleScopeType::Product => $product !== null && in_array($product->getCode(), $codes, true),
+                EarningRuleScopeType::Taxon => $product instanceof ProductInterface && $this->productMatchesTaxonCodes($product, $codes),
             };
 
             if (!$matches) {
@@ -52,7 +56,6 @@ final class EarningRuleResolver implements EarningRuleResolverInterface
 
             $specificity = $scope->specificity();
 
-            // Higher specificity wins; within same specificity, higher priority wins
             if (
                 $specificity > $bestSpecificity
                 || ($specificity === $bestSpecificity && ($bestRule === null || $rule->getPriority() > $bestRule->getPriority()))
@@ -65,13 +68,17 @@ final class EarningRuleResolver implements EarningRuleResolverInterface
         return $bestRule;
     }
 
-    private function productMatchesTaxon(ProductInterface $product, int $taxonId): bool
+    /**
+     * Check if any of the product's taxons (or their ancestors) match the given codes.
+     *
+     * @param string[] $taxonCodes
+     */
+    private function productMatchesTaxonCodes(ProductInterface $product, array $taxonCodes): bool
     {
         foreach ($product->getTaxons() as $taxon) {
-            // Check the taxon itself and all ancestors
             $current = $taxon;
             while ($current !== null) {
-                if ($current->getId() === $taxonId) {
+                if (in_array($current->getCode(), $taxonCodes, true)) {
                     return true;
                 }
                 $current = $current instanceof TaxonInterface ? $current->getParent() : null;

@@ -15,7 +15,8 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
 
     protected string $scopeType = 'taxon';
 
-    protected int $targetId = 0;
+    /** @var string[] */
+    protected array $targetCodes = [];
 
     protected int $pointsPerCurrencyUnit = 1;
 
@@ -54,14 +55,16 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
         $this->scopeType = $scopeType->value;
     }
 
-    public function getTargetId(): int
+    /** @return string[] */
+    public function getTargetCodes(): array
     {
-        return $this->targetId;
+        return $this->targetCodes;
     }
 
-    public function setTargetId(int $targetId): void
+    /** @param string[] $targetCodes */
+    public function setTargetCodes(array $targetCodes): void
     {
-        $this->targetId = $targetId;
+        $this->targetCodes = $targetCodes;
     }
 
     public function getPointsPerCurrencyUnit(): int

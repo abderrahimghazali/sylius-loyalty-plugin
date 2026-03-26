@@ -9,7 +9,6 @@
 
         <indexes>
             <index name="idx_ler_channel_scope" columns="channel_id,scope_type,enabled"/>
-            <index name="idx_ler_target" columns="scope_type,target_id"/>
         </indexes>
 
         <id name="id" column="id" type="integer">
@@ -20,7 +19,7 @@
 
         <field name="scopeType" column="scope_type" type="string" length="20" nullable="false"/>
 
-        <field name="targetId" column="target_id" type="integer" nullable="false"/>
+        <field name="targetCodes" column="target_codes" type="json" nullable="false"/>
 
         <field name="pointsPerCurrencyUnit" column="points_per_currency_unit" type="integer" nullable="false">
             <options>
