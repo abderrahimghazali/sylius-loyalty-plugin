@@ -34,6 +34,7 @@ final class LoyaltyConfigurationController extends AbstractController
 
         $configurations = [];
         foreach ($channels as $channel) {
+            assert($channel instanceof ChannelInterface);
             $configurations[] = [
                 'channel' => $channel,
                 'config' => $this->configurationRepository->findOneByChannel($channel),
