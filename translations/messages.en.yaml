@@ -52,6 +52,9 @@ loyalty:
         points_expiring_soon: Points expiring soon!
         expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
 
+        # Cart summary
+        loyalty_discount: Loyalty discount
+
         # Cart redemption
         redeem_points: Redeem Loyalty Points
         points_to_redeem: Points to redeem

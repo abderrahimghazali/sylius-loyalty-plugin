@@ -4,3 +4,8 @@ sylius_twig_hooks:
             loyalty_points:
                 template: '@SyliusLoyaltyPlugin/shop/cart/index/content/form/sections/general/loyalty_points.html.twig'
                 priority: 90
+
+        'sylius_shop.cart.index.content.form.sections.general.summary':
+            loyalty_discount:
+                template: '@SyliusLoyaltyPlugin/shop/cart/index/content/form/sections/general/summary/loyalty_discount.html.twig'
+                priority: 350

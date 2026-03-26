@@ -1,0 +1,11 @@
+{% import "@SyliusShop/shared/macro/money.html.twig" as money %}
+
+{% set cart = hookable_metadata.context.cart %}
+{% set loyalty_total = cart.getAdjustmentsTotal('loyalty_points_discount') %}
+
+{% if loyalty_total %}
+    <div class="hstack gap-2 mb-2">
+        <div>{{ 'loyalty.ui.loyalty_discount'|trans }}:</div>
+        <div class="ms-auto text-end text-success">{{ money.convertAndFormat(loyalty_total) }}</div>
+    </div>
+{% endif %}
