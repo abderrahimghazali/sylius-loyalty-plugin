@@ -6,14 +6,14 @@ namespace Abderrahim\SyliusLoyaltyPlugin\Service;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class LoyaltyConfigurationProvider implements LoyaltyConfigurationProviderInterface
 {
     private ?LoyaltyConfigurationInterface $cached = null;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly RepositoryInterface $configurationRepository,
     ) {
     }
 
@@ -23,8 +23,7 @@ final class LoyaltyConfigurationProvider implements LoyaltyConfigurationProvider
             return $this->cached;
         }
 
-        $repository = $this->entityManager->getRepository(LoyaltyConfiguration::class);
-        $config = $repository->findOneBy([]);
+        $config = $this->configurationRepository->findOneBy([]);
 
         if ($config === null) {
             // Return an in-memory default with sensible values.

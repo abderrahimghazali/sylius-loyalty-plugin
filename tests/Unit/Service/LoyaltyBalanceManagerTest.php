@@ -7,6 +7,7 @@ namespace Tests\Abderrahim\SyliusLoyaltyPlugin\Unit\Service;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfigurationInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransaction;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransactionInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
@@ -38,6 +39,8 @@ final class LoyaltyBalanceManagerTest extends TestCase
         $this->accountRepository = $this->createMock(LoyaltyAccountRepositoryInterface::class);
         $this->transactionRepository = $this->createMock(PointTransactionRepositoryInterface::class);
         $this->accountFactory = $this->createMock(FactoryInterface::class);
+        $transactionFactory = $this->createMock(FactoryInterface::class);
+        $transactionFactory->method('createNew')->willReturnCallback(fn () => new PointTransaction());
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->pointsCalculator = $this->createMock(PointsCalculatorInterface::class);
         $this->tierEvaluator = $this->createMock(TierEvaluatorInterface::class);
@@ -51,6 +54,7 @@ final class LoyaltyBalanceManagerTest extends TestCase
             $this->accountRepository,
             $this->transactionRepository,
             $this->accountFactory,
+            $transactionFactory,
             $this->entityManager,
             $this->pointsCalculator,
             $this->tierEvaluator,

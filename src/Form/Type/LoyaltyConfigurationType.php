@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Form\Type;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration;
-use Symfony\Component\Form\AbstractType;
+use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class LoyaltyConfigurationType extends AbstractType
+final class LoyaltyConfigurationType extends AbstractResourceType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -67,13 +65,6 @@ final class LoyaltyConfigurationType extends AbstractType
                 'attr' => ['min' => 0],
             ])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => LoyaltyConfiguration::class,
-        ]);
     }
 
     public function getBlockPrefix(): string

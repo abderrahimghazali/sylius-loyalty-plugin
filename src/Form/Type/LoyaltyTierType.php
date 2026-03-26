@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Form\Type;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyTier;
-use Symfony\Component\Form\AbstractType;
+use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -15,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class LoyaltyTierType extends AbstractType
+final class LoyaltyTierType extends AbstractResourceType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -64,11 +63,9 @@ final class LoyaltyTierType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => LoyaltyTier::class,
-            'is_edit' => false,
-        ]);
+        parent::configureOptions($resolver);
 
+        $resolver->setDefault('is_edit', false);
         $resolver->setAllowedTypes('is_edit', 'bool');
     }
 

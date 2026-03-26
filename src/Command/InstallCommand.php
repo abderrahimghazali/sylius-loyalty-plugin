@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Command;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +20,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class InstallCommand extends Command
 {
     public function __construct(
+        private readonly RepositoryInterface $configurationRepository,
+        private readonly FactoryInterface $configurationFactory,
         private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
@@ -28,9 +31,7 @@ final class InstallCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $existing = $this->entityManager
-            ->getRepository(LoyaltyConfiguration::class)
-            ->findOneBy([]);
+        $existing = $this->configurationRepository->findOneBy([]);
 
         if ($existing !== null) {
             $io->success('Loyalty configuration already exists. Nothing to do.');
@@ -38,7 +39,7 @@ final class InstallCommand extends Command
             return Command::SUCCESS;
         }
 
-        $config = new LoyaltyConfiguration();
+        $config = $this->configurationFactory->createNew();
         $this->entityManager->persist($config);
         $this->entityManager->flush();
 

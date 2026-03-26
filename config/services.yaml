@@ -8,7 +8,7 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProvider:
         arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
+            $configurationRepository: '@loyalty.repository.configuration'
 
     Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface:
         alias: Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProvider
@@ -35,6 +35,7 @@ services:
             $accountRepository: '@loyalty.repository.account'
             $transactionRepository: '@loyalty.repository.point_transaction'
             $accountFactory: '@loyalty.factory.account'
+            $transactionFactory: '@loyalty.factory.point_transaction'
             $entityManager: '@doctrine.orm.entity_manager'
             $pointsCalculator: '@Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface'
             $tierEvaluator: '@Abderrahim\SyliusLoyaltyPlugin\Service\TierEvaluatorInterface'
@@ -81,6 +82,8 @@ services:
 
     Abderrahim\SyliusLoyaltyPlugin\Command\InstallCommand:
         arguments:
+            $configurationRepository: '@loyalty.repository.configuration'
+            $configurationFactory: '@loyalty.factory.configuration'
             $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: console.command }
@@ -201,6 +204,8 @@ services:
     # --- Form Types ---
 
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType:
+        arguments:
+            $dataClass: '%loyalty.model.configuration.class%'
         tags:
             - { name: form.type }
 
@@ -209,6 +214,8 @@ services:
             - { name: form.type }
 
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyTierType:
+        arguments:
+            $dataClass: '%loyalty.model.tier.class%'
         tags:
             - { name: form.type }
 

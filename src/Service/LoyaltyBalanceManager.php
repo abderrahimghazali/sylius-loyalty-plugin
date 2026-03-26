@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Service;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
-use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransaction;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransactionInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
@@ -21,6 +20,7 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         private readonly LoyaltyAccountRepositoryInterface $accountRepository,
         private readonly PointTransactionRepositoryInterface $transactionRepository,
         private readonly FactoryInterface $accountFactory,
+        private readonly FactoryInterface $transactionFactory,
         private readonly EntityManagerInterface $entityManager,
         private readonly PointsCalculatorInterface $pointsCalculator,
         private readonly TierEvaluatorInterface $tierEvaluator,
@@ -52,7 +52,8 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
         ?string $description = null,
         ?OrderInterface $order = null,
     ): PointTransactionInterface {
-        $transaction = new PointTransaction();
+        /** @var PointTransactionInterface $transaction */
+        $transaction = $this->transactionFactory->createNew();
         $transaction->setType($type);
         $transaction->setPoints($points);
         $transaction->setDescription($description);

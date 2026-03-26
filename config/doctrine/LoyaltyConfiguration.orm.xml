@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration\LoyaltyConfiguration"
+                       table="loyalty_configuration">
+
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="pointsPerCurrencyUnit" column="points_per_currency_unit" type="integer" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+
+        <field name="redemptionRate" column="redemption_rate" type="integer" nullable="false">
+            <options>
+                <option name="default">100</option>
+            </options>
+        </field>
+
+        <field name="expiryDays" column="expiry_days" type="integer" nullable="false">
+            <options>
+                <option name="default">365</option>
+            </options>
+        </field>
+
+        <field name="tiersEnabled" column="tiers_enabled" type="boolean" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+
+        <field name="registrationBonusEnabled" column="registration_bonus_enabled" type="boolean" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+
+        <field name="registrationBonusPoints" column="registration_bonus_points" type="integer" nullable="false">
+            <options>
+                <option name="default">100</option>
+            </options>
+        </field>
+
+        <field name="birthdayBonusEnabled" column="birthday_bonus_enabled" type="boolean" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+
+        <field name="birthdayBonusPoints" column="birthday_bonus_points" type="integer" nullable="false">
+            <options>
+                <option name="default">200</option>
+            </options>
+        </field>
+
+        <field name="firstOrderBonusEnabled" column="first_order_bonus_enabled" type="boolean" nullable="false">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+
+        <field name="firstOrderBonusPoints" column="first_order_bonus_points" type="integer" nullable="false">
+            <options>
+                <option name="default">50</option>
+            </options>
+        </field>
+
+    </mapped-superclass>
+
+</doctrine-mapping>

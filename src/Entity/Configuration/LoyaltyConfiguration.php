@@ -4,45 +4,28 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity\Configuration;
 
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity]
-#[ORM\Table(name: 'loyalty_configuration')]
 class LoyaltyConfiguration implements LoyaltyConfigurationInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
     protected ?int $id = null;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 1])]
     protected int $pointsPerCurrencyUnit = 1;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 100])]
     protected int $redemptionRate = 100;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 365])]
     protected int $expiryDays = 365;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     protected bool $tiersEnabled = true;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     protected bool $registrationBonusEnabled = true;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 100])]
     protected int $registrationBonusPoints = 100;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     protected bool $birthdayBonusEnabled = true;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 200])]
     protected int $birthdayBonusPoints = 200;
 
-    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     protected bool $firstOrderBonusEnabled = true;
 
-    #[ORM\Column(type: 'integer', options: ['default' => 50])]
     protected int $firstOrderBonusPoints = 50;
 
     public function getId(): ?int
