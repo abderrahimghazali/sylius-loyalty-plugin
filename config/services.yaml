@@ -166,6 +166,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.menu.shop.account, method: addLoyaltyMenu }
 
+    # --- Form Extensions ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Extension\CartTypeExtension:
+        tags:
+            - { name: form.type_extension }
+
     # --- Form Types ---
 
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyConfigurationType:
