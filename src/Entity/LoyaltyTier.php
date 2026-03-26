@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+#[UniqueEntity(fields: ['code'], message: 'A tier with this code already exists.')]
 class LoyaltyTier implements LoyaltyTierInterface
 {
     protected ?int $id = null;
