@@ -33,7 +33,7 @@ SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Cus
 ### Key Features
 
 - **Points earning** — Configurable points per currency unit on every order
-- **Checkout redemption** — Spend points as a monetary discount with live total update (Stimulus)
+- **Cart redemption** — Spend points as a monetary discount on the cart page (same UX pattern as coupons)
 - **Points expiry** — Automatic expiration with cron command + 30-day warnings
 - **Bonus events** — Registration, birthday, and first-order bonuses (toggle on/off)
 - **Tier system** — Bronze / Silver / Gold with earning multipliers (tiers only go up)
@@ -68,18 +68,7 @@ return [
 
 ### 2. Import configuration and routes
 
-```yaml
-# config/packages/sylius_loyalty.yaml
-sylius_loyalty:
-    points_per_currency_unit: 1   # 1 point per €1 spent
-    redemption_rate: 100          # 100 points = €1 discount
-    expiry_days: 365              # Points expire after 12 months
-    bonus:
-        registration: 100         # Welcome bonus
-        first_order: 50           # First purchase bonus
-        birthday: 200             # Annual birthday bonus
-    tiers_enabled: true
-```
+All loyalty settings (earning rate, redemption rate, expiry, bonuses, tiers) are managed from the **admin panel** under Configuration > Loyalty Configuration. Settings are stored in the database and take effect immediately.
 
 ```yaml
 # config/routes/sylius_loyalty.yaml
@@ -110,7 +99,7 @@ class Order extends BaseOrder implements LoyaltyOrderInterface
 }
 ```
 
-### 4. Register the Stimulus controller (for checkout widget)
+### 4. Register the Stimulus controller (for the cart widget)
 
 Add the plugin JS dependency to your `package.json`:
 
@@ -140,8 +129,8 @@ Register the controller in `assets/shop/controllers.json`:
 Then rebuild assets:
 
 ```bash
-yarn install --force
-yarn encore dev
+npm install
+npm run build
 ```
 
 ### 5. Run migrations
@@ -187,25 +176,25 @@ Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
 | Extension Point | What It Does |
 |---|---|
 | `OrderProcessorInterface` (priority 5) | Applies loyalty discount adjustment after taxes |
-| `sylius.order.post_complete` event | Awards earn points on order completion |
+| `sylius.order.post_complete` event | Awards earn points + first-order bonus on order completion |
 | `sylius.order.post_cancel` event | Revokes earned points |
 | `sylius.customer.post_register` event | Awards registration bonus |
 | `workflow.sylius_order_checkout.completed.complete` | Deducts redeemed points from balance |
 | `workflow.sylius_order.completed.cancel` | Restores redeemed points |
 | `workflow.sylius_payment.completed.refund` | Restores redeemed points on refund |
 | `sylius.menu.admin.main` event | Adds menu items under Customers & Configuration |
-| Twig hooks | Checkout widget, customer show section, account menu |
+| Twig hooks | Cart widget, cart/checkout summary, customer show section, account menu |
 
 ## Shop Features
 
-### Checkout Redemption Widget
+### Cart Redemption Widget
 
-At the checkout summary step, logged-in customers see their points balance and can enter how many points to redeem. The widget uses a **Stimulus controller** for live updates — no page reload needed.
+On the cart page, logged-in customers can redeem points as a discount — styled identically to the coupon section. The widget uses Symfony UX Live Components (the same `data-model` binding pattern as the built-in coupon field).
 
-- Input field with min/max validation
-- "Use all points" button
-- "Clear" button to remove redemption
-- Live discount and total recalculation via API
+- Input field with placeholder showing available balance
+- "Apply points" button (triggers Live Component re-render, same as "Apply coupon")
+- Applied state shows a badge with points count, discount value, and a remove button
+- Loyalty discount line appears in the cart summary and throughout the checkout sidebar
 - Automatic clamping: can't exceed balance or order total
 
 ### Customer Account — Loyalty Page
@@ -249,9 +238,11 @@ Under **Configuration > Loyalty Configuration**:
 - Enable/disable tier system
 - Toggle and configure bonus events (registration, birthday, first order)
 
-Settings are stored in the database and take effect immediately without redeployment. The YAML config values serve as defaults for the initial database row.
+Settings are stored in the database and take effect immediately without redeployment.
 
-## API Endpoints
+## API Endpoints (Headless)
+
+For headless/SPA storefronts, the plugin provides REST endpoints. All shop endpoints verify the authenticated user owns the order.
 
 ### Shop API
 
@@ -277,12 +268,16 @@ PATCH  /api/v2/admin/loyalty/accounts/{id}
 
 ## Edge Cases Handled
 
+- Pessimistic DB locking prevents double-spend on concurrent checkouts
+- API endpoints verify the authenticated user owns the order
+- Balance cannot go negative (clamped in service layer + guard in entity)
 - Points redemption cannot exceed available balance (clamped)
 - Discount cannot exceed order total (capped, points recalculated)
 - Guest checkouts cannot use loyalty points (guarded)
 - Disabled accounts are excluded from earning and redemption
 - Duplicate point awards are prevented (idempotent per order)
-- Points are reserved at checkout, deducted only on completion
+- First-order bonus awarded only once (idempotent)
+- Points are reserved at cart, deducted only on order completion
 - Cancelled/refunded orders restore redeemed points (idempotent)
 - Birthday bonus awarded at most once per calendar year
 - Tiers only upgrade, never demote (based on lifetime points)
