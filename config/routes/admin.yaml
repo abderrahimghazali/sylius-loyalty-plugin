@@ -61,7 +61,7 @@ loyalty_admin_loyalty_earning_rule:
         section: admin
         grid: loyalty_admin_loyalty_earning_rule
         templates: '@SyliusAdmin/shared/crud'
-        except: ['show']
+        only: ['index', 'delete', 'bulkDelete']
         vars:
             all:
                 subheader: loyalty.ui.manage_earning_rules
@@ -69,6 +69,18 @@ loyalty_admin_loyalty_earning_rule:
                 icon: percent
     type: sylius.resource
     prefix: /loyalty
+
+loyalty_admin_earning_rule_create:
+    path: /loyalty/earning-rules/new
+    methods: [GET, POST]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController::createAction
+
+loyalty_admin_earning_rule_update:
+    path: /loyalty/earning-rules/{id}/edit
+    methods: [GET, POST, PUT, PATCH]
+    defaults:
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController::updateAction
 
 loyalty_admin_configuration_index:
     path: /loyalty/configuration

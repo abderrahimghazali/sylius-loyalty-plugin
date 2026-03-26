@@ -14,13 +14,13 @@ use Sylius\Bundle\CoreBundle\Form\DataTransformer\ProductVariantsToCodesTransfor
 use Sylius\Bundle\CoreBundle\Form\DataTransformer\TaxonsToCodesTransformer;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class LoyaltyEarningRuleType extends AbstractResourceType
@@ -37,38 +37,49 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $scope = EarningRuleScopeType::from($options['scope']);
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'sylius.ui.name',
                 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 255)],
             ])
-            ->add('scopeType', ChoiceType::class, [
-                'label' => 'loyalty.ui.scope_type',
-                'choices' => [
-                    'loyalty.ui.scope_taxon' => 'taxon',
-                    'loyalty.ui.scope_product' => 'product',
-                    'loyalty.ui.scope_variant' => 'variant',
-                ],
-                'mapped' => false,
-            ])
-            ->add('targetTaxons', TaxonAutocompleteType::class, [
-                'label' => 'loyalty.ui.target_taxons',
-                'multiple' => true,
-                'required' => false,
-                'mapped' => false,
-            ])
-            ->add('targetProducts', ProductAutocompleteType::class, [
-                'label' => 'loyalty.ui.target_products',
-                'multiple' => true,
-                'required' => false,
-                'mapped' => false,
-            ])
-            ->add('targetVariants', ProductVariantAutocompleteType::class, [
-                'label' => 'loyalty.ui.target_variants',
-                'multiple' => true,
-                'required' => false,
-                'mapped' => false,
-            ])
+        ;
+
+        // Add only the relevant autocomplete field based on scope
+        match ($scope) {
+            EarningRuleScopeType::Taxon => $builder
+                ->add('targets', TaxonAutocompleteType::class, [
+                    'label' => 'loyalty.ui.target_taxons',
+                    'multiple' => true,
+                    'required' => true,
+                    'mapped' => false,
+                ]),
+            EarningRuleScopeType::Product => $builder
+                ->add('targets', ProductAutocompleteType::class, [
+                    'label' => 'loyalty.ui.target_products',
+                    'multiple' => true,
+                    'required' => true,
+                    'mapped' => false,
+                ]),
+            EarningRuleScopeType::Variant => $builder
+                ->add('targets', ProductVariantAutocompleteType::class, [
+                    'label' => 'loyalty.ui.target_variants',
+                    'multiple' => true,
+                    'required' => true,
+                    'mapped' => false,
+                ]),
+        };
+
+        // Add the appropriate data transformer
+        $transformer = match ($scope) {
+            EarningRuleScopeType::Taxon => $this->taxonsToCodesTransformer,
+            EarningRuleScopeType::Product => $this->productsToCodesTransformer,
+            EarningRuleScopeType::Variant => $this->variantsToCodesTransformer,
+        };
+        $builder->get('targets')->addModelTransformer($transformer);
+
+        $builder
             ->add('pointsPerCurrencyUnit', IntegerType::class, [
                 'label' => 'loyalty.form.points_per_currency_unit',
                 'help' => 'loyalty.form.earning_rule_rate_help',
@@ -100,53 +111,39 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
             ])
         ;
 
-        // Add data transformers for entity ↔ codes conversion
-        $builder->get('targetTaxons')->addModelTransformer($this->taxonsToCodesTransformer);
-        $builder->get('targetProducts')->addModelTransformer($this->productsToCodesTransformer);
-        $builder->get('targetVariants')->addModelTransformer($this->variantsToCodesTransformer);
-
-        // Pre-populate form from entity
+        // Pre-populate targets from entity's targetCodes
         $builder->addEventListener(FormEvents::POST_SET_DATA, static function (FormEvent $event): void {
             $rule = $event->getData();
             if ($rule === null) {
                 return;
             }
 
-            $form = $event->getForm();
-            $form->get('scopeType')->setData($rule->getScopeType()->value);
-
             $codes = $rule->getTargetCodes();
             if (count($codes) > 0) {
-                match ($rule->getScopeType()) {
-                    EarningRuleScopeType::Taxon => $form->get('targetTaxons')->setData($codes),
-                    EarningRuleScopeType::Product => $form->get('targetProducts')->setData($codes),
-                    EarningRuleScopeType::Variant => $form->get('targetVariants')->setData($codes),
-                };
+                $event->getForm()->get('targets')->setData($codes);
             }
         });
 
-        // On submit: read scope + matching autocomplete → set entity fields
-        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event): void {
+        // On submit: set scopeType + targetCodes from the form
+        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) use ($scope): void {
             $rule = $event->getData();
             if ($rule === null) {
                 return;
             }
 
-            $form = $event->getForm();
-            $scopeValue = $form->get('scopeType')->getData();
+            $rule->setScopeType($scope);
 
-            if ($scopeValue !== null) {
-                $rule->setScopeType(EarningRuleScopeType::from($scopeValue));
-            }
-
-            $codes = match ($rule->getScopeType()) {
-                EarningRuleScopeType::Taxon => $form->get('targetTaxons')->getData(),
-                EarningRuleScopeType::Product => $form->get('targetProducts')->getData(),
-                EarningRuleScopeType::Variant => $form->get('targetVariants')->getData(),
-            };
-
+            $codes = $event->getForm()->get('targets')->getData();
             $rule->setTargetCodes(is_array($codes) ? $codes : []);
         });
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefault('scope', 'taxon');
+        $resolver->setAllowedValues('scope', ['taxon', 'product', 'variant']);
     }
 
     public function getBlockPrefix(): string

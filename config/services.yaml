@@ -247,6 +247,16 @@ services:
         tags:
             - { name: form.type }
 
+    # --- Earning Rule Controller ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController:
+        arguments:
+            $earningRuleRepository: '@loyalty.repository.earning_rule'
+            $earningRuleFactory: '@loyalty.factory.earning_rule'
+            $entityManager: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: controller.service_arguments }
+
     # --- Conflict Detection ---
 
     Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector:

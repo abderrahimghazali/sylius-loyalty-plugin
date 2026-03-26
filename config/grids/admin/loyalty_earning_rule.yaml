@@ -53,10 +53,37 @@ sylius_grid:
                     label: sylius.ui.enabled
             actions:
                 main:
-                    create:
+                    create_taxon:
                         type: create
+                        label: loyalty.ui.add_category_rule
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: taxon
+                    create_product:
+                        type: create
+                        label: loyalty.ui.add_product_rule
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: product
+                    create_variant:
+                        type: create
+                        label: loyalty.ui.add_variant_rule
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: variant
                 item:
                     update:
                         type: update
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_update
+                                parameters:
+                                    id: resource.id
                     delete:
                         type: delete
