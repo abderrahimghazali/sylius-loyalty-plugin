@@ -70,7 +70,7 @@
                                 <div class="subheader">{{ 'loyalty.ui.tier'|trans }}</div>
                                 <div class="h1 mb-0">
                                     {% if account.tier %}
-                                        <span class="badge" {% if account.tier.color %}style="background-color: {{ account.tier.color|e('css') }}; color: white;"{% endif %}>
+                                        <span class="badge" {% if account.tier.color %}style="background-color: {{ account.tier.color|e('html_attr') }}; color: white;"{% endif %}>
                                             {{ account.tier.name }}
                                         </span>
                                     {% else %}

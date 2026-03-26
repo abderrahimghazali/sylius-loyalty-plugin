@@ -1,5 +1,5 @@
 {% if data is not null %}
-    <span class="badge" {% if data.color %}style="background-color: {{ data.color|e('css') }}; color: white;"{% endif %}>
+    <span class="badge" {% if data.color %}style="background-color: {{ data.color|e('html_attr') }}; color: white;"{% endif %}>
         {{ data.name }}
     </span>
 {% else %}
