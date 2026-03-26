@@ -70,6 +70,7 @@ loyalty:
         target_taxons: Categories
         target_products: Products
         target_variants: Variants
+        conflicts: Conflicts
         points_per_unit: Pts/unit
         starts_at: Starts at
         ends_at: Ends at

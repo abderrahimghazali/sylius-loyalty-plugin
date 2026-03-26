@@ -247,7 +247,19 @@ services:
         tags:
             - { name: form.type }
 
-    # --- Twig Extension ---
+    # --- Conflict Detection ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector:
+        arguments:
+            $earningRuleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface'
+
+    # --- Twig Extensions ---
+
+    Abderrahim\SyliusLoyaltyPlugin\Twig\EarningRuleConflictExtension:
+        arguments:
+            $conflictDetector: '@Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector'
+        tags:
+            - { name: twig.extension }
 
     Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
         arguments:

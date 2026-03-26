@@ -33,6 +33,12 @@ sylius_grid:
                     type: string
                     label: sylius.ui.priority
                     sortable: ~
+                conflicts:
+                    type: twig
+                    label: loyalty.ui.conflicts
+                    path: "."
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/conflicts.html.twig'
                 enabled:
                     type: twig
                     label: sylius.ui.enabled
