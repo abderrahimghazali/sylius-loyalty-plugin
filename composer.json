@@ -3,6 +3,13 @@
     "type": "sylius-plugin",
     "description": "Points-based loyalty and rewards system for Sylius 2.x",
     "license": "MIT",
+    "keywords": ["sylius", "sylius-plugin", "loyalty", "rewards", "points", "ecommerce"],
+    "authors": [
+        {
+            "name": "Abderrahim Ghazali",
+            "homepage": "https://github.com/abderrahimghazali"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "sylius/sylius": "^2.1",
@@ -22,6 +29,8 @@
             "Tests\\Abderrahim\\SyliusLoyaltyPlugin\\": "tests/"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-main": "2.0-dev"
