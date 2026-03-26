@@ -14,3 +14,16 @@ sylius_twig_hooks:
             loyalty_discount:
                 template: '@SyliusLoyaltyPlugin/shop/checkout/common/sidebar/summary/total/loyalty_discount.html.twig'
                 priority: 250
+
+        'sylius_shop.shared.order.show.summary.table_summary':
+            loyalty_discount:
+                template: '@SyliusLoyaltyPlugin/shop/shared/order/show/summary/table_summary/loyalty_discount.html.twig'
+                priority: 250
+
+        'sylius_shop.shared.order.show.summary.table_summary.loyalty_discount':
+            label:
+                template: '@SyliusLoyaltyPlugin/shop/shared/order/show/summary/table_summary/loyalty_discount/label.html.twig'
+                priority: 100
+            value:
+                template: '@SyliusLoyaltyPlugin/shop/shared/order/show/summary/table_summary/loyalty_discount/value.html.twig'
+                priority: 0

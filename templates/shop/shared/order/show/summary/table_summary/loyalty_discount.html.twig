@@ -1,0 +1,8 @@
+{% set order = hookable_metadata.context.order %}
+{% set loyalty_total = order.getAdjustmentsTotal('loyalty_points_discount') %}
+
+{% if loyalty_total %}
+    <tr>
+        {% hook 'loyalty_discount' %}
+    </tr>
+{% endif %}
