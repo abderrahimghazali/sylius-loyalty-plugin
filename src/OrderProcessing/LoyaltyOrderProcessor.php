@@ -25,9 +25,6 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 #[AsOrderProcessor(priority: 5)]
 final class LoyaltyOrderProcessor implements OrderProcessorInterface
 {
-    /**
-     * @param FactoryInterface<AdjustmentInterface> $adjustmentFactory
-     */
     public function __construct(
         private readonly LoyaltyAccountRepositoryInterface $accountRepository,
         private readonly FactoryInterface $adjustmentFactory,

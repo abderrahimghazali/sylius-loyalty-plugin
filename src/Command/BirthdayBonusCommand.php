@@ -22,7 +22,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class BirthdayBonusCommand extends Command
 {
-    /** @param RepositoryInterface<CustomerInterface> $customerRepository */
     public function __construct(
         private readonly RepositoryInterface $customerRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,

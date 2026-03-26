@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Admin;
 
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,7 @@ final class LoyaltyAccountController extends AbstractController
     {
         $account = $this->accountRepository->find($id);
 
-        if ($account === null) {
+        if (!$account instanceof LoyaltyAccountInterface) {
             throw new NotFoundHttpException('Loyalty account not found.');
         }
 

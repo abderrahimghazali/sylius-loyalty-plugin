@@ -9,9 +9,6 @@ use Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransactionInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-/**
- * @extends RepositoryInterface<PointTransactionInterface>
- */
 interface PointTransactionRepositoryInterface extends RepositoryInterface
 {
     /** @return PointTransactionInterface[] */

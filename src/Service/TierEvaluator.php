@@ -10,7 +10,6 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class TierEvaluator implements TierEvaluatorInterface
 {
-    /** @param RepositoryInterface<LoyaltyTierInterface> $tierRepository */
     public function __construct(
         private readonly RepositoryInterface $tierRepository,
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
@@ -32,6 +31,7 @@ final class TierEvaluator implements TierEvaluatorInterface
         $lifetimePoints = $account->getLifetimePoints();
 
         foreach ($tiers as $tier) {
+            assert($tier instanceof LoyaltyTierInterface);
             if ($lifetimePoints >= $tier->getMinPoints()) {
                 // Only upgrade, never downgrade
                 if ($currentTier === null || $tier->getMinPoints() > $currentTier->getMinPoints()) {

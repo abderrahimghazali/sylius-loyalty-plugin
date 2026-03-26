@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Controller\Admin;
 
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccountInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Form\Type\PointAdjustmentType;
 use Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyAccountRepositoryInterface;
@@ -24,7 +25,7 @@ final class PointAdjustmentController extends AbstractController
     public function adjustAction(Request $request, int $accountId): Response
     {
         $account = $this->accountRepository->find($accountId);
-        if ($account === null) {
+        if (!$account instanceof LoyaltyAccountInterface) {
             throw new NotFoundHttpException('Loyalty account not found.');
         }
 
