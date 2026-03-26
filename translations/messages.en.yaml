@@ -52,6 +52,9 @@ loyalty:
         points_expiring_soon: Points expiring soon!
         expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
 
+        # Tier fields
+        color: Badge Color
+
         # Cart summary
         loyalty_discount: Loyalty discount
 

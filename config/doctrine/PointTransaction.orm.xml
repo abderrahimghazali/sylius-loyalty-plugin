@@ -7,6 +7,12 @@
     <mapped-superclass name="Abderrahim\SyliusLoyaltyPlugin\Entity\PointTransaction"
                        table="loyalty_point_transaction">
 
+        <indexes>
+            <index name="idx_lpt_account_type" columns="loyalty_account_id,type"/>
+            <index name="idx_lpt_order" columns="order_id"/>
+            <index name="idx_lpt_expiry" columns="expires_at,expired"/>
+        </indexes>
+
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO"/>
         </id>

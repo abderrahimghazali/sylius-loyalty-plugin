@@ -161,6 +161,7 @@ services:
         arguments:
             $accountRepository: '@loyalty.repository.account'
             $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
+            $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: controller.service_arguments }
 

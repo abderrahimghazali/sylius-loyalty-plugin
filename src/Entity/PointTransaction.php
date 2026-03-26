@@ -112,16 +112,4 @@ class PointTransaction implements PointTransactionInterface
         return $this->createdAt;
     }
 
-    /**
-     * Remaining redeemable points on this earn transaction (points - already redeemed/expired).
-     * Only meaningful for Earn/Bonus types.
-     */
-    public function getRemainingPoints(): int
-    {
-        if ($this->type->isDebit() || $this->expired) {
-            return 0;
-        }
-
-        return $this->points;
-    }
 }
