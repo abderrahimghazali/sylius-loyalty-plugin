@@ -1,0 +1,8 @@
+{% set scope = data.scopeType.value|default(data.scopeType) %}
+{% set target_id = data.targetId %}
+
+{% if target_id > 0 %}
+    <code>#{{ target_id }}</code>
+{% else %}
+    -
+{% endif %}

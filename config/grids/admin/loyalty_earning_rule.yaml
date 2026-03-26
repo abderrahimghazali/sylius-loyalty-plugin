@@ -20,9 +20,11 @@ sylius_grid:
                     label: loyalty.ui.scope_type
                     options:
                         template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/scope_type.html.twig'
-                targetId:
-                    type: string
-                    label: loyalty.ui.target_id
+                target:
+                    type: twig
+                    label: loyalty.ui.target
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/target.html.twig'
                 pointsPerCurrencyUnit:
                     type: string
                     label: loyalty.ui.points_per_unit
