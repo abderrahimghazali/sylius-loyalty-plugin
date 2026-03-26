@@ -16,6 +16,8 @@ loyalty:
         tiers: Loyalty Tiers
         point_transactions: Point Transactions
         point_transaction: Point Transaction
+        earning_rules: Earning Rules
+        earning_rule: Earning Rule
 
         # Points
         points: Points
