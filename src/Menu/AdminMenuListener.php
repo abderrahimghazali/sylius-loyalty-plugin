@@ -44,6 +44,18 @@ final class AdminMenuListener
             ;
 
             $configMenu
+                ->addChild('loyalty_earning_rules', [
+                    'route' => 'loyalty_admin_earning_rule_index',
+                    'extras' => ['routes' => [
+                        ['route' => 'loyalty_admin_earning_rule_create'],
+                        ['route' => 'loyalty_admin_earning_rule_update'],
+                    ]],
+                ])
+                ->setLabel('loyalty.ui.loyalty_earning_rules')
+                ->setLabelAttribute('icon', 'percent')
+            ;
+
+            $configMenu
                 ->addChild('loyalty_configuration', [
                     'route' => 'loyalty_admin_configuration_index',
                 ])

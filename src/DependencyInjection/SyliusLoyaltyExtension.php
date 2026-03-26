@@ -27,11 +27,13 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
         $loader->load('resources/point_transaction.yaml');
         $loader->load('resources/loyalty_tier.yaml');
         $loader->load('resources/loyalty_configuration.yaml');
+        $loader->load('resources/loyalty_earning_rule.yaml');
 
         // Load grid configurations
         $loader->load('grids/admin/loyalty_account.yaml');
         $loader->load('grids/admin/point_transaction.yaml');
         $loader->load('grids/admin/loyalty_tier.yaml');
+        $loader->load('grids/admin/loyalty_earning_rule.yaml');
 
         // Load twig hooks configuration
         $loader->load('config.yaml');

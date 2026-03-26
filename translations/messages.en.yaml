@@ -57,6 +57,18 @@ loyalty:
         configured: Configured
         not_configured: Not configured
 
+        # Earning rules
+        loyalty_earning_rules: Earning Rules
+        manage_earning_rules: Manage per-product/category earning rules
+        scope_type: Scope
+        scope_taxon: Category (Taxon)
+        scope_product: Product
+        scope_variant: Variant
+        target_id: Target ID
+        points_per_unit: Pts/unit
+        starts_at: Starts at
+        ends_at: Ends at
+
         # Tier fields
         color: Badge Color
 
@@ -98,6 +110,7 @@ loyalty:
         birthday_bonus_points: Birthday bonus points
         first_order_bonus_enabled: Enable first order bonus
         first_order_bonus_points: First order bonus points
+        target_id_help: 'The database ID of the taxon, product, or variant this rule targets.'
         min_points: Minimum lifetime points
         multiplier: Points multiplier
         color: Badge color

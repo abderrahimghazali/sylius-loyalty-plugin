@@ -19,9 +19,20 @@ services:
 
     # --- Services ---
 
+    Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface:
+        alias: loyalty.repository.earning_rule
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolver:
+        arguments:
+            $earningRuleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface'
+
+    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolverInterface:
+        alias: Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolver
+
     Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator:
         arguments:
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
+            $earningRuleResolver: '@Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolverInterface'
 
     Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface:
         alias: Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator
@@ -218,6 +229,12 @@ services:
             - { name: form.type }
 
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\PointAdjustmentType:
+        tags:
+            - { name: form.type }
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyEarningRuleType:
+        arguments:
+            $dataClass: '%loyalty.model.earning_rule.class%'
         tags:
             - { name: form.type }
 

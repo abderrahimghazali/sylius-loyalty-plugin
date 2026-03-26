@@ -12,6 +12,7 @@ final class PointsCalculator implements PointsCalculatorInterface
 {
     public function __construct(
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
+        private readonly EarningRuleResolverInterface $earningRuleResolver,
     ) {
     }
 
@@ -24,17 +25,31 @@ final class PointsCalculator implements PointsCalculatorInterface
             ? $this->configProvider->getConfigurationForChannel($channel)
             : $this->configProvider->getConfiguration();
 
-        // Use items subtotal (pre-discount) so loyalty/coupon discounts don't reduce earned points
-        $orderTotalInUnits = $order->getItemsTotal() / 100;
+        $defaultRate = $config->getPointsPerCurrencyUnit();
+        $totalPoints = 0;
 
-        $basePoints = (int) floor($orderTotalInUnits * $config->getPointsPerCurrencyUnit());
+        foreach ($order->getItems() as $item) {
+            $rate = $defaultRate;
 
-        // Apply tier multiplier if account has a tier
+            // Check for a per-product/category/variant earning rule override
+            if ($channel !== null) {
+                $rule = $this->earningRuleResolver->resolve($item, $channel);
+                if ($rule !== null) {
+                    $rate = $rule->getPointsPerCurrencyUnit();
+                }
+            }
+
+            // Use item total (unit price * qty minus item-level promotions)
+            $itemTotalInUnits = $item->getTotal() / 100;
+            $totalPoints += (int) floor($itemTotalInUnits * $rate);
+        }
+
+        // Apply tier multiplier
         $multiplier = 1.0;
         if ($account !== null && $account->getTier() !== null) {
             $multiplier = $account->getTier()->getMultiplier();
         }
 
-        return (int) floor($basePoints * $multiplier);
+        return (int) floor($totalPoints * $multiplier);
     }
 }

@@ -55,6 +55,21 @@ loyalty_admin_point_adjustment:
     defaults:
         _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController::adjustAction
 
+loyalty_admin_loyalty_earning_rule:
+    resource: |
+        alias: loyalty.earning_rule
+        section: admin
+        grid: loyalty_admin_loyalty_earning_rule
+        templates: '@SyliusAdmin/shared/crud'
+        except: ['show']
+        vars:
+            all:
+                subheader: loyalty.ui.manage_earning_rules
+            index:
+                icon: percent
+    type: sylius.resource
+    prefix: /loyalty
+
 loyalty_admin_configuration_index:
     path: /loyalty/configuration
     methods: [GET]
