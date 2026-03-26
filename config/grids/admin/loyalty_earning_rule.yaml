@@ -16,8 +16,10 @@ sylius_grid:
                     label: sylius.ui.name
                     sortable: ~
                 scopeType:
-                    type: string
+                    type: twig
                     label: loyalty.ui.scope_type
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/scope_type.html.twig'
                 targetId:
                     type: string
                     label: loyalty.ui.target_id
