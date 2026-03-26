@@ -9,6 +9,7 @@ use Abderrahim\SyliusLoyaltyPlugin\Repository\PointTransactionRepositoryInterfac
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Core\Model\CustomerInterface as CoreCustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -43,7 +44,7 @@ final class FirstOrderBonusListener
         }
 
         $customer = $order->getCustomer();
-        if ($customer === null) {
+        if (!$customer instanceof CoreCustomerInterface) {
             return;
         }
 

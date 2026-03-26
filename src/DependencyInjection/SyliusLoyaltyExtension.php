@@ -14,18 +14,6 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
-
-        // Set parameters from config
-        $container->setParameter('sylius_loyalty.points_per_currency_unit', $config['points_per_currency_unit']);
-        $container->setParameter('sylius_loyalty.redemption_rate', $config['redemption_rate']);
-        $container->setParameter('sylius_loyalty.expiry_days', $config['expiry_days']);
-        $container->setParameter('sylius_loyalty.bonus.registration', $config['bonus']['registration']);
-        $container->setParameter('sylius_loyalty.bonus.first_order', $config['bonus']['first_order']);
-        $container->setParameter('sylius_loyalty.bonus.birthday', $config['bonus']['birthday']);
-        $container->setParameter('sylius_loyalty.tiers_enabled', $config['tiers_enabled']);
-
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.yaml');
     }

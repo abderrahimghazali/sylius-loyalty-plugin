@@ -7,7 +7,7 @@
     <h2 class="mb-0">{{ 'loyalty.ui.my_loyalty_points'|trans }}</h2>
     {% if account.tier %}
         <span class="badge fs-6"
-              {% if account.tier.color %}style="background-color: {{ account.tier.color }}; color: white;"{% endif %}>
+              {% if account.tier.color %}style="background-color: {{ account.tier.color|e('css') }}; color: white;"{% endif %}>
             {{ account.tier.name }}
             <small>({{ account.tier.multiplier }}x {{ 'loyalty.ui.multiplier'|trans }})</small>
         </span>

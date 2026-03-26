@@ -2,5 +2,5 @@ parameters:
     level: 5
     paths:
         - src
-    excludePaths:
-        - src/DependencyInjection/Configuration.php
+    ignoreErrors:
+        - identifier: trait.unused

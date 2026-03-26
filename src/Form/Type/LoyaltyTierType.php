@@ -47,6 +47,13 @@ final class LoyaltyTierType extends AbstractType
             ->add('color', ColorType::class, [
                 'label' => 'loyalty.form.color',
                 'required' => false,
+                'constraints' => [
+                    new Assert\Length(max: 7),
+                    new Assert\Regex(
+                        pattern: '/^#[0-9A-Fa-f]{6}$/',
+                        message: 'Color must be a valid hex code (e.g. #FF5733).',
+                    ),
+                ],
             ])
             ->add('enabled', CheckboxType::class, [
                 'label' => 'sylius.ui.enabled',

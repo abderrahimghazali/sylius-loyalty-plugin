@@ -28,7 +28,7 @@
                 </div>
                 {% if loyalty.tier is not null %}
                     <span style="display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.025em;
-                        {% if loyalty.tier_color %}background-color: {{ loyalty.tier_color }}; color: white;{% else %}background-color: #e5e7eb; color: #374151;{% endif %}">
+                        {% if loyalty.tier_color %}background-color: {{ loyalty.tier_color|e('css') }}; color: white;{% else %}background-color: #e5e7eb; color: #374151;{% endif %}">
                         {{ loyalty.tier }}
                     </span>
                 {% endif %}

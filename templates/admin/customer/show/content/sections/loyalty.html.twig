@@ -15,7 +15,7 @@
         </h3>
         {% if loyalty.tier is not null %}
             <span class="badge"
-                  {% if loyalty.tier_color %}style="background-color: {{ loyalty.tier_color }}; color: white;"{% endif %}>
+                  {% if loyalty.tier_color %}style="background-color: {{ loyalty.tier_color|e('css') }}; color: white;"{% endif %}>
                 {{ loyalty.tier }}
             </span>
         {% endif %}
