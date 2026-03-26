@@ -20,7 +20,7 @@ sylius_grid:
                     label: loyalty.ui.scope_type
                     options:
                         template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/scope_type.html.twig'
-                target:
+                targetCodes:
                     type: twig
                     label: loyalty.ui.target
                     options:
