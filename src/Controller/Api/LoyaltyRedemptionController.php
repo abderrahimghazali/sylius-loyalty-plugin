@@ -18,8 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[AsController]
+#[IsGranted('ROLE_USER')]
 final class LoyaltyRedemptionController
 {
     public function __construct(
@@ -77,7 +79,7 @@ final class LoyaltyRedemptionController
         $available = $account->getPointsBalance();
         if ($pointsToRedeem > $available) {
             return $this->errorResponse(
-                sprintf('Insufficient points. Available: %d, requested: %d.', $available, $pointsToRedeem),
+                'Insufficient points balance.',
                 Response::HTTP_UNPROCESSABLE_ENTITY,
             );
         }

@@ -86,7 +86,7 @@
             </tr>
         </thead>
         <tbody>
-            {% set running_balance = account.pointsBalance %}
+            {% set running_balance = hookable_metadata.context.balanceAtPageTop|default(account.pointsBalance) %}
             {% set rows = [] %}
             {% for transaction in transactions %}
                 {% set rows = rows|merge([{

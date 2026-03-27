@@ -41,12 +41,26 @@ final class LoyaltyAccountController extends AbstractController
         $totalPages = max(1, (int) ceil($totalItems / self::PER_PAGE));
         $transactions = $this->transactionRepository->findPaginatedByLoyaltyAccount($account, $page, self::PER_PAGE);
 
+        // Compute the balance at the top of this page by summing transactions on prior pages
+        $balanceAtPageTop = $account->getPointsBalance();
+        if ($page > 1) {
+            $newerTransactions = $this->transactionRepository->findPaginatedByLoyaltyAccount($account, 1, ($page - 1) * self::PER_PAGE);
+            foreach ($newerTransactions as $tx) {
+                if ($tx->getType()->isDebit()) {
+                    $balanceAtPageTop += $tx->getPoints();
+                } else {
+                    $balanceAtPageTop -= $tx->getPoints();
+                }
+            }
+        }
+
         return $this->render('@SyliusLoyaltyPlugin/shop/account/loyalty.html.twig', [
             'account' => $account,
             'transactions' => $transactions,
             'redemptionRate' => $this->configProvider->getConfiguration()->getRedemptionRate(),
             'currentPage' => $page,
             'totalPages' => $totalPages,
+            'balanceAtPageTop' => $balanceAtPageTop,
         ]);
     }
 }

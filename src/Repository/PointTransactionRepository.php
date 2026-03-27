@@ -13,17 +13,21 @@ use Sylius\Component\Core\Model\OrderInterface;
 class PointTransactionRepository extends EntityRepository implements PointTransactionRepositoryInterface
 {
     /** @return PointTransactionInterface[] */
-    public function findExpirableTransactions(\DateTimeInterface $now): array
+    public function findExpirableTransactions(\DateTimeInterface $now, ?int $limit = null): array
     {
-        return $this->createQueryBuilder('pt')
+        $qb = $this->createQueryBuilder('pt')
             ->andWhere('pt.expiresAt <= :now')
             ->andWhere('pt.expired = :notExpired')
             ->andWhere('pt.type IN (:earnTypes)')
             ->setParameter('now', $now)
             ->setParameter('notExpired', false)
-            ->setParameter('earnTypes', [TransactionType::Earn->value, TransactionType::Bonus->value])
-            ->getQuery()
-            ->getResult();
+            ->setParameter('earnTypes', [TransactionType::Earn->value, TransactionType::Bonus->value]);
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /** @return PointTransactionInterface[] */

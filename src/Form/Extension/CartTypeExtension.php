@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class CartTypeExtension extends AbstractTypeExtension
 {
@@ -18,6 +19,10 @@ final class CartTypeExtension extends AbstractTypeExtension
             'required' => false,
             'label' => 'loyalty.ui.points_to_redeem',
             'empty_data' => '0',
+            'constraints' => [
+                new Assert\GreaterThanOrEqual(0),
+                new Assert\LessThanOrEqual(10_000_000),
+            ],
         ]);
 
         $builder->get('pointsToRedeem')->addModelTransformer(new CallbackTransformer(

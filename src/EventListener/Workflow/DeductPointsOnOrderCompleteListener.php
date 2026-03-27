@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\EventListener\Workflow;
 
-use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\Order\LoyaltyOrderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Enum\TransactionType;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface;
@@ -53,7 +52,7 @@ final class DeductPointsOnOrderCompleteListener
         $account = $this->balanceManager->getOrCreateAccount($customer);
 
         // Lock the account row to prevent concurrent double-spend
-        $this->entityManager->find(LoyaltyAccount::class, $account->getId(), LockMode::PESSIMISTIC_WRITE);
+        $this->entityManager->find($account::class, $account->getId(), LockMode::PESSIMISTIC_WRITE);
         $this->entityManager->refresh($account);
 
         // Final guard: don't deduct more than available

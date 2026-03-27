@@ -12,7 +12,7 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 interface PointTransactionRepositoryInterface extends RepositoryInterface
 {
     /** @return PointTransactionInterface[] */
-    public function findExpirableTransactions(\DateTimeInterface $now): array;
+    public function findExpirableTransactions(\DateTimeInterface $now, ?int $limit = null): array;
 
     /** @return PointTransactionInterface[] */
     public function findByLoyaltyAccount(LoyaltyAccountInterface $account, int $limit = 50): array;

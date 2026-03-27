@@ -38,6 +38,8 @@ final class PointAdjustmentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'csrf_protection' => true,
+            'csrf_token_id' => 'loyalty_point_adjustment',
         ]);
     }
 

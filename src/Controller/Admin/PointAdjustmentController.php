@@ -39,7 +39,7 @@ final class PointAdjustmentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $points = (int) $data['points'];
-            $reason = (string) $data['reason'];
+            $reason = strip_tags((string) $data['reason']);
 
             // Positive = credit points (Adjust), negative = debit points (Deduct)
             if ($points > 0) {

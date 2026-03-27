@@ -20,6 +20,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class ExpirePointsCommand extends Command
 {
+    private const BATCH_SIZE = 100;
+
     public function __construct(
         private readonly PointTransactionRepositoryInterface $transactionRepository,
         private readonly LoyaltyBalanceManagerInterface $balanceManager,
@@ -32,39 +34,38 @@ final class ExpirePointsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $now = new \DateTime();
-
-        $expirableTransactions = $this->transactionRepository->findExpirableTransactions($now);
-
-        if (count($expirableTransactions) === 0) {
-            $io->success('No points to expire.');
-
-            return Command::SUCCESS;
-        }
-
         $count = 0;
 
-        foreach ($expirableTransactions as $transaction) {
-            $account = $transaction->getLoyaltyAccount();
-            if ($account === null) {
-                continue;
+        do {
+            $batch = $this->transactionRepository->findExpirableTransactions($now, self::BATCH_SIZE);
+
+            foreach ($batch as $transaction) {
+                $account = $transaction->getLoyaltyAccount();
+                if ($account === null) {
+                    continue;
+                }
+
+                $transaction->setExpired(true);
+
+                $this->balanceManager->addTransaction(
+                    $account,
+                    TransactionType::Expire,
+                    $transaction->getPoints(),
+                    sprintf('Points expired (earned on %s)', $transaction->getCreatedAt()?->format('Y-m-d')),
+                );
+
+                ++$count;
             }
 
-            $transaction->setExpired(true);
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        } while (count($batch) === self::BATCH_SIZE);
 
-            $this->balanceManager->addTransaction(
-                $account,
-                TransactionType::Expire,
-                $transaction->getPoints(),
-                sprintf('Points expired (earned on %s)', $transaction->getCreatedAt()?->format('Y-m-d')),
-            );
-
-            ++$count;
+        if ($count === 0) {
+            $io->success('No points to expire.');
+        } else {
+            $io->success(sprintf('Expired %d point transaction(s).', $count));
         }
-
-        // Single flush for the entire batch
-        $this->entityManager->flush();
-
-        $io->success(sprintf('Expired %d point transaction(s).', $count));
 
         return Command::SUCCESS;
     }
