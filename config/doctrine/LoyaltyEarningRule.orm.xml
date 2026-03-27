@@ -8,7 +8,7 @@
                        table="loyalty_earning_rule">
 
         <indexes>
-            <index name="idx_ler_channel_scope" columns="channel_id,scope_type,enabled"/>
+            <index name="idx_ler_scope_enabled" columns="scope_type,enabled"/>
         </indexes>
 
         <id name="id" column="id" type="integer">
@@ -43,10 +43,17 @@
             </options>
         </field>
 
-        <many-to-one field="channel"
-                     target-entity="Sylius\Component\Channel\Model\ChannelInterface">
-            <join-column name="channel_id" referenced-column-name="id" nullable="true"/>
-        </many-to-one>
+        <many-to-many field="channels"
+                      target-entity="Sylius\Component\Channel\Model\ChannelInterface">
+            <join-table name="loyalty_earning_rule_channels">
+                <join-columns>
+                    <join-column name="earning_rule_id" referenced-column-name="id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="channel_id" referenced-column-name="id" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
 
     </mapped-superclass>
 

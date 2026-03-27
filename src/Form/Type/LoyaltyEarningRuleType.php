@@ -101,9 +101,11 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
                 'required' => false,
                 'widget' => 'single_text',
             ])
-            ->add('channel', ChannelChoiceType::class, [
-                'label' => 'sylius.ui.channel',
-                'constraints' => [new Assert\NotNull()],
+            ->add('channels', ChannelChoiceType::class, [
+                'label' => 'sylius.ui.channels',
+                'multiple' => true,
+                'expanded' => true,
+                'constraints' => [new Assert\Count(min: 1, minMessage: 'loyalty.earning_rule.channels.not_empty')],
             ])
             ->add('enabled', CheckboxType::class, [
                 'label' => 'sylius.ui.enabled',

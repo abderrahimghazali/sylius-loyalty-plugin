@@ -16,7 +16,8 @@ class LoyaltyEarningRuleRepository extends EntityRepository implements LoyaltyEa
         $date ??= new \DateTime();
 
         $qb = $this->createQueryBuilder('er')
-            ->andWhere('er.channel = :channel')
+            ->innerJoin('er.channels', 'c')
+            ->andWhere('c = :channel')
             ->andWhere('er.enabled = :enabled')
             ->andWhere('er.startsAt IS NULL OR er.startsAt <= :date')
             ->andWhere('er.endsAt IS NULL OR er.endsAt >= :date')

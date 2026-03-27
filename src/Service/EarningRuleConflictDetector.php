@@ -26,13 +26,10 @@ final class EarningRuleConflictDetector
      */
     public function findConflicts(LoyaltyEarningRuleInterface $rule): array
     {
-        $channel = $rule->getChannel();
-        if ($channel === null) {
+        $channels = $rule->getChannels();
+        if ($channels->isEmpty()) {
             return [];
         }
-
-        $allRules = $this->earningRuleRepository->findActiveRulesForChannel($channel);
-        $conflicts = [];
 
         $ruleCodes = $rule->getTargetCodes();
         $ruleScope = $rule->getScopeType();
@@ -41,21 +38,30 @@ final class EarningRuleConflictDetector
             return [];
         }
 
-        foreach ($allRules as $other) {
-            // Don't compare with itself
-            if ($other->getId() === $rule->getId()) {
-                continue;
-            }
+        $conflicts = [];
+        $seen = [];
 
-            // Only same scope level is a conflict
-            if ($other->getScopeType() !== $ruleScope) {
-                continue;
-            }
+        foreach ($channels as $channel) {
+            $allRules = $this->earningRuleRepository->findActiveRulesForChannel($channel);
 
-            // Check for overlapping target codes
-            $overlap = array_intersect($ruleCodes, $other->getTargetCodes());
-            if (count($overlap) > 0) {
-                $conflicts[] = $other;
+            foreach ($allRules as $other) {
+                if ($other->getId() === $rule->getId()) {
+                    continue;
+                }
+
+                if (isset($seen[$other->getId()])) {
+                    continue;
+                }
+
+                if ($other->getScopeType() !== $ruleScope) {
+                    continue;
+                }
+
+                $overlap = array_intersect($ruleCodes, $other->getTargetCodes());
+                if (count($overlap) > 0) {
+                    $conflicts[] = $other;
+                    $seen[$other->getId()] = true;
+                }
             }
         }
 

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
 use Abderrahim\SyliusLoyaltyPlugin\Enum\EarningRuleScopeType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Channel\Model\ChannelInterface;
 
 class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
@@ -28,7 +30,13 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
 
     protected bool $enabled = true;
 
-    protected ?ChannelInterface $channel = null;
+    /** @var Collection<int, ChannelInterface> */
+    protected Collection $channels;
+
+    public function __construct()
+    {
+        $this->channels = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,13 +125,26 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
         $this->enabled = $enabled;
     }
 
-    public function getChannel(): ?ChannelInterface
+    /** @return Collection<int, ChannelInterface> */
+    public function getChannels(): Collection
     {
-        return $this->channel;
+        return $this->channels;
     }
 
-    public function setChannel(?ChannelInterface $channel): void
+    public function addChannel(ChannelInterface $channel): void
     {
-        $this->channel = $channel;
+        if (!$this->channels->contains($channel)) {
+            $this->channels->add($channel);
+        }
+    }
+
+    public function removeChannel(ChannelInterface $channel): void
+    {
+        $this->channels->removeElement($channel);
+    }
+
+    public function hasChannel(ChannelInterface $channel): bool
+    {
+        return $this->channels->contains($channel);
     }
 }

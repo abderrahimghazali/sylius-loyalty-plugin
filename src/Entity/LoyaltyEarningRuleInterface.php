@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
 use Abderrahim\SyliusLoyaltyPlugin\Enum\EarningRuleScopeType;
+use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
@@ -44,7 +45,12 @@ interface LoyaltyEarningRuleInterface extends ResourceInterface
 
     public function setEnabled(bool $enabled): void;
 
-    public function getChannel(): ?ChannelInterface;
+    /** @return Collection<int, ChannelInterface> */
+    public function getChannels(): Collection;
 
-    public function setChannel(?ChannelInterface $channel): void;
+    public function addChannel(ChannelInterface $channel): void;
+
+    public function removeChannel(ChannelInterface $channel): void;
+
+    public function hasChannel(ChannelInterface $channel): bool;
 }
