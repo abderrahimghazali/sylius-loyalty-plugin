@@ -147,6 +147,12 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             return null;
         }
 
+        // Idempotency: check if points were already revoked for this order
+        $existingDeduct = $this->transactionRepository->findDeductByOrder($account, $order);
+        if ($existingDeduct !== null) {
+            return null;
+        }
+
         return $this->addTransaction(
             $account,
             TransactionType::Deduct,

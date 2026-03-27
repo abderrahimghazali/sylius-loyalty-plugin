@@ -40,10 +40,15 @@ final class LoyaltyTierType extends AbstractResourceType
                 'label' => 'loyalty.form.color',
                 'required' => false,
                 'constraints' => [
-                    new Assert\Length(max: 7),
-                    new Assert\Regex(
-                        pattern: '/^#[0-9A-Fa-f]{6}$/',
-                        message: 'Color must be a valid hex code (e.g. #FF5733).',
+                    new Assert\When(
+                        expression: 'value !== null and value !== ""',
+                        constraints: [
+                            new Assert\Length(max: 7),
+                            new Assert\Regex(
+                                pattern: '/^#[0-9A-Fa-f]{6}$/',
+                                message: 'Color must be a valid hex code (e.g. #FF5733).',
+                            ),
+                        ],
                     ),
                 ],
             ])

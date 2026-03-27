@@ -40,6 +40,7 @@ final class LoyaltyOrderProcessor implements OrderProcessorInterface
 
         // Always clear existing loyalty adjustments before recalculating
         $this->clearLoyaltyAdjustments($order);
+        $order->recalculateAdjustmentsTotal();
 
         $pointsToRedeem = $order->getPointsToRedeem();
 

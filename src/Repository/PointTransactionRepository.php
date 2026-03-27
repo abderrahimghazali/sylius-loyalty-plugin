@@ -88,6 +88,20 @@ class PointTransactionRepository extends EntityRepository implements PointTransa
             ->getOneOrNullResult();
     }
 
+    public function findDeductByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.order = :order')
+            ->andWhere('pt.type = :type')
+            ->setParameter('account', $account)
+            ->setParameter('order', $order)
+            ->setParameter('type', TransactionType::Deduct->value)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findRedeemByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
     {
         return $this->createQueryBuilder('pt')

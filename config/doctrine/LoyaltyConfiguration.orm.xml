@@ -13,64 +13,64 @@
 
         <many-to-one field="channel"
                      target-entity="Sylius\Component\Channel\Model\ChannelInterface">
-            <join-column name="channel_id" referenced-column-name="id" nullable="true" />
+            <join-column name="channel_id" referenced-column-name="id" nullable="false" unique="true"/>
         </many-to-one>
 
-        <field name="pointsPerCurrencyUnit" column="pointsPerCurrencyUnit" type="integer" nullable="false">
+        <field name="pointsPerCurrencyUnit" column="points_per_currency_unit" type="integer" nullable="false">
             <options>
                 <option name="default">1</option>
             </options>
         </field>
 
-        <field name="redemptionRate" column="redemptionRate" type="integer" nullable="false">
+        <field name="redemptionRate" column="redemption_rate" type="integer" nullable="false">
             <options>
                 <option name="default">100</option>
             </options>
         </field>
 
-        <field name="expiryDays" column="expiryDays" type="integer" nullable="false">
+        <field name="expiryDays" column="expiry_days" type="integer" nullable="false">
             <options>
                 <option name="default">365</option>
             </options>
         </field>
 
-        <field name="tiersEnabled" column="tiersEnabled" type="boolean" nullable="false">
+        <field name="tiersEnabled" column="tiers_enabled" type="boolean" nullable="false">
             <options>
                 <option name="default">1</option>
             </options>
         </field>
 
-        <field name="registrationBonusEnabled" column="registrationBonusEnabled" type="boolean" nullable="false">
+        <field name="registrationBonusEnabled" column="registration_bonus_enabled" type="boolean" nullable="false">
             <options>
                 <option name="default">1</option>
             </options>
         </field>
 
-        <field name="registrationBonusPoints" column="registrationBonusPoints" type="integer" nullable="false">
+        <field name="registrationBonusPoints" column="registration_bonus_points" type="integer" nullable="false">
             <options>
                 <option name="default">100</option>
             </options>
         </field>
 
-        <field name="birthdayBonusEnabled" column="birthdayBonusEnabled" type="boolean" nullable="false">
+        <field name="birthdayBonusEnabled" column="birthday_bonus_enabled" type="boolean" nullable="false">
             <options>
                 <option name="default">1</option>
             </options>
         </field>
 
-        <field name="birthdayBonusPoints" column="birthdayBonusPoints" type="integer" nullable="false">
+        <field name="birthdayBonusPoints" column="birthday_bonus_points" type="integer" nullable="false">
             <options>
                 <option name="default">200</option>
             </options>
         </field>
 
-        <field name="firstOrderBonusEnabled" column="firstOrderBonusEnabled" type="boolean" nullable="false">
+        <field name="firstOrderBonusEnabled" column="first_order_bonus_enabled" type="boolean" nullable="false">
             <options>
                 <option name="default">1</option>
             </options>
         </field>
 
-        <field name="firstOrderBonusPoints" column="firstOrderBonusPoints" type="integer" nullable="false">
+        <field name="firstOrderBonusPoints" column="first_order_bonus_points" type="integer" nullable="false">
             <options>
                 <option name="default">50</option>
             </options>
