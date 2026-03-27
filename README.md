@@ -33,7 +33,7 @@ SyliusLoyaltyPlugin adds a complete loyalty program to any Sylius 2.x store. Cus
 ### Key Features
 
 - **Multi-channel** — Each channel has independent earning rates, redemption rates, expiry, and bonus settings
-- **Per-product/category earning rules** — Override earning rates for specific taxons, products, or variants with time-limited promotions
+- **Loyalty rules** — Override earning rates for specific products with per-rule points configuration and multi-channel support
 - **Points earning** — Configurable default points per currency unit on every order
 - **Cart redemption** — Spend points as a monetary discount on the cart page
 - **Points expiry** — Automatic expiration with cron command + 30-day warnings
@@ -147,7 +147,7 @@ php bin/console doctrine:migrations:migrate
 php bin/console loyalty:install
 ```
 
-This creates a default loyalty configuration for each channel. You can then customize settings per channel from the admin panel under **Configuration > Loyalty Configuration**.
+This creates a default loyalty configuration for each channel. You can then customize settings per channel from the admin panel under **Configuration > Loyalty configuration**.
 
 ### 7. Set up cron jobs
 
@@ -167,8 +167,8 @@ php bin/console loyalty:birthday-bonus
 Channel ──1:1──▶ LoyaltyConfiguration
                     (earning rate, redemption rate, expiry, bonuses)
 
-Channel ──1:N──▶ LoyaltyEarningRule
-                    (scope: taxon/product/variant, target codes, rate override)
+Channel ──N:M──▶ LoyaltyRule ──N:M──▶ Product
+                    (name, enabled, points rate per product)
 
 Customer ──1:1──▶ LoyaltyAccount ──1:N──▶ PointTransaction
                         │                    (earn/redeem/expire/adjust/bonus)
@@ -187,7 +187,7 @@ Points are **shared across channels** (one account per customer), while earning/
 | `PointTransaction` | Ledger entry — signed points, type, optional order link, expiry |
 | `LoyaltyTier` | Tier with min-points threshold, earning multiplier, color |
 | `LoyaltyConfiguration` | Per-channel config: earning rate, redemption rate, expiry, bonuses |
-| `LoyaltyEarningRule` | Per-channel rate override for specific taxons, products, or variants |
+| `LoyaltyRule` | Per-product earning rate override, multi-channel |
 
 ### Sylius Integration Points
 
@@ -200,7 +200,7 @@ Points are **shared across channels** (one account per customer), while earning/
 | `workflow.sylius_order_checkout.completed.complete` | Deducts redeemed points from balance |
 | `workflow.sylius_order.completed.cancel` | Restores redeemed points |
 | `workflow.sylius_payment.completed.refund` | Restores redeemed points on refund |
-| `sylius.menu.admin.main` event | Adds menu items under Customers & Configuration |
+| `sylius.menu.admin.main` event | Adds menu items under Customers, Marketing & Configuration |
 | Twig hooks | Cart widget, cart/checkout summary, customer show section, account menu |
 
 ## Multi-Channel Support
@@ -217,7 +217,7 @@ Each Sylius channel can have its own loyalty configuration:
 
 Points are shared across channels — a customer earns on one store and redeems on another. Rates are applied based on the order's channel.
 
-Manage per-channel settings at **Configuration > Loyalty Configuration** in the admin panel.
+Manage per-channel settings at **Configuration > Loyalty configuration** in the admin panel.
 
 ## Shop Features
 
@@ -252,7 +252,7 @@ From any loyalty account detail page, admins can add or deduct points with a req
 
 ### Tier Management
 
-Full CRUD for loyalty tiers under **Configuration > Loyalty Tiers**. Code and position are auto-generated from the tier name.
+Full CRUD for loyalty tiers under **Marketing > Loyalty tiers**. Code and position are auto-generated from the tier name.
 
 | Field | Description |
 |---|---|
@@ -263,7 +263,7 @@ Full CRUD for loyalty tiers under **Configuration > Loyalty Tiers**. Code and po
 
 ### Per-Channel Configuration
 
-Under **Configuration > Loyalty Configuration**, admins see a table of all channels and can configure each independently:
+Under **Configuration > Loyalty configuration**, admins see a table of all channels and can configure each independently:
 
 - Points per currency unit
 - Redemption rate (points per 1 currency unit)
@@ -273,26 +273,25 @@ Under **Configuration > Loyalty Configuration**, admins see a table of all chann
 
 Settings are stored in the database and take effect immediately without redeployment.
 
-### Earning Rules
+### Loyalty Rules
 
-Under **Configuration > Earning Rules**, admins can override the default earning rate for specific categories, products, or variants. The index page offers three create buttons:
+Under **Marketing > Loyalty rules**, admins can override the default earning rate for specific products. Each rule has:
 
-- **Category rule** — select one or more taxons (multi-select autocomplete)
-- **Product rule** — select one or more products
-- **Variant rule** — select one or more specific variants
+- **Name** — descriptive label for the rule
+- **Products** — select one or more products via autocomplete
+- **Points per currency unit** — custom earning rate (set to 0 to exclude products from earning)
+- **Channels** — select which channels the rule applies to
+- **Enabled** — toggle the rule on/off
 
-Each rule specifies a points-per-currency-unit rate, an optional date range (for time-limited promotions like "double points this week"), a priority, and a channel.
-
-**Specificity resolution**: When a product matches multiple rules, the most specific wins: Variant > Product > Category > Channel default. Within the same scope level, higher priority wins. The grid shows a **Conflicts** column warning when rules overlap at the same scope level.
+When a product in an order matches a loyalty rule for that channel, the rule's rate is used instead of the channel's default rate.
 
 **Example rules:**
 
-| Rule | Scope | Targets | Rate |
+| Rule | Products | Rate | Channels |
 |---|---|---|---|
-| Double on Dresses | Category | Dresses | 2 pts/€1 |
-| No points on gift cards | Product | Gift Card | 0 pts/€1 |
-| 5x on new collection | Category | New Arrivals | 5 pts/€1 |
-| Premium variant bonus | Variant | XL Gold Edition | 10 pts/€1 |
+| Double on gift sets | Gift Set A, Gift Set B | 2 pts/€1 | All |
+| No points on gift cards | Gift Card | 0 pts/€1 | All |
+| Premium bonus | Limited Edition Watch | 10 pts/€1 | Fashion Web Store |
 
 ## API Endpoints (Headless)
 
