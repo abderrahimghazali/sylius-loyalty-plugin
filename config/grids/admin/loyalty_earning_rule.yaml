@@ -9,18 +9,36 @@ sylius_grid:
                         method: createQueryBuilder
                         arguments: ['er']
             sorting:
-                name: asc
+                priority: desc
             fields:
                 name:
                     type: string
                     label: sylius.ui.name
                     sortable: ~
-                channels:
+                scopeType:
                     type: twig
-                    label: sylius.ui.channels
+                    label: loyalty.ui.scope_type
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/scope_type.html.twig'
+                targetCodes:
+                    type: twig
+                    label: loyalty.ui.target
+                    options:
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/target.html.twig'
+                pointsPerCurrencyUnit:
+                    type: string
+                    label: loyalty.ui.points_per_unit
+                    sortable: ~
+                priority:
+                    type: string
+                    label: sylius.ui.priority
+                    sortable: ~
+                conflicts:
+                    type: twig
+                    label: loyalty.ui.conflicts
                     path: "."
                     options:
-                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/channels.html.twig'
+                        template: '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/field/conflicts.html.twig'
                 enabled:
                     type: twig
                     label: sylius.ui.enabled
@@ -35,12 +53,30 @@ sylius_grid:
                     label: sylius.ui.enabled
             actions:
                 main:
-                    create:
+                    create_taxon:
                         type: create
-                        label: loyalty.ui.add_earning_rule
+                        label: loyalty.ui.add_category_rule
                         options:
                             link:
                                 route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: taxon
+                    create_product:
+                        type: create
+                        label: loyalty.ui.add_product_rule
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: product
+                    create_variant:
+                        type: create
+                        label: loyalty.ui.add_variant_rule
+                        options:
+                            link:
+                                route: loyalty_admin_earning_rule_create
+                                parameters:
+                                    scope: variant
                 item:
                     update:
                         type: update

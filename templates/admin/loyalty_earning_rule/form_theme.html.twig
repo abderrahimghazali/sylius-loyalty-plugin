@@ -1,89 +1,10 @@
 {% block loyalty_earning_rule_widget %}
-    <div class="card mb-3">
-        <div class="card-header">
-            <h3 class="card-title">{{ 'loyalty.ui.rule_details'|trans }}</h3>
-        </div>
-        <div class="card-body">
-            {{ form_row(form.name) }}
-            {{ form_row(form.enabled) }}
-        </div>
-    </div>
-
-    <div class="card" {{ stimulus_controller('loyalty-earning-rule-channels') }}>
-        <div class="card-header">
-            <h3 class="card-title">{{ 'loyalty.ui.channel_configuration'|trans }}</h3>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label class="form-label">{{ 'loyalty.ui.select_channels'|trans }}</label>
-                <div class="d-flex flex-wrap gap-3">
-                    {% for index, config in form.channelConfigurations %}
-                        {% set channelName = config.vars.data.channel.name ?? ('Channel ' ~ index) %}
-                        {% set channelCode = config.vars.data.channel.code ?? index %}
-                        <label class="form-check form-check-inline">
-                            <input class="form-check-input"
-                                   type="checkbox"
-                                   value="{{ channelCode }}"
-                                   checked
-                                   {{ stimulus_action('loyalty-earning-rule-channels', 'toggle', 'change') }}
-                                   {{ stimulus_target('loyalty-earning-rule-channels', 'checkbox') }}
-                                   data-loyalty-earning-rule-channels-channel-param="{{ channelCode }}"
-                            >
-                            <span class="form-check-label">{{ channelName }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
-            </div>
-
-            {% if form.channelConfigurations|length > 0 %}
-                <ul class="nav nav-tabs" role="tablist" {{ stimulus_target('loyalty-earning-rule-channels', 'tabList') }}>
-                    {% for index, config in form.channelConfigurations %}
-                        {% set channelCode = config.vars.data.channel.code ?? index %}
-                        {% set channelName = config.vars.data.channel.name ?? ('Channel ' ~ index) %}
-                        <li class="nav-item" role="presentation"
-                            data-channel="{{ channelCode }}"
-                            {{ stimulus_target('loyalty-earning-rule-channels', 'tab') }}>
-                            <button class="nav-link {{ loop.first ? 'active' : '' }}"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#channel-config-{{ channelCode }}"
-                                    type="button"
-                                    role="tab">
-                                {{ channelName }}
-                            </button>
-                        </li>
-                    {% endfor %}
-                </ul>
-
-                <div class="tab-content pt-3">
-                    {% for index, config in form.channelConfigurations %}
-                        {% set channelCode = config.vars.data.channel.code ?? index %}
-                        {% set channelName = config.vars.data.channel.name ?? ('Channel ' ~ index) %}
-                        <div class="tab-pane {{ loop.first ? 'show active' : '' }}"
-                             id="channel-config-{{ channelCode }}"
-                             role="tabpanel"
-                             data-channel="{{ channelCode }}"
-                             {{ stimulus_target('loyalty-earning-rule-channels', 'pane') }}>
-
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <span class="text-muted">{{ 'loyalty.ui.for_every_product'|trans }}</span>
-                                </div>
-                                <div class="col-auto" style="width: 120px;">
-                                    {{ form_widget(config.pointsPerProduct, {attr: {class: 'form-control'}}) }}
-                                </div>
-                                <div class="col-auto">
-                                    <span class="text-muted">{{ 'loyalty.ui.points'|trans }}</span>
-                                </div>
-                            </div>
-                            {% if form_errors(config.pointsPerProduct)|length > 0 %}
-                                <div class="mt-1">{{ form_errors(config.pointsPerProduct) }}</div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-muted">{{ 'loyalty.ui.no_channels_available'|trans }}</div>
-            {% endif %}
-        </div>
-    </div>
+    {{ form_row(form.name) }}
+    {{ form_row(form.targets) }}
+    {{ form_row(form.pointsPerCurrencyUnit) }}
+    {{ form_row(form.priority) }}
+    {{ form_row(form.startsAt) }}
+    {{ form_row(form.endsAt) }}
+    {{ form_row(form.channel) }}
+    {{ form_row(form.enabled) }}
 {% endblock %}

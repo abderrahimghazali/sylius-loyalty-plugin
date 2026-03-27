@@ -27,10 +27,12 @@ final class LoyaltyEarningRuleController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMINISTRATION_ACCESS');
 
+        $scope = $request->query->getString('scope', 'taxon');
+
         /** @var LoyaltyEarningRuleInterface $rule */
         $rule = $this->earningRuleFactory->createNew();
 
-        $form = $this->createForm(LoyaltyEarningRuleType::class, $rule);
+        $form = $this->createForm(LoyaltyEarningRuleType::class, $rule, ['scope' => $scope]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -44,6 +46,7 @@ final class LoyaltyEarningRuleController extends AbstractController
 
         return $this->render('@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/create.html.twig', [
             'form' => $form->createView(),
+            'scope' => $scope,
         ]);
     }
 
@@ -56,7 +59,9 @@ final class LoyaltyEarningRuleController extends AbstractController
             throw new NotFoundHttpException('Earning rule not found.');
         }
 
-        $form = $this->createForm(LoyaltyEarningRuleType::class, $rule);
+        $scope = $rule->getScopeType()->value;
+
+        $form = $this->createForm(LoyaltyEarningRuleType::class, $rule, ['scope' => $scope]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -69,6 +74,7 @@ final class LoyaltyEarningRuleController extends AbstractController
 
         return $this->render('@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/update.html.twig', [
             'form' => $form->createView(),
+            'scope' => $scope,
             'rule' => $rule,
         ]);
     }

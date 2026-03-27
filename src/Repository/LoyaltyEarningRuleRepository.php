@@ -11,15 +11,20 @@ use Sylius\Component\Channel\Model\ChannelInterface;
 class LoyaltyEarningRuleRepository extends EntityRepository implements LoyaltyEarningRuleRepositoryInterface
 {
     /** @return LoyaltyEarningRuleInterface[] */
-    public function findEnabledRulesForChannel(ChannelInterface $channel): array
+    public function findActiveRulesForChannel(ChannelInterface $channel, ?\DateTimeInterface $date = null): array
     {
-        return $this->createQueryBuilder('er')
-            ->innerJoin('er.channelConfigurations', 'cc')
-            ->andWhere('cc.channel = :channel')
+        $date ??= new \DateTime();
+
+        $qb = $this->createQueryBuilder('er')
+            ->andWhere('er.channel = :channel')
             ->andWhere('er.enabled = :enabled')
+            ->andWhere('er.startsAt IS NULL OR er.startsAt <= :date')
+            ->andWhere('er.endsAt IS NULL OR er.endsAt >= :date')
             ->setParameter('channel', $channel)
             ->setParameter('enabled', true)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('date', $date)
+            ->orderBy('er.priority', 'DESC');
+
+        return $qb->getQuery()->getResult();
     }
 }

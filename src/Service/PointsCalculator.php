@@ -28,20 +28,20 @@ final class PointsCalculator implements PointsCalculatorInterface
         $defaultRate = $config->getPointsPerCurrencyUnit();
         $totalPoints = 0;
 
-        // Check if there's an earning rule rate for this channel
-        $earningRuleRate = $channel !== null
-            ? $this->earningRuleResolver->getPointsRateForChannel($channel)
-            : null;
-
         foreach ($order->getItems() as $item) {
-            if ($earningRuleRate !== null) {
-                // Earning rule: points per product purchased
-                $totalPoints += $item->getQuantity() * $earningRuleRate;
-            } else {
-                // Default: points per currency unit spent
-                $itemTotalInUnits = $item->getTotal() / 100;
-                $totalPoints += (int) floor($itemTotalInUnits * $defaultRate);
+            $rate = $defaultRate;
+
+            // Check for a per-product/category/variant earning rule override
+            if ($channel !== null) {
+                $rule = $this->earningRuleResolver->resolve($item, $channel);
+                if ($rule !== null) {
+                    $rate = $rule->getPointsPerCurrencyUnit();
+                }
             }
+
+            // Use item total (unit price * qty minus item-level promotions)
+            $itemTotalInUnits = $item->getTotal() / 100;
+            $totalPoints += (int) floor($itemTotalInUnits * $rate);
         }
 
         // Apply tier multiplier

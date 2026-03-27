@@ -1,7 +1,0 @@
-{% for config in data.channelConfigurations %}
-    <span class="badge bg-info text-white me-1" title="{{ config.pointsPerProduct }} {{ 'loyalty.ui.points_per_product_short'|trans }}">
-        {{ config.channel.name }} ({{ config.pointsPerProduct }}pts)
-    </span>
-{% else %}
-    <span class="text-muted">{{ 'loyalty.ui.no_channels'|trans }}</span>
-{% endfor %}
