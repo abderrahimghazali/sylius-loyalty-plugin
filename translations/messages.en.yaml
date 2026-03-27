@@ -1,30 +1,30 @@
 loyalty:
     ui:
         # General
-        loyalty_points: Loyalty Points
-        loyalty_account: Loyalty Account
-        loyalty_accounts: Loyalty Accounts
-        loyalty_tiers: Loyalty Tiers
-        loyalty_configuration: Loyalty Configuration
+        loyalty_points: Loyalty points
+        loyalty_account: Loyalty account
+        loyalty_accounts: Loyalty accounts
+        loyalty_tiers: Loyalty tiers
+        loyalty_configuration: Loyalty configuration
         manage_loyalty_accounts: Manage customer loyalty accounts
         manage_loyalty_tiers: Manage loyalty tier levels
         point_transaction_history: Point transaction history
 
         # Sylius auto-generated keys (from resource alias)
-        accounts: Loyalty Accounts
-        account: Loyalty Account
-        tiers: Loyalty Tiers
-        point_transactions: Point Transactions
-        point_transaction: Point Transaction
-        rules: Loyalty Rules
-        rule: Loyalty Rule
+        accounts: Loyalty accounts
+        account: Loyalty account
+        tiers: Loyalty tiers
+        point_transactions: Point transactions
+        point_transaction: Point transaction
+        rules: Loyalty rules
+        rule: Loyalty rule
 
         # Points
         points: Points
-        points_balance: Points Balance
-        lifetime_points: Lifetime Points
-        available_points: Available Points
-        redeemable_value: Redeemable Value
+        points_balance: Points balance
+        lifetime_points: Lifetime points
+        available_points: Available points
+        redeemable_value: Redeemable value
         min_points: Min. Points
         multiplier: Multiplier
         balance: Balance
@@ -32,7 +32,7 @@ loyalty:
 
         # Tier
         tier: Tier
-        no_tier: No Tier
+        no_tier: No tier
 
         # Transactions
         type: Type
@@ -43,8 +43,8 @@ loyalty:
         type_deduct: Deducted
         type_bonus: Bonus
         expires: Expires
-        expires_at: Expires At
-        transaction_history: Transaction History
+        expires_at: Expires at
+        transaction_history: Transaction history
         no_transactions: No transactions yet.
 
         # Shop account
@@ -55,27 +55,27 @@ loyalty:
         expiry_warning: '%points% points will expire on %date%. Use them before they expire!'
 
         # Channel configuration
-        channel_configurations: Channel Configurations
+        channel_configurations: Channel configurations
         configured: Configured
         not_configured: Not configured
 
         # Loyalty rules
-        loyalty_rules: Loyalty Rules
+        loyalty_rules: Loyalty rules
         manage_loyalty_rules: Manage per-product loyalty rules
         products: Products
         points_per_unit: Pts/unit
         create_rule: New rule
-        new_rule: New Loyalty Rule
-        edit_rule: Edit Loyalty Rule
+        new_rule: New loyalty rule
+        edit_rule: Edit loyalty rule
 
         # Tier fields
-        color: Badge Color
+        color: Badge color
 
         # Cart summary
         loyalty_discount: Loyalty discount
 
         # Cart redemption
-        redeem_points: Redeem Loyalty Points
+        redeem_points: Redeem loyalty points
         points_to_redeem: Points to redeem
         points_applied: Loyalty points applied
         apply_points: Apply points
@@ -84,16 +84,16 @@ loyalty:
         clear: Clear
 
         # Admin
-        adjust_points: Adjust Points
-        manual_adjustment: Manual Adjustment
+        adjust_points: Adjust points
+        manual_adjustment: Manual adjustment
         adjustment_hint: 'Enter a positive number to add points, negative to deduct.'
-        apply_adjustment: Apply Adjustment
+        apply_adjustment: Apply adjustment
         view_full_details: View full details
 
         # Configuration page
-        config_earning: Points Earning & Expiry
-        config_bonuses: Bonus Events
-        config_tiers: Tier Thresholds
+        config_earning: Points earning & expiry
+        config_bonuses: Bonus events
+        config_tiers: Tier thresholds
 
     form:
         points_per_currency_unit: Points per currency unit

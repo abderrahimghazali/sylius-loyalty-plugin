@@ -28,10 +28,10 @@ final class AdminMenuListener
             ;
         }
 
-        // Add tier management + config under Configuration menu
-        $configMenu = $menu->getChild('configuration');
-        if ($configMenu !== null) {
-            $configMenu
+        // Add tiers + rules under Marketing menu
+        $marketingMenu = $menu->getChild('marketing');
+        if ($marketingMenu !== null) {
+            $marketingMenu
                 ->addChild('loyalty_tiers', [
                     'route' => 'loyalty_admin_tier_index',
                     'extras' => ['routes' => [
@@ -43,7 +43,7 @@ final class AdminMenuListener
                 ->setLabelAttribute('icon', 'trophy')
             ;
 
-            $configMenu
+            $marketingMenu
                 ->addChild('loyalty_rules', [
                     'route' => 'loyalty_admin_rule_index',
                     'extras' => ['routes' => [
@@ -54,7 +54,11 @@ final class AdminMenuListener
                 ->setLabel('loyalty.ui.loyalty_rules')
                 ->setLabelAttribute('icon', 'percent')
             ;
+        }
 
+        // Add config under Configuration menu
+        $configMenu = $menu->getChild('configuration');
+        if ($configMenu !== null) {
             $configMenu
                 ->addChild('loyalty_configuration', [
                     'route' => 'loyalty_admin_configuration_index',
