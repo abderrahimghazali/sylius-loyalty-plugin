@@ -11,5 +11,5 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 interface LoyaltyEarningRuleRepositoryInterface extends RepositoryInterface
 {
     /** @return LoyaltyEarningRuleInterface[] */
-    public function findActiveRulesForChannel(ChannelInterface $channel, ?\DateTimeInterface $date = null): array;
+    public function findEnabledRulesForChannel(ChannelInterface $channel): array;
 }

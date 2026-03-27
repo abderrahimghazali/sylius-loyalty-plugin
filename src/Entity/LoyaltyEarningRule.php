@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
-use Abderrahim\SyliusLoyaltyPlugin\Enum\EarningRuleScopeType;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Channel\Model\ChannelInterface;
 
 class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
@@ -13,22 +14,15 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
 
     protected ?string $name = null;
 
-    protected string $scopeType = 'taxon';
-
-    /** @var string[] */
-    protected array $targetCodes = [];
-
-    protected int $pointsPerCurrencyUnit = 1;
-
-    protected int $priority = 0;
-
-    protected ?\DateTimeInterface $startsAt = null;
-
-    protected ?\DateTimeInterface $endsAt = null;
-
     protected bool $enabled = true;
 
-    protected ?ChannelInterface $channel = null;
+    /** @var Collection<int, LoyaltyEarningRuleChannelConfigurationInterface> */
+    protected Collection $channelConfigurations;
+
+    public function __construct()
+    {
+        $this->channelConfigurations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,68 +39,6 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
         $this->name = $name;
     }
 
-    public function getScopeType(): EarningRuleScopeType
-    {
-        return EarningRuleScopeType::from($this->scopeType);
-    }
-
-    public function setScopeType(EarningRuleScopeType $scopeType): void
-    {
-        $this->scopeType = $scopeType->value;
-    }
-
-    /** @return string[] */
-    public function getTargetCodes(): array
-    {
-        return $this->targetCodes;
-    }
-
-    /** @param string[] $targetCodes */
-    public function setTargetCodes(array $targetCodes): void
-    {
-        $this->targetCodes = $targetCodes;
-    }
-
-    public function getPointsPerCurrencyUnit(): int
-    {
-        return $this->pointsPerCurrencyUnit;
-    }
-
-    public function setPointsPerCurrencyUnit(int $pointsPerCurrencyUnit): void
-    {
-        $this->pointsPerCurrencyUnit = $pointsPerCurrencyUnit;
-    }
-
-    public function getPriority(): int
-    {
-        return $this->priority;
-    }
-
-    public function setPriority(int $priority): void
-    {
-        $this->priority = $priority;
-    }
-
-    public function getStartsAt(): ?\DateTimeInterface
-    {
-        return $this->startsAt;
-    }
-
-    public function setStartsAt(?\DateTimeInterface $startsAt): void
-    {
-        $this->startsAt = $startsAt;
-    }
-
-    public function getEndsAt(): ?\DateTimeInterface
-    {
-        return $this->endsAt;
-    }
-
-    public function setEndsAt(?\DateTimeInterface $endsAt): void
-    {
-        $this->endsAt = $endsAt;
-    }
-
     public function isEnabled(): bool
     {
         return $this->enabled;
@@ -117,13 +49,41 @@ class LoyaltyEarningRule implements LoyaltyEarningRuleInterface
         $this->enabled = $enabled;
     }
 
-    public function getChannel(): ?ChannelInterface
+    /** @return Collection<int, LoyaltyEarningRuleChannelConfigurationInterface> */
+    public function getChannelConfigurations(): Collection
     {
-        return $this->channel;
+        return $this->channelConfigurations;
     }
 
-    public function setChannel(?ChannelInterface $channel): void
+    public function addChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): void
     {
-        $this->channel = $channel;
+        if (!$this->hasChannelConfiguration($configuration)) {
+            $configuration->setEarningRule($this);
+            $this->channelConfigurations->add($configuration);
+        }
+    }
+
+    public function removeChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): void
+    {
+        if ($this->hasChannelConfiguration($configuration)) {
+            $configuration->setEarningRule(null);
+            $this->channelConfigurations->removeElement($configuration);
+        }
+    }
+
+    public function hasChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): bool
+    {
+        return $this->channelConfigurations->contains($configuration);
+    }
+
+    public function getConfigurationForChannel(ChannelInterface $channel): ?LoyaltyEarningRuleChannelConfigurationInterface
+    {
+        foreach ($this->channelConfigurations as $configuration) {
+            if ($configuration->getChannel() === $channel) {
+                return $configuration;
+            }
+        }
+
+        return null;
     }
 }

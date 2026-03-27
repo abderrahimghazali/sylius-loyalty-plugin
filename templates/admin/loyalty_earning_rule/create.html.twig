@@ -1,8 +1,6 @@
 {% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
-{% set scope_labels = {taxon: 'loyalty.ui.scope_taxon', product: 'loyalty.ui.scope_product', variant: 'loyalty.ui.scope_variant'} %}
-
-{% block title %}{{ 'sylius.ui.new'|trans }} {{ (scope_labels[scope] ?? scope)|trans }} {{ 'loyalty.ui.earning_rule'|trans }} | {{ parent() }}{% endblock %}
+{% block title %}{{ 'sylius.ui.new'|trans }} {{ 'loyalty.ui.earning_rule'|trans }} | {{ parent() }}{% endblock %}
 
 {% block body %}
     {% include '@SyliusAdmin/shared/crud/common/sidebar.html.twig' %}
@@ -22,7 +20,7 @@
                 <div class="row mt-3 row-gap-2">
                     <div class="col-12 col-md">
                         <h1 class="page-title">
-                            {{ 'sylius.ui.new'|trans }} {{ (scope_labels[scope] ?? scope)|trans }} {{ 'loyalty.ui.earning_rule'|trans }}
+                            {{ 'sylius.ui.new'|trans }} {{ 'loyalty.ui.earning_rule'|trans }}
                         </h1>
                     </div>
                     <div class="col-12 col-md-auto ms-auto d-print-none">
@@ -39,11 +37,7 @@
             <div class="container-xl">
                 {% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/form_theme.html.twig' %}
                 {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'earning-rule-form'}}) }}
-                <div class="card">
-                    <div class="card-body">
-                        {{ form_widget(form) }}
-                    </div>
-                </div>
+                {{ form_widget(form) }}
                 {{ form_end(form) }}
             </div>
         </div>

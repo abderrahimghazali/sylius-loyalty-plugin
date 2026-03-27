@@ -7,35 +7,11 @@
     <mapped-superclass name="Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRule"
                        table="loyalty_earning_rule">
 
-        <indexes>
-            <index name="idx_ler_channel_scope" columns="channel_id,scope_type,enabled"/>
-        </indexes>
-
         <id name="id" column="id" type="integer">
             <generator strategy="AUTO"/>
         </id>
 
         <field name="name" column="name" type="string" length="255" nullable="true"/>
-
-        <field name="scopeType" column="scope_type" type="string" length="20" nullable="false"/>
-
-        <field name="targetCodes" column="target_codes" type="json" nullable="false"/>
-
-        <field name="pointsPerCurrencyUnit" column="points_per_currency_unit" type="integer" nullable="false">
-            <options>
-                <option name="default">1</option>
-            </options>
-        </field>
-
-        <field name="priority" column="priority" type="integer" nullable="false">
-            <options>
-                <option name="default">0</option>
-            </options>
-        </field>
-
-        <field name="startsAt" column="starts_at" type="datetime" nullable="true"/>
-
-        <field name="endsAt" column="ends_at" type="datetime" nullable="true"/>
 
         <field name="enabled" column="enabled" type="boolean" nullable="false">
             <options>
@@ -43,10 +19,14 @@
             </options>
         </field>
 
-        <many-to-one field="channel"
-                     target-entity="Sylius\Component\Channel\Model\ChannelInterface">
-            <join-column name="channel_id" referenced-column-name="id" nullable="true"/>
-        </many-to-one>
+        <one-to-many field="channelConfigurations"
+                     target-entity="Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRuleChannelConfiguration"
+                     mapped-by="earningRule"
+                     orphan-removal="true">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
 
     </mapped-superclass>
 

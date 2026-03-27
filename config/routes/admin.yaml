@@ -78,7 +78,7 @@ loyalty_admin_earning_rule_create:
 
 loyalty_admin_earning_rule_update:
     path: /loyalty/earning-rules/{id}/edit
-    methods: [GET, POST, PUT, PATCH]
+    methods: [GET, POST]
     defaults:
         _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController::updateAction
 

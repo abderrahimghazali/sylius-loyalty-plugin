@@ -235,9 +235,11 @@ services:
     Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyEarningRuleType:
         arguments:
             $dataClass: '%loyalty.model.earning_rule.class%'
-            $productsToCodesTransformer: '@sylius.form.type.data_transformer.products_to_codes'
-            $taxonsToCodesTransformer: '@sylius.form.type.data_transformer.taxons_to_codes'
-            $variantsToCodesTransformer: '@sylius.form.type.data_transformer.product_variants_to_codes'
+            $channelRepository: '@sylius.repository.channel'
+        tags:
+            - { name: form.type }
+
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyEarningRuleChannelConfigurationType:
         tags:
             - { name: form.type }
 
@@ -257,19 +259,7 @@ services:
         tags:
             - { name: controller.service_arguments }
 
-    # --- Conflict Detection ---
-
-    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector:
-        arguments:
-            $earningRuleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface'
-
     # --- Twig Extensions ---
-
-    Abderrahim\SyliusLoyaltyPlugin\Twig\EarningRuleConflictExtension:
-        arguments:
-            $conflictDetector: '@Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector'
-        tags:
-            - { name: twig.extension }
 
     Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
         arguments:

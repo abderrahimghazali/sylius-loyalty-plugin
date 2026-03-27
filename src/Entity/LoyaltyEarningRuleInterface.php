@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Entity;
 
-use Abderrahim\SyliusLoyaltyPlugin\Enum\EarningRuleScopeType;
+use Doctrine\Common\Collections\Collection;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
@@ -14,37 +14,18 @@ interface LoyaltyEarningRuleInterface extends ResourceInterface
 
     public function setName(?string $name): void;
 
-    public function getScopeType(): EarningRuleScopeType;
-
-    public function setScopeType(EarningRuleScopeType $scopeType): void;
-
-    /** @return string[] */
-    public function getTargetCodes(): array;
-
-    /** @param string[] $targetCodes */
-    public function setTargetCodes(array $targetCodes): void;
-
-    public function getPointsPerCurrencyUnit(): int;
-
-    public function setPointsPerCurrencyUnit(int $pointsPerCurrencyUnit): void;
-
-    public function getPriority(): int;
-
-    public function setPriority(int $priority): void;
-
-    public function getStartsAt(): ?\DateTimeInterface;
-
-    public function setStartsAt(?\DateTimeInterface $startsAt): void;
-
-    public function getEndsAt(): ?\DateTimeInterface;
-
-    public function setEndsAt(?\DateTimeInterface $endsAt): void;
-
     public function isEnabled(): bool;
 
     public function setEnabled(bool $enabled): void;
 
-    public function getChannel(): ?ChannelInterface;
+    /** @return Collection<int, LoyaltyEarningRuleChannelConfigurationInterface> */
+    public function getChannelConfigurations(): Collection;
 
-    public function setChannel(?ChannelInterface $channel): void;
+    public function addChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): void;
+
+    public function removeChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): void;
+
+    public function hasChannelConfiguration(LoyaltyEarningRuleChannelConfigurationInterface $configuration): bool;
+
+    public function getConfigurationForChannel(ChannelInterface $channel): ?LoyaltyEarningRuleChannelConfigurationInterface;
 }

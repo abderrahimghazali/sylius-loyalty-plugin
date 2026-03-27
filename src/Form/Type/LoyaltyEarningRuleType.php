@@ -4,32 +4,23 @@ declare(strict_types=1);
 
 namespace Abderrahim\SyliusLoyaltyPlugin\Form\Type;
 
-use Abderrahim\SyliusLoyaltyPlugin\Enum\EarningRuleScopeType;
-use Sylius\Bundle\AdminBundle\Form\Type\ProductAutocompleteType;
-use Sylius\Bundle\AdminBundle\Form\Type\ProductVariantAutocompleteType;
-use Sylius\Bundle\AdminBundle\Form\Type\TaxonAutocompleteType;
-use Sylius\Bundle\ChannelBundle\Form\Type\ChannelChoiceType;
-use Sylius\Bundle\CoreBundle\Form\DataTransformer\ProductsToCodesTransformer;
-use Sylius\Bundle\CoreBundle\Form\DataTransformer\ProductVariantsToCodesTransformer;
-use Sylius\Bundle\CoreBundle\Form\DataTransformer\TaxonsToCodesTransformer;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRuleChannelConfiguration;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
+use Sylius\Component\Channel\Model\ChannelInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class LoyaltyEarningRuleType extends AbstractResourceType
 {
     public function __construct(
         string $dataClass,
-        private readonly ProductsToCodesTransformer $productsToCodesTransformer,
-        private readonly TaxonsToCodesTransformer $taxonsToCodesTransformer,
-        private readonly ProductVariantsToCodesTransformer $variantsToCodesTransformer,
+        private readonly ChannelRepositoryInterface $channelRepository,
         array $validationGroups = [],
     ) {
         parent::__construct($dataClass, $validationGroups);
@@ -37,113 +28,45 @@ final class LoyaltyEarningRuleType extends AbstractResourceType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $scope = EarningRuleScopeType::from($options['scope']);
-
         $builder
             ->add('name', TextType::class, [
                 'label' => 'sylius.ui.name',
                 'constraints' => [new Assert\NotBlank(), new Assert\Length(max: 255)],
             ])
-        ;
-
-        // Add only the relevant autocomplete field based on scope
-        match ($scope) {
-            EarningRuleScopeType::Taxon => $builder
-                ->add('targets', TaxonAutocompleteType::class, [
-                    'label' => 'loyalty.ui.target_taxons',
-                    'multiple' => true,
-                    'required' => true,
-                    'mapped' => false,
-                ]),
-            EarningRuleScopeType::Product => $builder
-                ->add('targets', ProductAutocompleteType::class, [
-                    'label' => 'loyalty.ui.target_products',
-                    'multiple' => true,
-                    'required' => true,
-                    'mapped' => false,
-                ]),
-            EarningRuleScopeType::Variant => $builder
-                ->add('targets', ProductVariantAutocompleteType::class, [
-                    'label' => 'loyalty.ui.target_variants',
-                    'multiple' => true,
-                    'required' => true,
-                    'mapped' => false,
-                ]),
-        };
-
-        // Add the appropriate data transformer
-        $transformer = match ($scope) {
-            EarningRuleScopeType::Taxon => $this->taxonsToCodesTransformer,
-            EarningRuleScopeType::Product => $this->productsToCodesTransformer,
-            EarningRuleScopeType::Variant => $this->variantsToCodesTransformer,
-        };
-        $builder->get('targets')->addModelTransformer($transformer);
-
-        $builder
-            ->add('pointsPerCurrencyUnit', IntegerType::class, [
-                'label' => 'loyalty.form.points_per_currency_unit',
-                'help' => 'loyalty.form.earning_rule_rate_help',
-                'constraints' => [new Assert\PositiveOrZero()],
-                'attr' => ['min' => 0],
-            ])
-            ->add('priority', IntegerType::class, [
-                'label' => 'sylius.ui.priority',
-                'constraints' => [new Assert\PositiveOrZero()],
-                'attr' => ['min' => 0],
-            ])
-            ->add('startsAt', DateTimeType::class, [
-                'label' => 'loyalty.ui.starts_at',
-                'required' => false,
-                'widget' => 'single_text',
-            ])
-            ->add('endsAt', DateTimeType::class, [
-                'label' => 'loyalty.ui.ends_at',
-                'required' => false,
-                'widget' => 'single_text',
-            ])
-            ->add('channel', ChannelChoiceType::class, [
-                'label' => 'sylius.ui.channel',
-                'constraints' => [new Assert\NotNull()],
-            ])
             ->add('enabled', CheckboxType::class, [
                 'label' => 'sylius.ui.enabled',
                 'required' => false,
             ])
+            ->add('channelConfigurations', CollectionType::class, [
+                'entry_type' => LoyaltyEarningRuleChannelConfigurationType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => false,
+            ])
         ;
 
-        // Pre-populate targets from entity's targetCodes
-        $builder->addEventListener(FormEvents::POST_SET_DATA, static function (FormEvent $event): void {
+        // Pre-populate channel configurations for all available channels
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
             $rule = $event->getData();
             if ($rule === null) {
                 return;
             }
 
-            $codes = $rule->getTargetCodes();
-            if (count($codes) > 0) {
-                $event->getForm()->get('targets')->setData($codes);
+            /** @var ChannelInterface[] $allChannels */
+            $allChannels = $this->channelRepository->findAll();
+
+            foreach ($allChannels as $channel) {
+                if ($rule->getConfigurationForChannel($channel) !== null) {
+                    continue;
+                }
+
+                $config = new LoyaltyEarningRuleChannelConfiguration();
+                $config->setChannel($channel);
+                $config->setPointsPerProduct(1);
+                $rule->addChannelConfiguration($config);
             }
         });
-
-        // On submit: set scopeType + targetCodes from the form
-        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) use ($scope): void {
-            $rule = $event->getData();
-            if ($rule === null) {
-                return;
-            }
-
-            $rule->setScopeType($scope);
-
-            $codes = $event->getForm()->get('targets')->getData();
-            $rule->setTargetCodes(is_array($codes) ? $codes : []);
-        });
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefault('scope', 'taxon');
-        $resolver->setAllowedValues('scope', ['taxon', 'product', 'variant']);
     }
 
     public function getBlockPrefix(): string
