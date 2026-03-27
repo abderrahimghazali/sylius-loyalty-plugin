@@ -1,38 +1,57 @@
 {% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
-{% form_theme form '@SyliusLoyaltyPlugin/admin/loyalty_rule/form_theme.html.twig' %}
+{% block title %}{{ 'loyalty.ui.edit_rule'|trans }} | {{ parent() }}{% endblock %}
 
-{% block title %}{{ 'loyalty.ui.edit_rule'|trans }} {{ parent() }}{% endblock %}
+{% block body %}
+    {% include '@SyliusAdmin/shared/crud/common/sidebar.html.twig' %}
 
-{% block content %}
-    <div class="col-12 col-lg-8">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h1 class="page-title">{{ 'loyalty.ui.edit_rule'|trans }} — {{ rule.name }}</h1>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ path('sylius_admin_dashboard') }}">{{ 'sylius.ui.dashboard'|trans }}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ path('loyalty_admin_rule_index') }}">{{ 'loyalty.ui.loyalty_rules'|trans }}</a></li>
-                        <li class="breadcrumb-item active">{{ rule.name }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div>
-                <a href="{{ path('loyalty_admin_rule_index') }}" class="btn btn-outline-secondary">{{ 'sylius.ui.cancel'|trans }}</a>
+    <div class="page-wrapper">
+        {% include '@SyliusAdmin/shared/crud/common/navbar.html.twig' %}
+
+        {% include '@SyliusAdmin/shared/crud/common/content/flashes.html.twig' %}
+
+        {% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
+        <div class="page-header" data-sticky-header>
+            <div class="container-xl">
+                {{ breadcrumbs([
+                    { name: 'sylius.ui.dashboard', url: path('sylius_admin_dashboard'), active: false },
+                    { name: 'loyalty.ui.loyalty_rules', url: path('loyalty_admin_rule_index'), active: false },
+                    { name: rule.name, active: true },
+                ]) }}
+                <div class="row mt-3 row-gap-2">
+                    <div class="col-12 col-md">
+                        <h1 class="page-title">{{ 'loyalty.ui.edit_rule'|trans }} — {{ rule.name }}</h1>
+                    </div>
+                </div>
             </div>
         </div>
 
-        {{ form_start(form) }}
-        <div class="card">
-            <div class="card-body">
-                {{ form_widget(form) }}
-            </div>
-            <div class="card-footer text-end">
-                <button type="submit" class="btn btn-primary">
-                    {{ 'sylius.ui.save'|trans }}
-                </button>
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                {% form_theme form '@SyliusLoyaltyPlugin/admin/loyalty_rule/form_theme.html.twig' %}
+                                {% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
+                                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                                    {{ form_widget(form) }}
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            {{ 'sylius.ui.save'|trans }}
+                                        </button>
+                                        <a href="{{ path('loyalty_admin_rule_index') }}" class="btn btn-outline-secondary">
+                                            {{ 'sylius.ui.cancel'|trans }}
+                                        </a>
+                                    </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        {{ form_end(form) }}
+
+        {% include '@SyliusAdmin/shared/crud/common/content/footer.html.twig' %}
     </div>
 {% endblock %}
