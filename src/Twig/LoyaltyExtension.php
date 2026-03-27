@@ -36,6 +36,7 @@ final class LoyaltyExtension extends AbstractExtension
         }
 
         return [
+            'id' => $account->getId(),
             'balance' => $account->getPointsBalance(),
             'lifetime' => $account->getLifetimePoints(),
             'tier' => $account->getTier()?->getName(),
