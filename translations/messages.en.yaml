@@ -116,9 +116,3 @@ loyalty:
         adjustment_points: Points
         adjustment_points_help: 'Positive to add, negative to deduct.'
         adjustment_reason: Reason
-
-    flash:
-        configuration_updated: Loyalty configuration has been updated successfully.
-        points_adjusted: Points have been adjusted successfully.
-        rule_created: Loyalty rule has been successfully created.
-        rule_updated: Loyalty rule has been successfully updated.
