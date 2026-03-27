@@ -19,20 +19,20 @@ services:
 
     # --- Services ---
 
-    Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface:
-        alias: loyalty.repository.earning_rule
+    Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyRuleRepositoryInterface:
+        alias: loyalty.repository.rule
 
-    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolver:
+    Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyRuleResolver:
         arguments:
-            $earningRuleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface'
+            $ruleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyRuleRepositoryInterface'
 
-    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolverInterface:
-        alias: Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolver
+    Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyRuleResolverInterface:
+        alias: Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyRuleResolver
 
     Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator:
         arguments:
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
-            $earningRuleResolver: '@Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolverInterface'
+            $ruleResolver: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyRuleResolverInterface'
 
     Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculatorInterface:
         alias: Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator
@@ -232,12 +232,9 @@ services:
         tags:
             - { name: form.type }
 
-    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyEarningRuleType:
+    Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyRuleType:
         arguments:
-            $dataClass: '%loyalty.model.earning_rule.class%'
-            $productsToCodesTransformer: '@sylius.form.type.data_transformer.products_to_codes'
-            $taxonsToCodesTransformer: '@sylius.form.type.data_transformer.taxons_to_codes'
-            $variantsToCodesTransformer: '@sylius.form.type.data_transformer.product_variants_to_codes'
+            $dataClass: '%loyalty.model.rule.class%'
         tags:
             - { name: form.type }
 
@@ -247,29 +244,17 @@ services:
         tags:
             - { name: form.type }
 
-    # --- Earning Rule Controller ---
+    # --- Loyalty Rule Controller ---
 
-    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController:
+    Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyRuleController:
         arguments:
-            $earningRuleRepository: '@loyalty.repository.earning_rule'
-            $earningRuleFactory: '@loyalty.factory.earning_rule'
+            $ruleRepository: '@loyalty.repository.rule'
+            $ruleFactory: '@loyalty.factory.rule'
             $entityManager: '@doctrine.orm.entity_manager'
         tags:
             - { name: controller.service_arguments }
 
-    # --- Conflict Detection ---
-
-    Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector:
-        arguments:
-            $earningRuleRepository: '@Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepositoryInterface'
-
     # --- Twig Extensions ---
-
-    Abderrahim\SyliusLoyaltyPlugin\Twig\EarningRuleConflictExtension:
-        arguments:
-            $conflictDetector: '@Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleConflictDetector'
-        tags:
-            - { name: twig.extension }
 
     Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
         arguments:

@@ -1,7 +1,0 @@
-{% if data is iterable and data|length > 0 %}
-    {% for code in data %}
-        <span class="badge bg-light text-dark me-1">{{ code }}</span>
-    {% endfor %}
-{% else %}
-    <span class="text-muted">-</span>
-{% endif %}

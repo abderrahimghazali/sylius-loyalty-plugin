@@ -1,9 +1,0 @@
-sylius_resource:
-    resources:
-        loyalty.earning_rule:
-            driver: doctrine/orm
-            classes:
-                model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRule
-                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRuleInterface
-                form: Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyEarningRuleType
-                repository: Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyEarningRuleRepository

@@ -1,0 +1,38 @@
+{% extends '@SyliusAdmin/shared/layout/main.html.twig' %}
+
+{% form_theme form '@SyliusLoyaltyPlugin/admin/loyalty_rule/form_theme.html.twig' %}
+
+{% block title %}{{ 'loyalty.ui.new_rule'|trans }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="col-12 col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="page-title">{{ 'loyalty.ui.new_rule'|trans }}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('sylius_admin_dashboard') }}">{{ 'sylius.ui.dashboard'|trans }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('loyalty_admin_rule_index') }}">{{ 'loyalty.ui.loyalty_rules'|trans }}</a></li>
+                        <li class="breadcrumb-item active">{{ 'sylius.ui.new'|trans }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <a href="{{ path('loyalty_admin_rule_index') }}" class="btn btn-outline-secondary">{{ 'sylius.ui.cancel'|trans }}</a>
+            </div>
+        </div>
+
+        {{ form_start(form) }}
+        <div class="card">
+            <div class="card-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="card-footer text-end">
+                <button type="submit" class="btn btn-primary">
+                    {{ 'sylius.ui.create'|trans }}
+                </button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

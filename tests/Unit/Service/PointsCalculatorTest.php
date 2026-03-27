@@ -6,9 +6,9 @@ namespace Tests\Abderrahim\SyliusLoyaltyPlugin\Unit\Service;
 
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyAccount;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyConfigurationInterface;
-use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyEarningRuleInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyRuleInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyTier;
-use Abderrahim\SyliusLoyaltyPlugin\Service\EarningRuleResolverInterface;
+use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyRuleResolverInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface;
 use Abderrahim\SyliusLoyaltyPlugin\Service\PointsCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,12 +21,12 @@ use Sylius\Component\Core\Model\OrderItemInterface;
 final class PointsCalculatorTest extends TestCase
 {
     private LoyaltyConfigurationProviderInterface&MockObject $configProvider;
-    private EarningRuleResolverInterface&MockObject $ruleResolver;
+    private LoyaltyRuleResolverInterface&MockObject $ruleResolver;
 
     protected function setUp(): void
     {
         $this->configProvider = $this->createMock(LoyaltyConfigurationProviderInterface::class);
-        $this->ruleResolver = $this->createMock(EarningRuleResolverInterface::class);
+        $this->ruleResolver = $this->createMock(LoyaltyRuleResolverInterface::class);
     }
 
     public function test_calculate_base_points(): void
@@ -138,7 +138,7 @@ final class PointsCalculatorTest extends TestCase
         $order = $this->createMock(OrderInterface::class);
         $order->method('getItems')->willReturn(new ArrayCollection([$item]));
 
-        $rule = $this->createMock(LoyaltyEarningRuleInterface::class);
+        $rule = $this->createMock(LoyaltyRuleInterface::class);
         $rule->method('getPointsPerCurrencyUnit')->willReturn(5);
 
         $this->ruleResolver->method('resolve')->willReturn($rule);
@@ -164,7 +164,7 @@ final class PointsCalculatorTest extends TestCase
         $order = $this->createMock(OrderInterface::class);
         $order->method('getItems')->willReturn(new ArrayCollection([$item]));
 
-        $rule = $this->createMock(LoyaltyEarningRuleInterface::class);
+        $rule = $this->createMock(LoyaltyRuleInterface::class);
         $rule->method('getPointsPerCurrencyUnit')->willReturn(0);
 
         $this->ruleResolver->method('resolve')->willReturn($rule);

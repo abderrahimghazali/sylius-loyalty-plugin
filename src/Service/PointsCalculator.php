@@ -12,7 +12,7 @@ final class PointsCalculator implements PointsCalculatorInterface
 {
     public function __construct(
         private readonly LoyaltyConfigurationProviderInterface $configProvider,
-        private readonly EarningRuleResolverInterface $earningRuleResolver,
+        private readonly LoyaltyRuleResolverInterface $ruleResolver,
     ) {
     }
 
@@ -31,9 +31,9 @@ final class PointsCalculator implements PointsCalculatorInterface
         foreach ($order->getItems() as $item) {
             $rate = $defaultRate;
 
-            // Check for a per-product/category/variant earning rule override
+            // Check for a per-product loyalty rule override
             if ($channel !== null) {
-                $rule = $this->earningRuleResolver->resolve($item, $channel);
+                $rule = $this->ruleResolver->resolve($item, $channel);
                 if ($rule !== null) {
                     $rate = $rule->getPointsPerCurrencyUnit();
                 }

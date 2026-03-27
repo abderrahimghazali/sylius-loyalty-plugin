@@ -55,32 +55,32 @@ loyalty_admin_point_adjustment:
     defaults:
         _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\PointAdjustmentController::adjustAction
 
-loyalty_admin_loyalty_earning_rule:
+loyalty_admin_loyalty_rule:
     resource: |
-        alias: loyalty.earning_rule
+        alias: loyalty.rule
         section: admin
-        grid: loyalty_admin_loyalty_earning_rule
+        grid: loyalty_admin_loyalty_rule
         templates: '@SyliusAdmin/shared/crud'
         only: ['index', 'delete', 'bulkDelete']
         vars:
             all:
-                subheader: loyalty.ui.manage_earning_rules
+                subheader: loyalty.ui.manage_loyalty_rules
             index:
                 icon: percent
     type: sylius.resource
     prefix: /loyalty
 
-loyalty_admin_earning_rule_create:
-    path: /loyalty/earning-rules/new
+loyalty_admin_rule_create:
+    path: /loyalty/rules/new
     methods: [GET, POST]
     defaults:
-        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController::createAction
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyRuleController::createAction
 
-loyalty_admin_earning_rule_update:
-    path: /loyalty/earning-rules/{id}/edit
+loyalty_admin_rule_update:
+    path: /loyalty/rules/{id}/edit
     methods: [GET, POST, PUT, PATCH]
     defaults:
-        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyEarningRuleController::updateAction
+        _controller: Abderrahim\SyliusLoyaltyPlugin\Controller\Admin\LoyaltyRuleController::updateAction
 
 loyalty_admin_configuration_index:
     path: /loyalty/configuration

@@ -1,6 +1,0 @@
-{% set labels = {taxon: 'loyalty.ui.scope_taxon', product: 'loyalty.ui.scope_product', variant: 'loyalty.ui.scope_variant'} %}
-{% set colors = {taxon: 'bg-info text-white', product: 'bg-primary text-white', variant: 'bg-warning text-dark'} %}
-
-<span class="badge {{ colors[data.value] ?? 'bg-secondary text-white' }}">
-    {{ (labels[data.value] ?? data.value)|trans }}
-</span>

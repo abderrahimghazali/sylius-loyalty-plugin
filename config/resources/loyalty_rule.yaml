@@ -1,0 +1,9 @@
+sylius_resource:
+    resources:
+        loyalty.rule:
+            driver: doctrine/orm
+            classes:
+                model: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyRule
+                interface: Abderrahim\SyliusLoyaltyPlugin\Entity\LoyaltyRuleInterface
+                form: Abderrahim\SyliusLoyaltyPlugin\Form\Type\LoyaltyRuleType
+                repository: Abderrahim\SyliusLoyaltyPlugin\Repository\LoyaltyRuleRepository

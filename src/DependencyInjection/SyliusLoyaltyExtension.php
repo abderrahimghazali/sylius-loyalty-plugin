@@ -27,13 +27,13 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
         $loader->load('resources/point_transaction.yaml');
         $loader->load('resources/loyalty_tier.yaml');
         $loader->load('resources/loyalty_configuration.yaml');
-        $loader->load('resources/loyalty_earning_rule.yaml');
+        $loader->load('resources/loyalty_rule.yaml');
 
         // Load grid configurations
         $loader->load('grids/admin/loyalty_account.yaml');
         $loader->load('grids/admin/point_transaction.yaml');
         $loader->load('grids/admin/loyalty_tier.yaml');
-        $loader->load('grids/admin/loyalty_earning_rule.yaml');
+        $loader->load('grids/admin/loyalty_rule.yaml');
 
         // Load twig hooks configuration
         $loader->load('config.yaml');
@@ -41,7 +41,7 @@ final class SyliusLoyaltyExtension extends Extension implements PrependExtension
         // Register custom form theme for earning rule form
         $container->prependExtensionConfig('twig', [
             'form_themes' => [
-                '@SyliusLoyaltyPlugin/admin/loyalty_earning_rule/form_theme.html.twig',
+                '@SyliusLoyaltyPlugin/admin/loyalty_rule/form_theme.html.twig',
             ],
         ]);
     }

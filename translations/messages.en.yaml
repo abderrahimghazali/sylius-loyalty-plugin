@@ -16,8 +16,8 @@ loyalty:
         tiers: Loyalty Tiers
         point_transactions: Point Transactions
         point_transaction: Point Transaction
-        earning_rules: Earning Rules
-        earning_rule: Earning Rule
+        rules: Loyalty Rules
+        rule: Loyalty Rule
 
         # Points
         points: Points
@@ -59,24 +59,14 @@ loyalty:
         configured: Configured
         not_configured: Not configured
 
-        # Earning rules
-        loyalty_earning_rules: Earning Rules
-        manage_earning_rules: Manage per-product/category earning rules
-        scope_type: Scope
-        scope_taxon: Category
-        scope_product: Product
-        scope_variant: Variant
-        target: Target
-        target_taxons: Categories
-        target_products: Products
-        target_variants: Variants
-        add_category_rule: Category rule
-        add_product_rule: Product rule
-        add_variant_rule: Variant rule
-        conflicts: Conflicts
+        # Loyalty rules
+        loyalty_rules: Loyalty Rules
+        manage_loyalty_rules: Manage per-product loyalty rules
+        products: Products
         points_per_unit: Pts/unit
-        starts_at: Starts at
-        ends_at: Ends at
+        create_rule: New rule
+        new_rule: New Loyalty Rule
+        edit_rule: Edit Loyalty Rule
 
         # Tier fields
         color: Badge Color
@@ -119,7 +109,7 @@ loyalty:
         birthday_bonus_points: Birthday bonus points
         first_order_bonus_enabled: Enable first order bonus
         first_order_bonus_points: First order bonus points
-        earning_rule_rate_help: 'Points per currency unit for items matching this rule. Set to 0 to exclude from earning.'
+        rule_rate_help: 'Points per currency unit for items matching this rule. Set to 0 to exclude from earning.'
         min_points: Minimum lifetime points
         multiplier: Points multiplier
         color: Badge color
@@ -130,3 +120,5 @@ loyalty:
     flash:
         configuration_updated: Loyalty configuration has been updated successfully.
         points_adjusted: Points have been adjusted successfully.
+        rule_created: Loyalty rule has been successfully created.
+        rule_updated: Loyalty rule has been successfully updated.

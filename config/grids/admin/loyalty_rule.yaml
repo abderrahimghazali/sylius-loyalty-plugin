@@ -1,0 +1,51 @@
+sylius_grid:
+    grids:
+        loyalty_admin_loyalty_rule:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: '%loyalty.model.rule.class%'
+                    repository:
+                        method: createQueryBuilder
+                        arguments: ['r']
+            sorting:
+                name: asc
+            fields:
+                name:
+                    type: string
+                    label: sylius.ui.name
+                    sortable: ~
+                pointsPerCurrencyUnit:
+                    type: string
+                    label: loyalty.ui.points_per_unit
+                    sortable: ~
+                enabled:
+                    type: twig
+                    label: sylius.ui.enabled
+                    options:
+                        template: '@SyliusUi/grid/field/enabled.html.twig'
+            filters:
+                name:
+                    type: string
+                    label: sylius.ui.name
+                enabled:
+                    type: boolean
+                    label: sylius.ui.enabled
+            actions:
+                main:
+                    create:
+                        type: create
+                        label: loyalty.ui.create_rule
+                        options:
+                            link:
+                                route: loyalty_admin_rule_create
+                item:
+                    update:
+                        type: update
+                        options:
+                            link:
+                                route: loyalty_admin_rule_update
+                                parameters:
+                                    id: resource.id
+                    delete:
+                        type: delete
