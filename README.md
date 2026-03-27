@@ -321,19 +321,23 @@ PATCH  /api/v2/admin/loyalty/accounts/{id}
 
 ## Edge Cases Handled
 
-- Pessimistic DB locking prevents double-spend on concurrent checkouts
-- API endpoints verify the authenticated user owns the order
+- Pessimistic DB locking prevents double-spend on concurrent checkouts, cancellations, and refunds
+- API endpoints require `ROLE_USER` and verify the authenticated user owns the order
 - Balance cannot go negative (clamped in service layer + guard in entity)
-- Points redemption cannot exceed available balance (clamped)
+- Points redemption cannot exceed available balance (clamped, validated in cart form and API)
 - Discount cannot exceed order total (capped, points recalculated)
 - Guest checkouts cannot use loyalty points (guarded)
 - Disabled accounts are excluded from earning and redemption
 - Duplicate point awards are prevented (idempotent per order)
+- Duplicate revocations are prevented (idempotent per order)
 - First-order bonus awarded only once (idempotent)
 - Points are reserved at cart, deducted only on order completion
-- Cancelled/refunded orders restore redeemed points (idempotent)
+- Cancelled/refunded orders restore redeemed points (idempotent, locked)
 - Birthday bonus awarded at most once per calendar year per channel
 - Tiers only upgrade, never demote (based on lifetime points)
+- CSRF protection on all admin forms
+- Admin point adjustment descriptions are sanitized
+- Expire points command uses batched processing for large datasets
 
 ## Translations
 
