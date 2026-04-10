@@ -46,7 +46,7 @@ final class RestorePointsOnOrderCancelListenerTest extends TestCase
         );
     }
 
-    public function test_restores_redeemed_points_on_cancel(): void
+    public function test_revokes_earned_and_restores_redeemed_points_on_cancel(): void
     {
         $customer = $this->createMock(CustomerInterface::class);
         $order = $this->createMock(RestoreTestOrderStub::class);
@@ -60,13 +60,15 @@ final class RestorePointsOnOrderCancelListenerTest extends TestCase
         $this->transactionRepository->method('findRedeemByOrder')->willReturn($redeemTx);
         $this->transactionRepository->method('findRestoreByOrder')->willReturn(null);
 
+        $this->balanceManager->expects($this->once())->method('revokePointsForOrder')->with($order);
+        $this->balanceManager->expects($this->once())->method('revokeBonusForOrder')->with($order);
         $this->balanceManager->expects($this->once())->method('addTransaction');
         $this->entityManager->expects($this->once())->method('flush');
 
         ($this->listener)(new CompletedEvent($order, new Marking()));
     }
 
-    public function test_skips_when_already_restored(): void
+    public function test_skips_restore_when_already_restored(): void
     {
         $customer = $this->createMock(CustomerInterface::class);
         $order = $this->createMock(RestoreTestOrderStub::class);
@@ -80,12 +82,14 @@ final class RestorePointsOnOrderCancelListenerTest extends TestCase
         $this->transactionRepository->method('findRestoreByOrder')
             ->willReturn($this->createMock(PointTransactionInterface::class));
 
+        $this->balanceManager->expects($this->once())->method('revokePointsForOrder');
+        $this->balanceManager->expects($this->once())->method('revokeBonusForOrder');
         $this->balanceManager->expects($this->never())->method('addTransaction');
 
         ($this->listener)(new CompletedEvent($order, new Marking()));
     }
 
-    public function test_skips_when_no_redeem_transaction(): void
+    public function test_revokes_earned_even_when_no_redeem_transaction(): void
     {
         $customer = $this->createMock(CustomerInterface::class);
         $order = $this->createMock(RestoreTestOrderStub::class);
@@ -95,6 +99,8 @@ final class RestorePointsOnOrderCancelListenerTest extends TestCase
         $this->accountRepository->method('findOneByCustomer')->willReturn($account);
         $this->transactionRepository->method('findRedeemByOrder')->willReturn(null);
 
+        $this->balanceManager->expects($this->once())->method('revokePointsForOrder');
+        $this->balanceManager->expects($this->once())->method('revokeBonusForOrder');
         $this->balanceManager->expects($this->never())->method('addTransaction');
 
         ($this->listener)(new CompletedEvent($order, new Marking()));
@@ -108,6 +114,7 @@ final class RestorePointsOnOrderCancelListenerTest extends TestCase
 
         $this->accountRepository->method('findOneByCustomer')->willReturn(null);
 
+        $this->balanceManager->expects($this->never())->method('revokePointsForOrder');
         $this->balanceManager->expects($this->never())->method('addTransaction');
 
         ($this->listener)(new CompletedEvent($order, new Marking()));
