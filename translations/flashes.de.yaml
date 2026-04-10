@@ -1,0 +1,6 @@
+loyalty:
+    flash:
+        configuration_updated: Die Treuekonfiguration wurde erfolgreich aktualisiert.
+        points_adjusted: Die Punkte wurden erfolgreich angepasst.
+        rule_created: Die Treueregel wurde erfolgreich erstellt.
+        rule_updated: Die Treueregel wurde erfolgreich aktualisiert.

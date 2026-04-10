@@ -60,6 +60,15 @@ loyalty:
         config_earning: Acumulação e expiração
         config_bonuses: Eventos bónus
         config_tiers: Limiares dos níveis
+        loyalty_rules: Regras de fidelidade
+        manage_loyalty_rules: Gerir regras de fidelidade por produto
+        rules: Regras de fidelidade
+        rule: Regra de fidelidade
+        products: Produtos
+        points_per_unit: Pts/unidade
+        create_rule: Nova regra
+        new_rule: Nova regra de fidelidade
+        edit_rule: Editar regra de fidelidade
 
     form:
         points_per_currency_unit: Pontos por unidade monetária
@@ -81,7 +90,4 @@ loyalty:
         adjustment_points: Pontos
         adjustment_points_help: 'Positivo para adicionar, negativo para deduzir.'
         adjustment_reason: Motivo
-
-    flash:
-        configuration_updated: A configuração de fidelidade foi atualizada com sucesso.
-        points_adjusted: Os pontos foram ajustados com sucesso.
+        rule_rate_help: 'Pontos por unidade monetária para artigos desta regra. 0 para excluir.'

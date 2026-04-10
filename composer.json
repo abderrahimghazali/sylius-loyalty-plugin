@@ -43,7 +43,8 @@
     "extra": {
         "branch-alias": {
             "dev-main": "2.0-dev"
-        }
+        },
+        "sylius-plugin-name": "Loyalty Plugin"
     },
     "config": {
         "sort-packages": true

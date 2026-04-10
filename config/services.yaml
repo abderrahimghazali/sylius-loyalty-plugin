@@ -257,8 +257,12 @@ services:
     # --- Twig Extensions ---
 
     Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyExtension:
+        tags:
+            - { name: twig.extension }
+
+    Abderrahim\SyliusLoyaltyPlugin\Twig\LoyaltyRuntime:
         arguments:
             $accountRepository: '@loyalty.repository.account'
             $configProvider: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyConfigurationProviderInterface'
         tags:
-            - { name: twig.extension }
+            - { name: twig.runtime }

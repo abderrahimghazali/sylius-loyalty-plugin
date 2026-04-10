@@ -60,6 +60,15 @@ loyalty:
         config_earning: Punkte sammeln & Verfall
         config_bonuses: Bonusaktionen
         config_tiers: Stufenschwellen
+        loyalty_rules: Treueregeln
+        manage_loyalty_rules: Treueregeln pro Produkt verwalten
+        rules: Treueregeln
+        rule: Treueregel
+        products: Produkte
+        points_per_unit: Pkt/Einheit
+        create_rule: Neue Regel
+        new_rule: Neue Treueregel
+        edit_rule: Treueregel bearbeiten
 
     form:
         points_per_currency_unit: Punkte pro Währungseinheit
@@ -81,7 +90,4 @@ loyalty:
         adjustment_points: Punkte
         adjustment_points_help: 'Positiv zum Hinzufügen, negativ zum Abziehen.'
         adjustment_reason: Grund
-
-    flash:
-        configuration_updated: Die Treuekonfiguration wurde erfolgreich aktualisiert.
-        points_adjusted: Die Punkte wurden erfolgreich angepasst.
+        rule_rate_help: 'Punkte pro Währungseinheit für Artikel dieser Regel. 0 zum Ausschließen.'

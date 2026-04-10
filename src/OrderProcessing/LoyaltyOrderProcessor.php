@@ -80,6 +80,12 @@ final class LoyaltyOrderProcessor implements OrderProcessorInterface
             : $this->configProvider->getConfiguration();
         $redemptionRate = $config->getRedemptionRate();
 
+        if ($redemptionRate <= 0) {
+            $order->setPointsToRedeem(0);
+
+            return;
+        }
+
         // Convert points to discount amount (in smallest currency unit = cents)
         $discountAmount = (int) floor(($effectivePoints / $redemptionRate) * 100);
 

@@ -60,6 +60,15 @@ loyalty:
         config_earning: Zbieranie punktów i wygasanie
         config_bonuses: Bonusy
         config_tiers: Progi poziomów
+        loyalty_rules: Reguły lojalnościowe
+        manage_loyalty_rules: Zarządzaj regułami lojalnościowymi
+        rules: Reguły lojalnościowe
+        rule: Reguła lojalnościowa
+        products: Produkty
+        points_per_unit: Pkt/szt.
+        create_rule: Nowa reguła
+        new_rule: Nowa reguła lojalnościowa
+        edit_rule: Edytuj regułę lojalnościową
 
     form:
         points_per_currency_unit: Punkty za jednostkę walutową
@@ -81,7 +90,4 @@ loyalty:
         adjustment_points: Punkty
         adjustment_points_help: 'Dodatnia wartość dodaje, ujemna odejmuje.'
         adjustment_reason: Powód
-
-    flash:
-        configuration_updated: Konfiguracja lojalnościowa została zaktualizowana.
-        points_adjusted: Punkty zostały skorygowane.
+        rule_rate_help: 'Punkty za jednostkę walutową dla produktów tej reguły. 0 aby wykluczyć.'

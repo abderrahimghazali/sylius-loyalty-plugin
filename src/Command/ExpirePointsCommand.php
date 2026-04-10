@@ -58,7 +58,13 @@ final class ExpirePointsCommand extends Command
             }
 
             $this->entityManager->flush();
-            $this->entityManager->clear();
+
+            foreach ($batch as $transaction) {
+                $this->entityManager->detach($transaction);
+                if ($transaction->getLoyaltyAccount() !== null) {
+                    $this->entityManager->detach($transaction->getLoyaltyAccount());
+                }
+            }
         } while (count($batch) === self::BATCH_SIZE);
 
         if ($count === 0) {

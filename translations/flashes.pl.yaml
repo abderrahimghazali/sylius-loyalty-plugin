@@ -1,0 +1,6 @@
+loyalty:
+    flash:
+        configuration_updated: Konfiguracja lojalnościowa została zaktualizowana.
+        points_adjusted: Punkty zostały skorygowane.
+        rule_created: Reguła lojalnościowa została utworzona.
+        rule_updated: Reguła lojalnościowa została zaktualizowana.

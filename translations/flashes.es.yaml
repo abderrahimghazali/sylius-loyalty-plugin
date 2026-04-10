@@ -1,0 +1,6 @@
+loyalty:
+    flash:
+        configuration_updated: La configuración de fidelidad se ha actualizado correctamente.
+        points_adjusted: Los puntos se han ajustado correctamente.
+        rule_created: La regla de fidelidad se ha creado correctamente.
+        rule_updated: La regla de fidelidad se ha actualizado correctamente.
