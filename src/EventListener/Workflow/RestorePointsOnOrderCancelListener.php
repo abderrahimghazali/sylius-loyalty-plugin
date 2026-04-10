@@ -16,7 +16,10 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Workflow\Event\CompletedEvent;
 
 /**
- * When an order is cancelled, restore any points that were redeemed for it.
+ * When an order is cancelled:
+ * 1. Revoke earned points
+ * 2. Revoke bonus points (first order bonus)
+ * 3. Restore any redeemed points
  *
  * Workflow: sylius_order, transition: cancel
  */
@@ -49,29 +52,30 @@ final class RestorePointsOnOrderCancelListener
             return;
         }
 
-        // Lock the account row to prevent concurrent double-restore
+        // Lock the account row to prevent concurrent double-processing
         $this->entityManager->find($account::class, $account->getId(), LockMode::PESSIMISTIC_WRITE);
         $this->entityManager->refresh($account);
 
-        // Find the redeem transaction for this order via DB query
+        // 1. Revoke earned points
+        $this->balanceManager->revokePointsForOrder($order);
+
+        // 2. Revoke bonus points (e.g. first order bonus)
+        $this->balanceManager->revokeBonusForOrder($order);
+
+        // 3. Restore redeemed points
         $redeemTransaction = $this->transactionRepository->findRedeemByOrder($account, $order);
-        if ($redeemTransaction === null) {
-            return;
+        if ($redeemTransaction !== null) {
+            $existing = $this->transactionRepository->findRestoreByOrder($account, $order);
+            if ($existing === null) {
+                $this->balanceManager->addTransaction(
+                    $account,
+                    TransactionType::Adjust,
+                    $redeemTransaction->getPoints(),
+                    sprintf('Points restored for cancelled order #%s', $order->getNumber()),
+                    $order,
+                );
+            }
         }
-
-        // Check we haven't already restored via DB query (re-check after lock)
-        $existing = $this->transactionRepository->findRestoreByOrder($account, $order);
-        if ($existing !== null) {
-            return;
-        }
-
-        $this->balanceManager->addTransaction(
-            $account,
-            TransactionType::Adjust,
-            $redeemTransaction->getPoints(),
-            sprintf('Points restored for cancelled order #%s', $order->getNumber()),
-            $order,
-        );
 
         $this->entityManager->flush();
     }

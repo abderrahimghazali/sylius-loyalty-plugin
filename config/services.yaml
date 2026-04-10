@@ -68,12 +68,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: sylius.order.post_complete, method: __invoke }
 
-    Abderrahim\SyliusLoyaltyPlugin\EventListener\OrderCancelListener:
-        arguments:
-            $balanceManager: '@Abderrahim\SyliusLoyaltyPlugin\Service\LoyaltyBalanceManagerInterface'
-            $entityManager: '@doctrine.orm.entity_manager'
-        tags:
-            - { name: kernel.event_listener, event: sylius.order.post_cancel, method: __invoke }
 
     Abderrahim\SyliusLoyaltyPlugin\EventListener\FirstOrderBonusListener:
         arguments:
