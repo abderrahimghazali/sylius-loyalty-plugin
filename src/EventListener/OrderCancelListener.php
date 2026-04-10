@@ -30,6 +30,7 @@ final class OrderCancelListener
         }
 
         $this->balanceManager->revokePointsForOrder($order);
+        $this->balanceManager->revokeBonusForOrder($order);
         $this->entityManager->flush();
     }
 }

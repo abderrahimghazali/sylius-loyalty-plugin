@@ -136,6 +136,36 @@ class PointTransactionRepository extends EntityRepository implements PointTransa
             ->getOneOrNullResult();
     }
 
+    public function findBonusByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.order = :order')
+            ->andWhere('pt.type = :type')
+            ->setParameter('account', $account)
+            ->setParameter('order', $order)
+            ->setParameter('type', TransactionType::Bonus->value)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findBonusDeductByOrder(LoyaltyAccountInterface $account, OrderInterface $order): ?PointTransactionInterface
+    {
+        return $this->createQueryBuilder('pt')
+            ->andWhere('pt.loyaltyAccount = :account')
+            ->andWhere('pt.order = :order')
+            ->andWhere('pt.type = :type')
+            ->andWhere('pt.description LIKE :desc')
+            ->setParameter('account', $account)
+            ->setParameter('order', $order)
+            ->setParameter('type', TransactionType::Deduct->value)
+            ->setParameter('desc', 'Bonus revoked%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findBonusByDescriptionAndYear(LoyaltyAccountInterface $account, string $description, int $year): ?PointTransactionInterface
     {
         $start = new \DateTime(sprintf('%d-01-01', $year));

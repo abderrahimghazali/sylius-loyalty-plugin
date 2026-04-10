@@ -162,4 +162,39 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             $order->getChannel(),
         );
     }
+
+    public function revokeBonusForOrder(OrderInterface $order): ?PointTransactionInterface
+    {
+        $customer = $order->getCustomer();
+        if ($customer === null) {
+            return null;
+        }
+
+        $account = $this->accountRepository->findOneByCustomer($customer);
+        if ($account === null) {
+            return null;
+        }
+
+        $bonusTransaction = $this->transactionRepository->findBonusByOrder($account, $order);
+        if ($bonusTransaction === null) {
+            return null;
+        }
+
+        // Idempotency: check if bonus was already revoked for this order
+        // Reuse findDeductByOrder — a Deduct transaction linked to this order with matching points
+        // We check description to distinguish earn-revoke from bonus-revoke
+        $existingDeduct = $this->transactionRepository->findBonusDeductByOrder($account, $order);
+        if ($existingDeduct !== null) {
+            return null;
+        }
+
+        return $this->addTransaction(
+            $account,
+            TransactionType::Deduct,
+            $bonusTransaction->getPoints(),
+            sprintf('Bonus revoked for cancelled order #%s', $order->getNumber()),
+            $order,
+            $order->getChannel(),
+        );
+    }
 }

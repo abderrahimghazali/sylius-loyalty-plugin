@@ -27,4 +27,6 @@ interface LoyaltyBalanceManagerInterface
     public function awardPointsForOrder(OrderInterface $order): ?PointTransactionInterface;
 
     public function revokePointsForOrder(OrderInterface $order): ?PointTransactionInterface;
+
+    public function revokeBonusForOrder(OrderInterface $order): ?PointTransactionInterface;
 }
