@@ -44,7 +44,7 @@
                                class="form-control"
                                min="1"
                                max="{{ loyalty.balance }}"
-                               placeholder="{{ 'loyalty.ui.enter_points'|trans({'%balance%': loyalty.balance}) }}"
+                               placeholder="0"
                                data-model="norender|sylius_shop_cart[pointsToRedeem]"
                                form="{{ form.vars.id }}"
                                {{ stimulus_target(ctrl, 'input') }}
@@ -56,6 +56,11 @@
                         </button>
                     {% endif %}
                 </div>
+                {% if current_points <= 0 %}
+                    <div class="text-muted mt-1" style="font-size: 0.8rem;">
+                        {{ 'loyalty.ui.enter_points'|trans({'%balance%': loyalty.balance|number_format}) }}
+                    </div>
+                {% endif %}
                 <button type="button" class="d-none" data-action="live#$render"
                         {{ stimulus_target(ctrl, 'renderButton') }}></button>
             </div>
