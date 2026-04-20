@@ -107,10 +107,12 @@ final class LoyaltyBalanceManager implements LoyaltyBalanceManagerInterface
             return null;
         }
 
-        // Check if points were already awarded for this order
-        $existing = $this->transactionRepository->findEarnByOrder($account, $order);
-        if ($existing !== null) {
-            return null;
+        // A newly created account (no ID yet) cannot have existing transactions
+        if ($account->getId() !== null) {
+            $existing = $this->transactionRepository->findEarnByOrder($account, $order);
+            if ($existing !== null) {
+                return null;
+            }
         }
 
         $channel = $order->getChannel();

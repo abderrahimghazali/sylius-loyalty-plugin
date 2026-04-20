@@ -57,10 +57,12 @@ final class FirstOrderBonusListener
             return;
         }
 
-        // Check if a first-order bonus was already awarded (idempotency)
-        $existing = $this->transactionRepository->findBonusByDescription($account, 'First order bonus');
-        if ($existing !== null) {
-            return;
+        // A newly created account (no ID yet) cannot have existing transactions
+        if ($account->getId() !== null) {
+            $existing = $this->transactionRepository->findBonusByDescription($account, 'First order bonus');
+            if ($existing !== null) {
+                return;
+            }
         }
 
         // Check this is actually the customer's first completed order
