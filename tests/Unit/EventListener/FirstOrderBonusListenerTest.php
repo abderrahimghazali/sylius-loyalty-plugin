@@ -54,6 +54,8 @@ final class FirstOrderBonusListenerTest extends TestCase
         $order->method('getCustomer')->willReturn($customer);
 
         $account = new LoyaltyAccount();
+        $ref = new \ReflectionProperty(LoyaltyAccount::class, 'id');
+        $ref->setValue($account, 1);
         $this->balanceManager->method('getOrCreateAccount')->willReturn($account);
         $this->transactionRepository->method('findBonusByDescription')->willReturn(null);
         $this->orderRepository->method('countByCustomer')->willReturn(1);
@@ -83,6 +85,8 @@ final class FirstOrderBonusListenerTest extends TestCase
         $order->method('getCustomer')->willReturn($customer);
 
         $account = new LoyaltyAccount();
+        $ref = new \ReflectionProperty(LoyaltyAccount::class, 'id');
+        $ref->setValue($account, 1);
         $this->balanceManager->method('getOrCreateAccount')->willReturn($account);
         $this->transactionRepository->method('findBonusByDescription')
             ->willReturn($this->createMock(PointTransactionInterface::class));
@@ -101,6 +105,8 @@ final class FirstOrderBonusListenerTest extends TestCase
         $order->method('getCustomer')->willReturn($customer);
 
         $account = new LoyaltyAccount();
+        $ref = new \ReflectionProperty(LoyaltyAccount::class, 'id');
+        $ref->setValue($account, 1);
         $this->balanceManager->method('getOrCreateAccount')->willReturn($account);
         $this->transactionRepository->method('findBonusByDescription')->willReturn(null);
         $this->orderRepository->method('countByCustomer')->willReturn(3);
